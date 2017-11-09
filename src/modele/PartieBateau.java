@@ -30,4 +30,8 @@ public class PartieBateau {
 		return this.position;
 	}
 	
+	public void setPosition(Coordonnes pos){
+		this.position.setX(pos.getX());
+		this.position.setY(pos.getY());
+	}
 }

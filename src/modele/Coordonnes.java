@@ -44,4 +44,18 @@ public class Coordonnes {
 	public void setPartieBateau(PartieBateau piece){
 		this.pieceBateau = piece;
 	}
-}
+	
+	//Methodes
+	
+	/*this method returns true if the two coordinates (x,y) are the same*/
+	public boolean equals(Coordonnes pos){
+		return pos.getX() == this.x && pos.getY() == this.y;
+		}
+	
+	/*this method returns true if the coordinates (x,y) from the ship's part
+	 * are the same than the ones defined in this object*/
+	public boolean equals(PartieBateau bat){
+		return bat.getPosition().getX() == this.x && bat.getPosition().getY() == this.y;
+		}
+	
+	}

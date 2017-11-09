@@ -69,17 +69,11 @@ public class Bateau {
 	
 	//Methodes
 	
-	/*this method returns true if the two coordinates (x,y) are the same
-	for the two objects*/
-	private boolean comparePosition(Coordonnes p1, Coordonnes p2){
-		return (p1.getX()==p2.getX() && p1.getY()==p2.getY());
-	}
-	
 	/*this method returns true if there is a ship's part at the position pos */
 	public boolean estTouche(Coordonnes pos){
 		Iterator<PartieBateau> bateauIterator = bateau.iterator();
 		while (bateauIterator.hasNext()){
-			if (this.comparePosition(bateauIterator.next().getPosition(), pos)) {
+			if (bateauIterator.next().getPosition().equals(pos)) {
 				return true;
 			}
 		}
@@ -97,4 +91,15 @@ public class Bateau {
 		return true;
 	}
 	
+	/*this procedure sets the ship's coordinates*/
+	public void placer(ArrayList<Coordonnes> l){
+		Iterator<Coordonnes> coordonnesIterator = l.iterator();
+		Iterator<PartieBateau> bateauIterator = bateau.iterator();
+		
+		if (l.size() == this.taille){
+			while(coordonnesIterator.hasNext() && bateauIterator.hasNext()){
+				bateauIterator.next().setPosition(coordonnesIterator.next());
+			}
+		}
+	}
 }
