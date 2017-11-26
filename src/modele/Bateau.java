@@ -6,47 +6,24 @@ import java.util.*;
 (jorge.ochoa_magana@insa-rouen.fr)*/
 
 
-public class Bateau {
-
-	public static enum TypeBateau {
-		PORTEAVIONS, CROISEUR, CONTRETORPILLEUR, 
-		SOUSMARIN, TORPILLEUR, CUIRASSE
-		}
+public class Bateau implements Iterable<PartieBateau>{
 	
 	//attributs
 	
-	private int taille;
+	private final int taille;
+	private final String nom;
 	private boolean estCoule;
 	private List<PartieBateau> bateau;
-	private TypeBateau type;
+
 	
 	//constructeur
 	
 	public Bateau(TypeBateau type){
-		this.type = type;
-		switch(type){
-		case PORTEAVIONS: 
-			this.taille = 5;
-			break;
-		case CROISEUR: 
-		case CUIRASSE: 
-			this.taille = 4;
-			break;
-		case CONTRETORPILLEUR:
-		case SOUSMARIN:
-			this.taille = 3;
-			break;
-		case TORPILLEUR:
-			this.taille = 2;
-			break;
-		}
 		
+		this.taille = type.getTaille();
+		this.nom = type.getNom();
 		this.estCoule = false;
-		this.bateau = new ArrayList<PartieBateau>();
-		for (int i = 0; i<this.taille; i++){
-			this.bateau.add(new PartieBateau(new Coordonnes(0,0,null)));
-		}
-		
+		this.bateau = new ArrayList<PartieBateau>(this.taille);
 	};
 	
 	//accesseurs
@@ -63,17 +40,20 @@ public class Bateau {
 		return this.bateau;		
 	};
 	
-	public TypeBateau getType(){
-		return this.type;
+	public String getNom(){
+		return this.nom;
 	}
 	
 	//Methodes
 	
+	public Iterator<PartieBateau> iterator(){
+		return this.bateau.iterator();
+	}
+	
 	/*this method returns true if there is a ship's part at the position pos */
-	public boolean estTouche(Coordonnes pos){
-		Iterator<PartieBateau> bateauIterator = bateau.iterator();
-		while (bateauIterator.hasNext()){
-			if (bateauIterator.next().getPosition().equals(pos)) {
+	public boolean estTouche(CarreauCarte pos){
+		while (this.iterator().hasNext()){
+			if (this.iterator().next().getCarreauCarte().equals(pos)) {
 				return true;
 			}
 		}
@@ -82,9 +62,8 @@ public class Bateau {
 	
 	/*this method returns true if all the parts of the ship are touched*/
 	public boolean estCoule(){
-		Iterator<PartieBateau> bateauIterator = bateau.iterator();
-		while (bateauIterator.hasNext()){
-			if (! bateauIterator.next().getTouche())
+		while (this.iterator().hasNext()){
+			if (! this.iterator().next().estTouche())
 				return false;
 		}
 		this.estCoule = true;
@@ -92,14 +71,14 @@ public class Bateau {
 	}
 	
 	/*this procedure sets the ship's coordinates*/
-	public void placer(ArrayList<Coordonnes> l){
-		Iterator<Coordonnes> coordonnesIterator = l.iterator();
-		Iterator<PartieBateau> bateauIterator = bateau.iterator();
+	public void placer(ArrayList<CarreauCarte> l) throws CarreauUtiliseException{
 		
-		if (l.size() == this.taille){
-			while(coordonnesIterator.hasNext() && bateauIterator.hasNext()){
-				bateauIterator.next().setPosition(coordonnesIterator.next());
-			}
+		for(CarreauCarte sq: l){
+			if(sq.contientBateau()) throw new CarreauUtiliseException();
+		}
+		if(!CarreauCarte.aligne(l));
+		for(CarreauCarte sq: l){
+			this.bateau.add(new PartieBateau(sq));
 		}
 	}
 }

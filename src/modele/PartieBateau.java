@@ -7,31 +7,32 @@ public class PartieBateau {
 	
 	//attributs
 	private boolean touche;
-	private Coordonnes position;
+	private final CarreauCarte sq;
 	
 	//constructeur 
-	public PartieBateau(Coordonnes pos){
-		this.position = pos;
-		this.position.setPartieBateau(this);
+	public PartieBateau(CarreauCarte sq0) throws CarreauUtiliseException{
+		this.sq = sq0;
 		this.touche = false;
+		this.sq.lierPartieBateau(this);	
 	}
 	
 	//accsseurs
 	
-	public boolean getTouche(){
+	public boolean estTouche(){
 		return this.touche;
 	};
 	
-	public void setTouche(boolean t){
-		this.touche = t;
+	public void attaquer(){
+		this.touche = true;
 	}
 	
-	public Coordonnes getPosition(){
-		return this.position;
+	public CarreauCarte getCarreauCarte(){
+		return this.sq;
 	}
 	
-	public void setPosition(Coordonnes pos){
-		this.position.setX(pos.getX());
-		this.position.setY(pos.getY());
-	}
+	/*public void setCarreauCarte(CarreauCarte cc){
+		this.sq = cc;
+	}*/
+	
+
 }
