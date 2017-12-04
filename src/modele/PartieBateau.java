@@ -3,36 +3,33 @@ package modele;
 /*class developed by Jorge OCHOA 
 (jorge.ochoa_magana@insa-rouen.fr)*/
 
+/**
+ * Cette classe représente une partie d'un bateau (état et coordonnées).
+ * 
+ * @author Carlos MIRANDA
+ */
+// 04-12-17 - Carlos - Refactoring
 public class PartieBateau {
 	
-	//attributs
-	private boolean touche;
-	private final CarreauCarte sq;
+	private boolean touchee;
+	private final CarreauCarte cc;
 	
-	//constructeur 
-	public PartieBateau(CarreauCarte sq0) throws CarreauUtiliseException{
-		this.sq = sq0;
-		this.touche = false;
-		this.sq.lierPartieBateau(this);	
+	public PartieBateau(CarreauCarte cc) throws CarreauUtiliseException {
+		touchee = false;
+		this.cc = cc;
+		this.cc.lierPartieBateau(this);	
 	}
 	
-	//accsseurs
+	public boolean estTouchee() { return touchee; }
 	
-	public boolean estTouche(){
-		return this.touche;
-	};
+	public void attaquer() { touchee = true; }
 	
-	public void attaquer(){
-		this.touche = true;
-	}
-	
-	public CarreauCarte getCarreauCarte(){
-		return this.sq;
-	}
-	
-	/*public void setCarreauCarte(CarreauCarte cc){
-		this.sq = cc;
-	}*/
-	
+	public CarreauCarte getCarreauCarte() { return cc; }	
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof PartieBateau) return (PartieBateau) o == this;
+		if (o instanceof CarreauCarte) return cc.equals((CarreauCarte) o);
+		return false;
+	}
 }

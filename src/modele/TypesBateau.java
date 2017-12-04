@@ -1,6 +1,12 @@
 package modele;
 
-public enum TypeBateau {
+/**
+ * Cette énumération représente les différents types de bateaux du jeu ainsi que leurs propriétés.
+ * 
+ * @author Carlos MIRANDA
+ */
+// 04-12-17 - Carlos - Refactoring
+public enum TypesBateau {
 	
 	PORTEAVIONS(5, "Porte-avions"),
 	CROISEUR(4, "Croiseur"),
@@ -12,17 +18,16 @@ public enum TypeBateau {
 	private int taille;
 	private String nom;
 	
-	TypeBateau(int t, String n){
-		this.taille = t;
-		this.nom = n;
+	TypesBateau(int taille, String nom){
+		this.taille = taille;
+		this.nom = nom;
 	}
 	
 	public int getTaille(){
-		return this.taille;
+		return taille;
 	}
 	
 	public String getNom(){
-		return this.nom;
+		return nom;
 	}
-
 }

@@ -1,84 +1,58 @@
 package modele;
 
-import java.util.*;
-
 /*class developed by Jorge OCHOA 
 (jorge.ochoa_magana@insa-rouen.fr)*/
 
+/**
+ * Cette classe représente un bateau (liste de parties de bateau et leurs états).
+ * 
+ * @author Carlos MIRANDA
+ */
+// 04-12-17 - Carlos - Refactoring
 
-public class Bateau implements Iterable<PartieBateau>{
-	
-	//attributs
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
+public class Bateau implements IBateau {
 	
 	private final int taille;
 	private final String nom;
 	private boolean estCoule;
 	private List<PartieBateau> bateau;
 
-	
-	//constructeur
-	
-	public Bateau(TypeBateau type){
-		
-		this.taille = type.getTaille();
-		this.nom = type.getNom();
-		this.estCoule = false;
-		this.bateau = new ArrayList<PartieBateau>(this.taille);
+	public Bateau(TypesBateau type) {
+		taille = type.getTaille();
+		nom = type.getNom();
+		estCoule = false;
+		bateau = new ArrayList<PartieBateau>(this.taille);
 	};
 	
-	//accesseurs
-	
-	public int getTaille(){
-		return this.taille;
-	}
-	
-	public boolean getEstCoule(){
-		return this.estCoule;
-	};
-	
-	public List<PartieBateau> getBateau(){
-		return this.bateau;		
-	};
-	
-	public String getNom(){
-		return this.nom;
-	}
-	
-	//Methodes
-	
-	public Iterator<PartieBateau> iterator(){
-		return this.bateau.iterator();
-	}
-	
-	/*this method returns true if there is a ship's part at the position pos */
-	public boolean estTouche(CarreauCarte pos){
-		while (this.iterator().hasNext()){
-			if (this.iterator().next().getCarreauCarte().equals(pos)) {
-				return true;
-			}
+	public void placer(List<CarreauCarte> lcc) throws CarreauUtiliseException {
+		if (!CarreauCarte.aligne(lcc)) throw new IllegalArgumentException();
+		for (CarreauCarte cc: lcc) {
+			if (cc.contientBateau()) throw new CarreauUtiliseException();
 		}
-		return false;
-	};
+		for (CarreauCarte cc: lcc) {
+			this.bateau.add(new PartieBateau(cc));
+		}
+	}
 	
-	/*this method returns true if all the parts of the ship are touched*/
-	public boolean estCoule(){
-		while (this.iterator().hasNext()){
-			if (! this.iterator().next().estTouche())
-				return false;
+	public boolean estCoule() {
+		if (this.estCoule) return true;
+		for (PartieBateau pb : bateau) {
+			if (!pb.estTouchee()) return false;
 		}
 		this.estCoule = true;
 		return true;
 	}
 	
-	/*this procedure sets the ship's coordinates*/
-	public void placer(ArrayList<CarreauCarte> l) throws CarreauUtiliseException{
-		
-		for(CarreauCarte sq: l){
-			if(sq.contientBateau()) throw new CarreauUtiliseException();
-		}
-		if(!CarreauCarte.aligne(l));
-		for(CarreauCarte sq: l){
-			this.bateau.add(new PartieBateau(sq));
-		}
-	}
+	public int getTaille() { return this.taille; }
+	
+	public List<PartieBateau> getBateau() { return this.bateau;	}
+	
+	public String getNom() { return this.nom; }
+	
+	public Iterator<PartieBateau> iterator() { return this.bateau.iterator(); }
 }

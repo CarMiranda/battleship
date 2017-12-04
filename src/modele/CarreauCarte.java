@@ -1,81 +1,77 @@
 package modele;
 
+/**
+ * Cette classe représente un carreau de la carte du jeu 
+ * (coordonnées et potentiellement une partie de bateau).
+ * 
+ * @author Carlos MIRANDA
+ */
+// 04-12-17 - Carlos - Refactoring
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarreauCarte {
+public class CarreauCarte implements ICarreauCarte {
 	
-	private final Coordonnes c;
-	private PartieBateau sp = null;
+	private final Coordonnees c;
+	private PartieBateau pb;
 	
-	//Constructeur
-	public CarreauCarte(int x, int y){
-		this.c = new Coordonnes(x,y);
-		this.c.setCarreauCarte(this);
+	public CarreauCarte(int x, int y) {
+		pb = null;
+		c = new Coordonnees(x, y);
+		c.setCarreauCarte(this);
 	}
 	
-	public CarreauCarte(Coordonnes c){
+	public CarreauCarte(Coordonnees c) {
 		this.c = c;
 		this.c.setCarreauCarte(this);
 	}
 	
-	//Accesseurs
-	public Coordonnes getCoordonnes() {
-		return c;
-	}
-	
-	
-	//Methodes 
-	/*This method strikes the ship's part contained in the SeaSquare
-	 * if the SeaSquare is empty or the part is already hit it returns false*/
-	public boolean attaquer(){
-		if (this.sp == null || this.sp.estTouche()) {
+	/**
+	 * Attaque ce CarreauCarte, i.e. attaque la partie de bateau associée ou
+	 * marque la case comme touchée.
+	 * @return si on a touché un bateau
+	 */
+	public boolean attaquer() {
+		if (pb.estTouchee()) throw new IllegalArgumentException();
+		if (pb == null) {
 			return false;
 		} else {
-			sp.attaquer();
+			pb.attaquer();
 			return true;
 		}
 	}
 	
-	/*returns true if this SquareSea is linked to a ship's part*/
-	public boolean contientBateau(){
-		return this.sp != null;
+	/**
+	 * Vérifie que la liste de CarreauCarte corresponde à une séquence de CarreauCartes
+	 * alignés (cf. Coordonnees.aligne)
+	 * @param lsq	Liste de CarreauCarte
+	 * @return si les CarreauCarte sont alignés ou pas
+	 */
+	public static final boolean aligne(List<CarreauCarte> lcc) {
+		List<Coordonnees> lc = new ArrayList<Coordonnees>(lcc.size());
+		for (CarreauCarte cc : lcc) {
+			lc.add(cc.getCoordonnees());
+		}
+		return Coordonnees.aligne(lc);
 	}
 	
-	/*Links this SeaSquare to its Coordinates*/
-	public void lierCoordonnes(){
-		this.c.setCarreauCarte(this);
-	}
-	
-	/*Links a ship's part to this SeaSquare*/
-	public void lierPartieBateau(PartieBateau sp) throws CarreauUtiliseException {
-		if (this.sp == null) {
-			this.sp = sp;
+	public void lierPartieBateau(PartieBateau pb) throws CarreauUtiliseException {
+		if (this.pb == null) {
+			this.pb = pb;
 		} else {
 			throw new CarreauUtiliseException();
 		}
 	}
 	
-	public boolean equals(Coordonnes c) {
-		return this.c.equals(c);
-	}
+	public Coordonnees getCoordonnees() { return c; }
 	
-	public String toString() {
-		if (this.sp == null) {
-			return " ";
-		} else if (this.sp.estTouche()) {
-			return "X";
-		} else {
-			return "S";
-		}
-	}
-	
-/*Checks if a list of SeaSquare is aligned*/
-	public static final boolean aligne(List<CarreauCarte> lsq) {
-		List<Coordonnes> lc = new ArrayList<Coordonnes>(lsq.size());
-		for (CarreauCarte sq : lsq) {
-			lc.add(sq.getCoordonnes());
-		}
-		return Coordonnes.aligne(lc);
+	public boolean contientBateau() { return this.pb != null; }
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof CarreauCarte) return c.equals(((CarreauCarte) o).getCoordonnees());
+		if (o instanceof Coordonnees) return c.equals((Coordonnees) o);
+		return false;
 	}
 }
