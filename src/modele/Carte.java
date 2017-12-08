@@ -13,12 +13,15 @@ import java.util.List;
 
 public class Carte implements ICarte {
 	
-	private final List<CarreauCarte> carte = new ArrayList<>(Jeu.DIFFICULTE.HAUTEUR * Jeu.DIFFICULTE.LARGEUR);
+	private final List<CarreauCarte> carte;
+	private final Difficulte difficulte;
 	
-	public Carte() {
+	public Carte(Difficulte difficulte) {
+		this.difficulte = difficulte;
+		carte = new ArrayList<>(difficulte.HAUTEUR * difficulte.LARGEUR);
 		int i, j;
-		for (i = 0; i < Jeu.DIFFICULTE.HAUTEUR; i++) {
-			for (j = 0; j < Jeu.DIFFICULTE.LARGEUR; j++) {
+		for (i = 0; i < difficulte.HAUTEUR; i++) {
+			for (j = 0; j < difficulte.LARGEUR; j++) {
 				carte.add(new CarreauCarte(i, j));
 			}
 		}

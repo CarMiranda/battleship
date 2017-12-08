@@ -17,7 +17,13 @@ public class Joueur implements IJoueur {
 	
 	public Joueur(String nom) {
 		this.nom = nom;
-		carte = new Carte();
+		carte = new Carte(Difficulte.FACILE);
+		flotte = new Flotte();
+	}
+	
+	public Joueur(String nom, Difficulte difficulte) {
+		this.nom = nom;
+		carte = new Carte(difficulte);
 		flotte = new Flotte();
 	}
 	
