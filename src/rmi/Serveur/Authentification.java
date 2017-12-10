@@ -22,7 +22,7 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 	public static void initAuthentification()
 			throws RemoteException, AlreadyBoundException {
 		Authentification auth = new Authentification();
-		Registry registry = LocateRegistry.getRegistry(Serveur.PORT);
+		Registry registry = LocateRegistry.getRegistry(/*Serveur.PORT*/);
 		registry.bind("auth", auth);
 		System.out.println("Service d'authentification initialisé correctement.");
 	}

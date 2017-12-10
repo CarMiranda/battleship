@@ -17,7 +17,7 @@ public class Entree extends UnicastRemoteObject implements IEntree {
 		this.nom = adversaire;
 		this.defaites = defaites;
 		this.victoires = victoires;
-		Registry registry = LocateRegistry.getRegistry(Serveur.HOST, Serveur.PORT);
+		Registry registry = LocateRegistry.getRegistry(/*Serveur.HOST, Serveur.PORT*/);
 		registry.bind(joueur + adversaire + "Entree", this);
 	}
 	

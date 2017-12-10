@@ -1,6 +1,7 @@
 package vue;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -9,17 +10,26 @@ import rmi.Serveur.IUtilisateurDistant;
 
 public class Client {
 	
-	public static String HOST = "localhost";
-	public static int PORT = 5002;
+	public static String REMOTEHOST;
+	/*public static int REMOTEPORT, PORT;*/
+	static {
+		/*REMOTEHOST = "localhost";
+		REMOTEPORT = 5002;
+		PORT = 5002;*/
+		//System.setProperty("java.rmi.server.hostname", REMOTEHOST);
+		//System.setProperty("java.rmi.server.port", Integer.toString(PORT));
+			
+	}
 	
 	private FenetreLogin fl;
 	private FenetreAccueil fa;
-	private FenetreJeu fj;
+	//private FenetreJeu fj;
 	private IUtilisateur utilisateur;
 	private Map<String, IUtilisateurDistant> utilisateurs;	
 	
-	public Client() {
+	public Client(String remoteHost) {
 		super();
+		REMOTEHOST = remoteHost;
 		fl = new FenetreLogin(this);
 	}
 	
@@ -53,8 +63,10 @@ public class Client {
 		fl.setVisible(true);
 	}
 	
-	public static void main(String[] args) {
-		Client client = new Client();
+	public static void main(String[] args) throws RemoteException {
+		LocateRegistry.getRegistry();
+		System.setSecurityManager(new SecurityManager());
+		Client client = new Client(args[0]);
 		client.showLogin();
 	}
 

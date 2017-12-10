@@ -9,21 +9,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-
-
 import com.mysql.jdbc.Connection;
 
 public class Serveur {
 	
-	public static final String HOST;
-	public static final int PORT;
+	/*public static final String HOST;
+	public static final int PORT;*/
 	private static Connection connexionSQL;
 	private static Properties proprietesConnexion;
 	static {
-		HOST = "localhost";
+		/*HOST = "localhost";
 		PORT = 5002;
 		System.setProperty("java.rmi.server.hostname", HOST);
-		System.setProperty("java.rmi.server.port", Integer.toString(PORT));
+		System.setProperty("java.rmi.server.port", Integer.toString(PORT));*/
 		connexionSQL = null;
 		proprietesConnexion = new Properties();
 		proprietesConnexion.put("user", "project");
@@ -33,11 +31,12 @@ public class Serveur {
 	
 	public static Connection initConnexionSQL() {
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
 			connexionSQL = (Connection) DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/battleship",
 					proprietesConnexion
 			);
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -66,7 +65,9 @@ public class Serveur {
 	public static void main(String args[]) {
 		// Initialisation de toutes les ressources
 		try {
-			LocateRegistry.createRegistry(PORT);
+			//LocateRegistry.createRegistry(PORT);
+			LocateRegistry.createRegistry(1099);
+			System.setSecurityManager(new SecurityManager());
 			initConnexionSQL();
 			UtilisateurDistant.initUtilisateurs();
 			Authentification.initAuthentification();

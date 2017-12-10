@@ -1,15 +1,12 @@
 package rmi.Client;
 
-import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
-import java.util.Set;
 
 import modele.Difficulte;
 
@@ -44,17 +41,16 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 			throws RemoteException {
 		IAuthentification auth;
 		try {
-			auth = (IAuthentification) Naming.lookup("rmi://" + Client.HOST + ":" + Client.PORT + "/auth");
+			Registry localRegistry = LocateRegistry.getRegistry();
+			Registry remoteRegistry = LocateRegistry.getRegistry(Client.REMOTEHOST);
+			auth = (IAuthentification) remoteRegistry.lookup("auth");
 			if (auth.authentification(nom, motDePasse)) {
-				Registry registry = LocateRegistry.getRegistry(Client.HOST, Client.PORT);
-				registry.bind(nom, this);
-				utilisateurDistant = (IUtilisateurDistant) registry.lookup(nom + "Distant");
+				localRegistry.bind(nom, this);
+				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
 				utilisateurDistant.setUtilisateurLocal(this);
 				utilisateurDistant.connecter();
 				return utilisateurDistant;
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		} catch (AlreadyBoundException e) {
@@ -68,17 +64,16 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 			throws RemoteException {
 		IAuthentification auth;
 		try {
-			auth = (IAuthentification) Naming.lookup("rmi://" + Client.HOST + ":" + Client.PORT + "/auth");
+			Registry localRegistry = LocateRegistry.getRegistry();
+			Registry remoteRegistry = LocateRegistry.getRegistry(Client.REMOTEHOST);
+			auth = (IAuthentification) remoteRegistry.lookup("auth");
 			if (auth.inscription(nom, motDePasse)) {
-				Registry registry = LocateRegistry.getRegistry(Client.HOST, Client.PORT);
-				registry.bind(nom, this);
-				utilisateurDistant = (IUtilisateurDistant) registry.lookup("rmi://" + Client.HOST + ":" + Client.PORT + "/" + nom + "Distant");
+				localRegistry.bind(nom, this);
+				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
 				utilisateurDistant.setUtilisateurLocal(this);
 				utilisateurDistant.connecter();
 				return utilisateurDistant;
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		} catch (AlreadyBoundException e) {
@@ -107,7 +102,7 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	public void finirUtilisation()
 			throws RemoteException {
 		utilisateurDistant.deconnecter();
-		Registry registry = LocateRegistry.getRegistry(Client.HOST, Client.PORT);
+		Registry registry = LocateRegistry.getRegistry();
 		try {
 			registry.unbind(nom);
 		} catch (NotBoundException e) {

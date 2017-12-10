@@ -1,8 +1,14 @@
 package vue;
 
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import javax.swing.AbstractListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 
 import rmi.Client.IUtilisateur;
@@ -13,13 +19,9 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -61,6 +63,7 @@ class MyCellRenderer extends JLabel implements ListCellRenderer<IUtilisateurDist
 	}
 }
 
+@SuppressWarnings("unused")
 public class FenetreAccueil extends JFrame {
 	
 	private static final long serialVersionUID = 1L;

@@ -12,12 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import com.mysql.jdbc.Connection;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import modele.Difficulte;
 import modele.UtilisateurInconnuException;
@@ -69,7 +65,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		this.connecte = false;
 		jeux = new HashMap<String, IJeuDistant>();
 		statistiques = new HashMap<String, IEntree>();
-		Registry registry = LocateRegistry.getRegistry(Serveur.HOST, Serveur.PORT);
+		Registry registry = LocateRegistry.getRegistry();
 		registry.bind(nom + "Distant", this);
 		
 	}

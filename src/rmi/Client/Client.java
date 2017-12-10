@@ -1,13 +1,9 @@
 package rmi.Client;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 import modele.Difficulte;
 
-import rmi.Serveur.IEntree;
 import rmi.Serveur.IUtilisateurDistant;
 
 public class Client {
@@ -18,17 +14,22 @@ public class Client {
 		System.setProperty("java.rmi.server.hostname", HOST);
 		System.setProperty("java.rmi.server.port", Integer.toString(PORT));
 	}
+	
+	public Client() {
+		
+	}
 
 	/**
 	 * @since 1.0.0
 	 */
-	public static void main(String[] args) {		
+	public static void main(String[] args) {	
+		vue.Client client = new vue.Client(args[0]);
 		try {
 			// Authentification
-			Utilisateur carlos = new Utilisateur("Carlos");
-			IUtilisateurDistant carlosd = carlos.authentification("Miranda");
+			Utilisateur carlos = new Utilisateur("Carlos", client);
+			carlos.authentification("Miranda");
 			
-			Utilisateur jorge = new Utilisateur("Jorge");
+			Utilisateur jorge = new Utilisateur("Jorge", client);
 			IUtilisateurDistant jorged = jorge.authentification("Ochoa");
 			
 			/*if (iud != null)
