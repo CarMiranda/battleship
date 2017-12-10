@@ -83,14 +83,23 @@ public class FenetreJeu extends javax.swing.JFrame {
 		
 		
 		//Chargement des images
-		//URL url = FenetreJeu.class.getResource("sea.gif");
+		URL url = FenetreJeu.class.getResource("carrier.png");
+		ImageIcon pAvionsImag = resize(new ImageIcon(url));
 		
-		ImageIcon pAvionsImag = resize(new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/carrier.png"));
-		ImageIcon sousMarinImag = resize(new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/submarine.gif"));
-		ImageIcon croiseurImag = resize(new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/battleship.jpg"));
-		ImageIcon torpilleurImag = resize(new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/destroyer.png"));
-		ImageIcon contreTorpImag = resize(new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/battleship2.jpg"));
-		ImageIcon cuirasseImag = resize(new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/cruiser.png"));
+		url = FenetreJeu.class.getResource("submarine.gif");
+		ImageIcon sousMarinImag = resize(new ImageIcon(url));
+		
+		url = FenetreJeu.class.getResource("battleship.jpg");
+		ImageIcon croiseurImag = resize(new ImageIcon(url));
+		
+		url = FenetreJeu.class.getResource("destroyer.png");
+		ImageIcon torpilleurImag = resize(new ImageIcon(url));
+		
+		url = FenetreJeu.class.getResource("battleship2.jpg");
+		ImageIcon contreTorpImag = resize(new ImageIcon(url));
+		
+		url = FenetreJeu.class.getResource("cruiser.png");
+		ImageIcon cuirasseImag = resize(new ImageIcon(url));
 		
 		//Creation d'un pannel pour affiché la flotte du jouer
 		JPanel flotte = new JPanel();

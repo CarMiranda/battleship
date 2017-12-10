@@ -20,8 +20,9 @@ public class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
 	private final ICarte map;
-	private JPanel pane1 = new JPanel(new BorderLayout());	
-	private Icon icon = new ImageIcon("/home/jorge/Bureau/GM4/POA/projet_java/cahier_de_charges/images_bateaux/sea.gif");
+	private JPanel pane1 = new JPanel(new BorderLayout());
+	URL url = GrilleIHM.class.getResource("sea.gif");
+	private Icon icon = new ImageIcon(url);
 	private JLabel label = new JLabel(icon);
 	
 	public GrilleIHM(ICarte carte) throws RemoteException{
