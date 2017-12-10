@@ -27,7 +27,8 @@ public class Flotte extends UnicastRemoteObject implements IFlotte {
 		return estDetruite;
 	}
 
-	public Iterator<IBateau> iterator() {
+	@Override
+	public Iterator<IBateau> iterator() throws RemoteException {
 		return flotte.iterator();
 	}
 

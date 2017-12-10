@@ -12,11 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import com.mysql.jdbc.Connection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import modele.Difficulte;
 import modele.UtilisateurInconnuException;
@@ -26,7 +23,7 @@ import rmi.Client.IUtilisateur;
 public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisateurDistant {
 	
 	private static final long serialVersionUID;
-	private static final Set<IUtilisateurDistant> utilisateurs;
+	private static final Map<String, IUtilisateurDistant> utilisateurs;
 	private final Map<String, IEntree> statistiques;
 	private final Map<String, IJeuDistant> jeux;
 	private String nom;
@@ -35,8 +32,8 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	private int bddId;
 	
 	static {
-		serialVersionUID = 2842424207782534826L;
-		utilisateurs = new TreeSet<IUtilisateurDistant>(new Comparator<IUtilisateurDistant>() {
+		serialVersionUID = 1255597867363756474L;
+		utilisateurs = /*new TreeSet<IUtilisateurDistant>(new Comparator<IUtilisateurDistant>() {
 			@Override
 			public int compare(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2) {
 				try {
@@ -57,7 +54,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 				}
 				return 0;
 			}
-		});
+		})*/ new HashMap<String, IUtilisateurDistant>();
 	}
 	
 	public UtilisateurDistant(int bddId, String nom)
@@ -68,7 +65,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		this.connecte = false;
 		jeux = new HashMap<String, IJeuDistant>();
 		statistiques = new HashMap<String, IEntree>();
-		Registry registry = LocateRegistry.getRegistry(Serveur.HOST, Serveur.PORT);
+		Registry registry = LocateRegistry.getRegistry();
 		registry.bind(nom + "Distant", this);
 		
 	}
@@ -76,6 +73,11 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	@Override
 	public void setUtilisateurLocal(IUtilisateur utilisateurLocal) throws RemoteException {
 		this.utilisateurLocal = utilisateurLocal;
+	}
+	
+	@Override
+	public IUtilisateur getUtilisateurLocal() throws RemoteException {
+		return utilisateurLocal;
 	}
 	
 	/**
@@ -101,7 +103,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		
 		while (rs.next()) {
 			IUtilisateurDistant utilisateur = new UtilisateurDistant(rs.getInt("id"), rs.getString("uname"));
-			utilisateurs.add(utilisateur);
+			utilisateurs.put(utilisateur.getNom(), utilisateur);
 			stats = conn.prepareStatement(preparedQuery);
 			stats.setInt(1, utilisateur.getBddId());
 			rsp = stats.executeQuery();
@@ -109,6 +111,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 				utilisateur.ajouterEntree(new Entree(rs.getString("uname"), rsp.getString("opponent"), rsp.getInt("win"), rsp.getInt("lose")));
 			}
 		}
+		System.out.println("Initialisation de la liste d'utilisateurs.");
 	}
 	
 	public String getNom() throws RemoteException { return nom; }
@@ -116,7 +119,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	public int getBddId() throws RemoteException { return bddId; }
 	
 	public static IUtilisateurDistant getUtilisateur(String nom) {
-		for (IUtilisateurDistant u : utilisateurs) {
+		for (IUtilisateurDistant u : utilisateurs.values()) {
 			try {
 				if (u.getNom().equals(nom)) return u;
 			} catch (RemoteException e) {
@@ -127,7 +130,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	}
 
 	@Override
-	public Set<IUtilisateurDistant> getUtilisateurs() throws RemoteException {
+	public Map<String, IUtilisateurDistant> getUtilisateurs() throws RemoteException {
 		return utilisateurs;
 	}
 
@@ -185,10 +188,25 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 
 	@Override
 	public void deconnecter() throws RemoteException {
+		for (IUtilisateurDistant iud : utilisateurs.values()) {
+			if (iud != this)
+			iud.informerConnection(this);
+		}
 		connecte = false;
+		setUtilisateurLocal(null);
 	}
 	
-	public void connecter() {
+	@Override
+	public void informerConnection(IUtilisateurDistant utilisateur) throws RemoteException {
+		if (utilisateurLocal != null)
+			utilisateurLocal.informerConnection(utilisateur);
+	}
+	
+	public void connecter() throws RemoteException {
+		for (IUtilisateurDistant iud : utilisateurs.values()) {
+			if (iud != this)
+			iud.informerConnection(this);
+		}
 		connecte = true;
 	}
 	
@@ -196,7 +214,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		try {
 			IUtilisateurDistant u = new UtilisateurDistant(bddId, nom);
 			u.connecter();
-			utilisateurs.add(u);
+			utilisateurs.put(u.getNom(), u);
 			return u;
 		} catch (RemoteException e) {
 			e.printStackTrace();

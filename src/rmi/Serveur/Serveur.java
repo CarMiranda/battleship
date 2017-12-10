@@ -9,31 +9,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-
-
 import com.mysql.jdbc.Connection;
-/**
- * @author Carlos MIRANDA
- * @version 1.0.0
- * Dec 5, 2017
- */
 
-/**
- * @author Carlos MIRANDA
- * @since 1.0.0
- * Dec 5, 2017
- */
 public class Serveur {
 	
-	public static final String HOST;
-	public static final int PORT;
+	/*public static final String HOST;
+	public static final int PORT;*/
 	private static Connection connexionSQL;
 	private static Properties proprietesConnexion;
 	static {
-		HOST = "localhost";
-		PORT = 5001;
+		/*HOST = "localhost";
+		PORT = 5002;
 		System.setProperty("java.rmi.server.hostname", HOST);
-		System.setProperty("java.rmi.server.port", Integer.toString(PORT));
+		System.setProperty("java.rmi.server.port", Integer.toString(PORT));*/
 		connexionSQL = null;
 		proprietesConnexion = new Properties();
 		proprietesConnexion.put("user", "project");
@@ -43,15 +31,17 @@ public class Serveur {
 	
 	public static Connection initConnexionSQL() {
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
 			connexionSQL = (Connection) DriverManager.getConnection(
 					"jdbc:mysql://localhost:3306/battleship",
 					proprietesConnexion
 			);
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 		
+		System.out.println("Connexion SQL établie correctement.");
 		return connexionSQL;
 	}
 	
@@ -64,7 +54,7 @@ public class Serveur {
 			connexionSQL.close();
 		} catch (SQLException e) {
 			if (connexionSQL == null) {
-				System.out.println("Une tentative de fermeture de connexion SQL a échoué.");
+				System.out.println("Tentative de fermeture de connexion SQL échouée.");
 				System.exit(1);
 			} else {
 				e.printStackTrace();
@@ -75,7 +65,9 @@ public class Serveur {
 	public static void main(String args[]) {
 		// Initialisation de toutes les ressources
 		try {
-			LocateRegistry.createRegistry(PORT);
+			//LocateRegistry.createRegistry(PORT);
+			LocateRegistry.createRegistry(1099);
+			System.setSecurityManager(new SecurityManager());
 			initConnexionSQL();
 			UtilisateurDistant.initUtilisateurs();
 			Authentification.initAuthentification();
@@ -86,10 +78,8 @@ public class Serveur {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			//fermerConnexionSQL();

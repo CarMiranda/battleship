@@ -32,6 +32,9 @@ public class Carte extends UnicastRemoteObject implements ICarte {
 	
 	@Override
 	public Difficulte getDifficulte() throws RemoteException { return difficulte; }
-	
-	public Iterator<ICarreauCarte> iterator() { return carte.iterator(); }
+
+	@Override
+	public Iterator<ICarreauCarte> iterator() throws RemoteException {
+		return carte.iterator();
+	}
 }

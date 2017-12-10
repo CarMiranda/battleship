@@ -5,8 +5,8 @@ import java.rmi.RemoteException;
 
 public interface IJeu extends Remote {
 	
-	// Méthodes à distance
 	IJoueur getJoueur() throws RemoteException;
 	IJoueur getAdversaire() throws RemoteException;
+	void jouer() throws RemoteException;
 	
 }
