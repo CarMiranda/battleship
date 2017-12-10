@@ -33,7 +33,6 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 		IUtilisateurDistant u = UtilisateurDistant.getUtilisateur(nom);
 		if (u != null && u.estConnecte()) return false;
 		if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
-			System.out.println("Tentative d'authentification de " + nom + " avec mot de passe " + motDePasse);
 			return validate(nom, motDePasse);
 		}
 		throw new IllegalArgumentException();
@@ -74,7 +73,7 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			rs = stmt.getGeneratedKeys();
 			rs.next();
-			UtilisateurDistant.addUtilisateurDistant(rs.getInt("id"), nom); 
+			UtilisateurDistant.addUtilisateurDistant(rs.getInt(1), nom); 
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

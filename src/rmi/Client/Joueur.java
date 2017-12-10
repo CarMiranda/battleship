@@ -38,9 +38,7 @@ public class Joueur extends UnicastRemoteObject implements IJoueur {
 	public String getNom() throws RemoteException { return joueurDistant.getNom(); }
 
 	@Override
-	public void placerFlotte() throws RemoteException {
-		
-	}
+	public void placerFlotte() throws RemoteException {}
 
 	@Override
 	public ICarreauCarte getAttaque() throws RemoteException {

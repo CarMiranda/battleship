@@ -54,5 +54,5 @@ public class Bateau extends UnicastRemoteObject implements IBateau {
 	public String getNom() throws RemoteException { return this.nom; }
 	
 	@Override
-	public Iterator<IPartieBateau> iterator() { return this.bateau.iterator(); }
+	public Iterator<IPartieBateau> iterator() throws RemoteException { return this.bateau.iterator(); }
 }

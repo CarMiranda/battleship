@@ -12,17 +12,7 @@ import java.util.Properties;
 
 
 import com.mysql.jdbc.Connection;
-/**
- * @author Carlos MIRANDA
- * @version 1.0.0
- * Dec 5, 2017
- */
 
-/**
- * @author Carlos MIRANDA
- * @since 1.0.0
- * Dec 5, 2017
- */
 public class Serveur {
 	
 	public static final String HOST;
@@ -31,7 +21,7 @@ public class Serveur {
 	private static Properties proprietesConnexion;
 	static {
 		HOST = "localhost";
-		PORT = 5001;
+		PORT = 5002;
 		System.setProperty("java.rmi.server.hostname", HOST);
 		System.setProperty("java.rmi.server.port", Integer.toString(PORT));
 		connexionSQL = null;
@@ -52,6 +42,7 @@ public class Serveur {
 			System.exit(1);
 		}
 		
+		System.out.println("Connexion SQL établie correctement.");
 		return connexionSQL;
 	}
 	
@@ -64,7 +55,7 @@ public class Serveur {
 			connexionSQL.close();
 		} catch (SQLException e) {
 			if (connexionSQL == null) {
-				System.out.println("Une tentative de fermeture de connexion SQL a échoué.");
+				System.out.println("Tentative de fermeture de connexion SQL échouée.");
 				System.exit(1);
 			} else {
 				e.printStackTrace();
@@ -86,10 +77,8 @@ public class Serveur {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			//fermerConnexionSQL();

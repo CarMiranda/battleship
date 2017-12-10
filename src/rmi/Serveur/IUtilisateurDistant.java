@@ -3,7 +3,6 @@ package rmi.Serveur;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
-import java.util.Set;
 
 import modele.Difficulte;
 
@@ -11,7 +10,7 @@ import rmi.Client.IUtilisateur;
 
 public interface IUtilisateurDistant extends Remote {
 
-	Set<IUtilisateurDistant> getUtilisateurs() throws RemoteException;
+	Map<String, IUtilisateurDistant> getUtilisateurs() throws RemoteException;
 	Map<String, IEntree> getStatistiques() throws RemoteException;
 	IJeuDistant commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte) throws RemoteException;
 	void deconnecter() throws RemoteException;
@@ -27,4 +26,6 @@ public interface IUtilisateurDistant extends Remote {
 	int getDefaites(String adversaire) throws RemoteException;
 	void ajouterEntree(IEntree entree) throws RemoteException;
 	int getBddId() throws RemoteException;
+	IUtilisateur getUtilisateurLocal() throws RemoteException;
+	void informerConnection(IUtilisateurDistant utilisateur) throws RemoteException;
 }
