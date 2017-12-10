@@ -13,8 +13,9 @@ public class Test {
 	
 	
 	public static void main(String[] args) {
-		IHMMarche = new FenetreJeu();
-		FenetreLogin fenetre = new FenetreLogin();
+		//IHMMarche = new FenetreJeu();
+		//FenetreLogin fenetre = new FenetreLogin();
+		
 		
 	}
 }

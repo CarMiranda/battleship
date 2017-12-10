@@ -31,5 +31,22 @@ public class Flotte extends UnicastRemoteObject implements IFlotte {
 		return flotte.iterator();
 	}
 
+	public int getNbBateauxNonCoules() throws RemoteException{
+		int counter = 0;
+		for (IBateau b : flotte) {
+			if (!b.estCoule())
+				counter++;
+		}
+		return counter;
+	}
+	
+	public int getNbBateauxNonCoules(TypesBateau ship) throws RemoteException{
+		int counter = 0;
+		for (IBateau b : flotte){
+			if (!b.estCoule() && b.getNom().equals(ship.getNom()))
+				counter++;
+		}
+		return counter;
+	}
 }
 
