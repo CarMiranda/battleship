@@ -21,15 +21,10 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	
 	public JeuDistant(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2, Difficulte difficulte)
 			throws RemoteException {
-		if (UtilisateurDistant.getUtilisateur(utilisateur1.getNom()).estConnecte() 
-				&& UtilisateurDistant.getUtilisateur(utilisateur2.getNom()).estConnecte()) {
-			joueur1 = new JoueurDistant(utilisateur1.getNom(), difficulte);
-			joueur2 = new JoueurDistant(utilisateur2.getNom(), difficulte);
-			fini = false;
-			finiParForfait = false;
-		} else {
-			throw new UtilisateurNonConnecteException();
-		}
+		joueur1 = new JoueurDistant(utilisateur1.getNom(), difficulte);
+		joueur2 = new JoueurDistant(utilisateur2.getNom(), difficulte);
+		fini = false;
+		finiParForfait = false;
 	}
 	
 	@Override

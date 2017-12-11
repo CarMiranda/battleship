@@ -1,6 +1,6 @@
 package vue;
 
-import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,57 +11,25 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 
+import modele.Difficulte;
+
 import rmi.Client.IUtilisateur;
 import rmi.Serveur.IUtilisateurDistant;
 import rmi.Serveur.IEntree;
 
-import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.SortedSet;
-import java.util.TreeSet;
-
-
-class MyCellRenderer extends JLabel implements ListCellRenderer<IUtilisateurDistant> {
-
-	private static final long serialVersionUID = 1L;
-	final static ImageIcon connectedIcon = new ImageIcon(ClassLoader.getSystemResource("connected.png"));
-	final static ImageIcon notConnectedIcon = new ImageIcon(ClassLoader.getSystemResource("notConnected.png"));
-	
-	@Override
-	public Component getListCellRendererComponent(
-			JList<? extends IUtilisateurDistant> list, 
-			IUtilisateurDistant value,
-			int index,
-			boolean isSelected,
-			boolean cellHasFocus
-			) {
-		
-		try {
-			setText(value.getNom());
-			setIcon(value.estConnecte() ? connectedIcon : notConnectedIcon);
-			if (isSelected) {
-	            setBackground(list.getSelectionBackground());
-	            setForeground(list.getSelectionForeground());
-	        } else {
-	            setBackground(list.getBackground());
-	            setForeground(list.getForeground());
-	        }
-			setEnabled(list.isEnabled());
-	        setFont(list.getFont());
-	        setOpaque(true);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		
-		return this;
-		
-	}
-}
 
 public class FenetreAccueil extends JFrame {
 	
@@ -70,20 +38,132 @@ public class FenetreAccueil extends JFrame {
 	private final static Font POLICE_SOUSTITRE = new Font("DevanagariMT-Bold",Font.ITALIC,20);
 	
 	private TableModelStats tableStats;
-	private Client client;
+	private final Client client;
+	private MyListModel usersListModel;
 	private JList<IUtilisateurDistant> usersList;
 	
+	private static class MyCellRenderer extends JLabel implements ListCellRenderer<IUtilisateurDistant> {
+
+		private static final long serialVersionUID = 1L;
+		final static ImageIcon connectedIcon = new ImageIcon(ClassLoader.getSystemResource("connected.png"));
+		final static ImageIcon notConnectedIcon = new ImageIcon(ClassLoader.getSystemResource("notConnected.png"));
+		
+		@Override
+		public Component getListCellRendererComponent(
+				JList<? extends IUtilisateurDistant> list, 
+				IUtilisateurDistant value,
+				int index,
+				boolean isSelected,
+				boolean cellHasFocus
+				) {
+			
+			try {
+				setText(value.getNom());
+				setIcon(value.estConnecte() ? connectedIcon : notConnectedIcon);
+				if (isSelected) {
+		            setBackground(list.getSelectionBackground());
+		            setForeground(list.getSelectionForeground());
+		        } else {
+		            setBackground(list.getBackground());
+		            setForeground(list.getForeground());
+		        }
+				setEnabled(list.isEnabled());
+		        setFont(list.getFont());
+		        setOpaque(true);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			
+			return this;
+			
+		}
+	}
+	protected class MyListModel extends DefaultListModel<IUtilisateurDistant> {
+		
+		private SortedSet<IUtilisateurDistant> data = null;
+		private static final long serialVersionUID = 1L;
+		
+		public MyListModel(SortedSet<IUtilisateurDistant> utilisateurs) {
+			super();
+			data = utilisateurs;
+		}
+
+		@Override
+		public IUtilisateurDistant getElementAt(int index) {
+			return (IUtilisateurDistant) data.toArray()[index];
+		}
+
+		@Override
+		public int getSize() {
+			return data.size();
+		}
+		
+		/*public void add(IUtilisateurDistant utilisateur) {
+			data.add(utilisateur);
+			fireContentsChanged(this, 0, getSize());
+		}
+		
+		public void addAll(IUtilisateurDistant[] utilisateurs) {
+			Collection<IUtilisateurDistant> c = Arrays.asList(utilisateurs);
+			data.addAll(c);
+			fireContentsChanged(this, 0, getSize());
+		}*/
+		
+	}
+	private class TableModelStats extends AbstractTableModel {
+		
+		private static final long serialVersionUID = 1L;
+		
+		private Object[] stats;
+		private String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées",
+		        "Parties perdues"};
+
+		public TableModelStats(IUtilisateur u) throws RemoteException{
+			this.stats = u.getStatistiques().values().toArray();
+		}
+
+		@Override
+		public int getColumnCount() {
+			return this.columnNames.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			return this.stats.length;
+		}
+
+		@Override
+		public String getValueAt(int ligne, int colonne) {
+			try {
+				switch (colonne) {
+				case 0:
+						return ((IEntree) stats[ligne]).getNom();
+				case 1 :
+						return String.valueOf(((IEntree) stats[ligne]).getDefaites() + ((IEntree) stats[ligne]).getVictoires());
+				case 2 :
+						return String.valueOf(((IEntree) stats[ligne]).getVictoires());
+				case 3 :
+						return String.valueOf(((IEntree) stats[ligne]).getDefaites());
+					default:
+						return "###";
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
 	public void actualiserUtilisateurs() {
 		usersList.repaint();
 	}
 	
-	public FenetreAccueil(Client client) throws RemoteException {
-		super("Battaille Navale");
+	
+	public FenetreAccueil(final Client client) throws RemoteException {
+		super("Bataille Navale");
 		
 		this.client = client;
 		final IUtilisateur user = client.getUtilisateur();
 		this.tableStats = new TableModelStats(user);
->>>>>>> reseau
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		/*Creation du panel affichage des statistiques de jeu */
@@ -102,14 +182,30 @@ public class FenetreAccueil extends JFrame {
 		usersPanel.add(label, BorderLayout.NORTH);
 
 		usersList = new JList<IUtilisateurDistant>();
-		Object[] tmp = user.getUtilisateurs().values().toArray();
+		Object[] tmp = client.getUtilisateurs().toArray();
 		IUtilisateurDistant[] userNames = new IUtilisateurDistant[tmp.length];
 		for (int i = 0; i < tmp.length; i += 1) {
 			userNames[i] = (IUtilisateurDistant) tmp[i];
 		}
+		usersListModel = new MyListModel(client.getUtilisateurs());
 		usersList.setCellRenderer(new MyCellRenderer());
-		usersList.setModel(new MyListModel());
-		usersList.setListData(userNames);
+		usersList.setModel(usersListModel);
+		
+		MouseListener mouseListener = new MouseAdapter() {
+			public void mouseClicked(MouseEvent mouseEvent) {
+				JList<IUtilisateurDistant> theList = (JList<IUtilisateurDistant>) mouseEvent.getSource();
+				int index = theList.locationToIndex(mouseEvent.getPoint());
+				if (index >= 0) {
+					IUtilisateurDistant iud = (IUtilisateurDistant) theList.getModel().getElementAt(index);
+					try {
+						client.getUtilisateur().commencerJeu(iud, Difficulte.DIFFICILE);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		usersList.addMouseListener(mouseListener);
 		usersPanel.add(usersList, BorderLayout.CENTER);
 		
 		/*Creation titre pour la fenetre d'accueil*/
@@ -138,125 +234,5 @@ public class FenetreAccueil extends JFrame {
 		pack();
 		this.setVisible(true);
 	}
-	
-	class MyComparator implements Comparator<IUtilisateurDistant> {
-		@Override
-		public int compare(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2) {
-			try {
-				if (utilisateur1.estConnecte() == utilisateur2.estConnecte()) {
-					// Les deux utilisateurs ont même état de connexion donc l'ordre est lexicographique
-					return utilisateur1.getNom().compareTo(utilisateur2.getNom());
-				} else {
-					if (utilisateur1.estConnecte()) {
-						// Le premier utilisateur est connecte, il sera donc prioritaire
-						return 1;
-					} else {
-						// Le deuxieme utilisateur est connecte, il sera donc prioritaire
-						return -1;
-					}
-				}
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-			return 0;
-		}
-	}
-		
-	class MyListModel extends AbstractListModel<IUtilisateurDistant> {
-		
-		private SortedSet<IUtilisateurDistant> data = null;
-		private static final long serialVersionUID = 1L;
-		
-		public MyListModel() {
-			super();
-			data = new TreeSet<IUtilisateurDistant>(new MyComparator());
-		}
-
-		@Override
-		public IUtilisateurDistant getElementAt(int index) {
-			return (IUtilisateurDistant) data.toArray()[index];
-		}
-
-		@Override
-		public int getSize() {
-			return data.size();
-		}
-		
-		public void add(IUtilisateurDistant utilisateur) {
-			data.add(utilisateur);
-			fireContentsChanged(this, 0, getSize() - 1);
-		}
-		
-		public void addAll(IUtilisateurDistant[] utilisateurs) {
-			Collection<IUtilisateurDistant> c = Arrays.asList(utilisateurs);
-			data.addAll(c);
-			fireContentsChanged(this, 0, getSize());
-		}
-		
-	}
-
-		@SuppressWarnings("serial")
-		private class TableModelStats extends AbstractTableModel{
-			//attribtut
-			
-			private Object[] stats;
-			private String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées",
-			        "Parties perdues"};
-
-			//constructeur
-			public TableModelStats(IUtilisateur u) throws RemoteException{
-				
-				this.stats = u.getStatistiques().values().toArray();
-			}
-
-			@Override
-			public int getColumnCount() {
-				// TODO Auto-generated method stub
-				return this.columnNames.length;
-			}
-
-			@Override
-			public int getRowCount() {
-				// TODO Auto-generated method stub
-				return this.stats.length;
-			}
-
-			@Override
-			public String getValueAt(int ligne, int colonne) {
-				// TODO Auto-generated method stub
-				switch (colonne) {
-				case 0:
-					try {
-						return ((IEntree) stats[ligne]).getNom();
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				case 1 :
-					try {
-						return String.valueOf(((IEntree) stats[ligne]).getDefaites() + ((IEntree) stats[ligne]).getVictoires());
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				case 2 :
-					try {
-						return String.valueOf(((IEntree) stats[ligne]).getVictoires());
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				case 3 :
-					try {
-						return String.valueOf(((IEntree) stats[ligne]).getDefaites());
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					default:
-						return "###";
-				}
-			}
-		}
 }
 

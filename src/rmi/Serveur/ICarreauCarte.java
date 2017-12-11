@@ -1,8 +1,9 @@
 package rmi.Serveur;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface ICarreauCarte {
+public interface ICarreauCarte extends Remote {
 
 	boolean attaquer() throws RemoteException;
 	boolean contientBateau() throws CarreauUtiliseException, RemoteException;

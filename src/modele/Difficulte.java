@@ -7,7 +7,7 @@ package modele;
 public enum Difficulte {
 	FACILE(5,6),
 	MOYEN(7,8), 
-	DIFFICILE(9,10);
+	DIFFICILE(10,10);
 	
 	public final int HAUTEUR, LARGEUR;
 	

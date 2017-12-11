@@ -6,9 +6,6 @@ import rmi.Serveur.ICarreauCarte;
 
 public class CarreauCarteVue extends JLabel{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public final ICarreauCarte carreauCarte;
 	

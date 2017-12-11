@@ -10,4 +10,5 @@ public interface IFlotte extends Remote {
 	int getNbBateauxNonCoules() throws RemoteException;
 	int getNbBateauxNonCoules(TypesBateau ship) throws RemoteException;
 	Iterator<IBateau> iterator() throws RemoteException;
+	int getNbBateaux(TypesBateau ship) throws RemoteException;
 }

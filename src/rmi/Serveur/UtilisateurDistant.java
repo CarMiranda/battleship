@@ -33,28 +33,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	
 	static {
 		serialVersionUID = 1255597867363756474L;
-		utilisateurs = /*new TreeSet<IUtilisateurDistant>(new Comparator<IUtilisateurDistant>() {
-			@Override
-			public int compare(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2) {
-				try {
-					if (utilisateur1.estConnecte() == utilisateur2.estConnecte()) {
-						// Les deux utilisateurs ont même état de connexion donc l'ordre est lexicographique
-						return utilisateur1.getNom().compareTo(utilisateur2.getNom());
-					} else {
-						if (utilisateur1.estConnecte()) {
-							// Le premier utilisateur est connecte, il sera donc prioritaire
-							return 1;
-						} else {
-							// Le deuxieme utilisateur est connecte, il sera donc prioritaire
-							return -1;
-						}
-					}
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-				return 0;
-			}
-		})*/ new HashMap<String, IUtilisateurDistant>();
+		utilisateurs = new HashMap<String, IUtilisateurDistant>();
 	}
 	
 	public UtilisateurDistant(int bddId, String nom)
@@ -175,45 +154,46 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	 * @return une instance distante du jeu
 	 */
 	@Override
-	public IJeuDistant commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte) throws RemoteException {
-		if (!utilisateur.estConnecte()) {
-			throw new UtilisateurNonConnecteException();
-		}
-		if (jeux.containsKey(nom + utilisateur.getNom()) || jeux.containsKey(utilisateur.getNom() + nom)) return null;
-		IJeuDistant jeu = new JeuDistant(this, utilisateur, difficulte);
-		jeux.put(nom + utilisateur.getNom(), jeu);
-		utilisateur.notifierJeu(this, jeu);
-		return jeu;
+	public IJeuDistant commencerJeu(IUtilisateurDistant adversaire, Difficulte difficulte) throws RemoteException {
+		System.out.println(nom + " lance une partie contre " + adversaire.getNom());
+		if (!adversaire.estConnecte()) throw new UtilisateurNonConnecteException();
+		if (jeux.containsKey(nom + adversaire.getNom()) || jeux.containsKey(adversaire.getNom() + nom)) return null;
+		System.out.println("Jeu valide, création du jeu en cours...");
+		IJeuDistant jeuDistant = new JeuDistant(this, adversaire, difficulte);
+		jeux.put(nom + adversaire.getNom(), jeuDistant);
+		adversaire.notifierJeu(this, jeuDistant);
+		notifierJeu(adversaire, jeuDistant);
+		return null;
 	}
 
 	@Override
 	public void deconnecter() throws RemoteException {
+		connecte = false;
 		for (IUtilisateurDistant iud : utilisateurs.values()) {
 			if (iud != this)
-			iud.informerConnection(this);
+			iud.informerConnection(this, false);
 		}
-		connecte = false;
 		setUtilisateurLocal(null);
 	}
 	
 	@Override
-	public void informerConnection(IUtilisateurDistant utilisateur) throws RemoteException {
+	public void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau)
+			throws RemoteException {
 		if (utilisateurLocal != null)
-			utilisateurLocal.informerConnection(utilisateur);
+			utilisateurLocal.informerConnection(utilisateur, estNouveau);
 	}
 	
-	public void connecter() throws RemoteException {
+	public void connecter(boolean estNouveau) throws RemoteException {
+		connecte = true;
 		for (IUtilisateurDistant iud : utilisateurs.values()) {
 			if (iud != this)
-			iud.informerConnection(this);
+			iud.informerConnection(this, estNouveau);
 		}
-		connecte = true;
 	}
 	
 	public static IUtilisateurDistant addUtilisateurDistant(int bddId, String nom) {
 		try {
 			IUtilisateurDistant u = new UtilisateurDistant(bddId, nom);
-			u.connecter();
 			utilisateurs.put(u.getNom(), u);
 			return u;
 		} catch (RemoteException e) {
@@ -247,5 +227,16 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	@Override
 	public void ajouterEntree(IEntree entree) throws RemoteException {
 		statistiques.put(entree.getNom(), entree);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof IUtilisateurDistant)
+			try {
+				return this.nom.equals(((IUtilisateurDistant)o).getNom());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		return false;
 	}
 }

@@ -11,11 +11,13 @@ public class Bateau extends UnicastRemoteObject implements IBateau {
 	private static final long serialVersionUID = 8080164946147281260L;
 	private final int taille;
 	private final String nom;
+	private final TypesBateau type;
 	private boolean estCoule;
 	private List<IPartieBateau> bateau;
 
 	public Bateau(TypesBateau type) 
 			throws RemoteException {
+		this.type = type;
 		taille = type.getTaille();
 		nom = type.getNom();
 		estCoule = false;
@@ -46,6 +48,9 @@ public class Bateau extends UnicastRemoteObject implements IBateau {
 	
 	@Override
 	public int getTaille() throws RemoteException { return this.taille; }
+	
+	@Override
+	public TypesBateau getType() throws RemoteException { return this.type; }
 	
 	@Override
 	public List<IPartieBateau> getBateau() throws RemoteException { return this.bateau; }

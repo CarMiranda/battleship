@@ -15,13 +15,14 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import rmi.Serveur.ICarte;
+import rmi.Serveur.ICarreauCarte;
 
 public class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
 	private final ICarte map;
 	private JPanel pane1 = new JPanel(new BorderLayout());
-	URL url = GrilleIHM.class.getResource("sea.gif");
+	URL url = ClassLoader.getSystemResource("sea.gif");
 	private Icon icon = new ImageIcon(url);
 	private JLabel label = new JLabel(icon);
 	
@@ -38,7 +39,7 @@ public class GrilleIHM extends JLayeredPane {
 		pane1.setBounds(0, 0, 512, 512);
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				final CarreauCarteVue seaSquareView = new CarreauCarteVue(map.getCarreauCarte(j, i)); //x = cols et y = rows
+				CarreauCarteVue seaSquareView = new CarreauCarteVue((ICarreauCarte)map.getCarreauCarte(j, i)); //x = cols et y = rows
 				seaSquareView.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 				pane2.add(seaSquareView);
 			}

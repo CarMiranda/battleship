@@ -11,21 +11,12 @@ import rmi.Serveur.IUtilisateurDistant;
 public class Client {
 	
 	public static String REMOTEHOST;
-	/*public static int REMOTEPORT, PORT;*/
-	static {
-		/*REMOTEHOST = "localhost";
-		REMOTEPORT = 5002;
-		PORT = 5002;*/
-		//System.setProperty("java.rmi.server.hostname", REMOTEHOST);
-		//System.setProperty("java.rmi.server.port", Integer.toString(PORT));
-			
-	}
 	
 	private FenetreLogin fl;
 	private FenetreAccueil fa;
 	//private FenetreJeu fj;
 	private IUtilisateur utilisateur;
-	private Map<String, IUtilisateurDistant> utilisateurs;	
+	private ListeUtilisateurs utilisateurs;	
 	
 	public Client(String remoteHost) {
 		super();
@@ -35,13 +26,15 @@ public class Client {
 	
 	public void setUtilisateurs() {
 		try {
-			this.utilisateurs = new WeakHashMap<String, IUtilisateurDistant>(utilisateur.getUtilisateurs());
+			Map<String, IUtilisateurDistant> utilisateursWeak = new WeakHashMap<String, IUtilisateurDistant>(utilisateur.getUtilisateurs());
+			utilisateurs = new ListeUtilisateurs();
+			utilisateurs.addAll(utilisateursWeak.values());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public Map<String, IUtilisateurDistant> getUtilisateurs() {
+	public ListeUtilisateurs getUtilisateurs() {
 		return utilisateurs;
 	}
 	
@@ -70,8 +63,14 @@ public class Client {
 		client.showLogin();
 	}
 
-	public void actualiserUtilisateurs() {
-		this.fa.actualiserUtilisateurs();		
+	public void actualiserUtilisateurs(IUtilisateurDistant utilisateurDistant, boolean estNouveau) {
+		if (estNouveau) {
+			utilisateurs.add(utilisateurDistant);	
+		} else {
+			utilisateurs.update(utilisateurDistant);
+		}
+		fa.actualiserUtilisateurs();
 	}
+	
 
 }

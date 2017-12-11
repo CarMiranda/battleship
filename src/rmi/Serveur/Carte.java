@@ -27,7 +27,13 @@ public class Carte extends UnicastRemoteObject implements ICarte {
 	
 	@Override
 	public ICarreauCarte getCarreauCarte(int x, int y) throws RemoteException {
-		return carte.get(carte.indexOf(new Coordonnees(x, y)));
+		try {
+			return carte.get(carte.indexOf(new Coordonnees(x, y)));
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println(x + ", " + y);
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Override

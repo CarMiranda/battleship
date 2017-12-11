@@ -14,5 +14,6 @@ public interface IBateau extends Remote {
 	List<IPartieBateau> getBateau() throws RemoteException;
 	String getNom() throws RemoteException;
 	Iterator<IPartieBateau> iterator() throws RemoteException;
+	TypesBateau getType() throws RemoteException;
 	
 }

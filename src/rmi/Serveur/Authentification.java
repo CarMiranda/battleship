@@ -8,6 +8,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+
+import modele.UtilisateurInconnuException;
+
 import com.mysql.jdbc.Connection;
 
 public class Authentification extends UnicastRemoteObject implements IAuthentification {
@@ -22,7 +25,7 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 	public static void initAuthentification()
 			throws RemoteException, AlreadyBoundException {
 		Authentification auth = new Authentification();
-		Registry registry = LocateRegistry.getRegistry(/*Serveur.PORT*/);
+		Registry registry = LocateRegistry.getRegistry();
 		registry.bind("auth", auth);
 		System.out.println("Service d'authentification initialisé correctement.");
 	}
@@ -32,17 +35,22 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 			throws RemoteException {
 		IUtilisateurDistant u = UtilisateurDistant.getUtilisateur(nom);
 		if (u != null && u.estConnecte()) return false;
-		if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
-			return validate(nom, motDePasse);
-		}
+			if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
+				return validate(nom, motDePasse);
+			}
+		
 		throw new IllegalArgumentException();
 	}
 
 	@Override
 	public boolean inscription(String nom, String motDePasse)
 			throws RemoteException {
-		if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
-			return add(nom, motDePasse);
+		try {
+			if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty()) && UtilisateurDistant.getUtilisateur(nom) == null) {
+				return add(nom, motDePasse);
+			}
+		} catch (UtilisateurInconnuException e) {
+			
 		}
 		throw new IllegalArgumentException();
 	}

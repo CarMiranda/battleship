@@ -1,16 +1,7 @@
-/**
- * 
- */
 package vue;
-
-/**
- * @author Jorge OCHOA
- *
- */
 
 import java.awt.BorderLayout; 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -19,29 +10,20 @@ import java.net.URL;
 import java.rmi.RemoteException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import rmi.Client.IJeu;
 import rmi.Serveur.TypesBateau;
 
-
-
-
-@SuppressWarnings("serial")
 public class FenetreJeu extends javax.swing.JFrame {
-	
+
+	private static final long serialVersionUID = 1L;
+
 	/*Cette methode permet de redimensionner une image*/
 	private static ImageIcon resize(ImageIcon imageIcon){
 		Image image = imageIcon.getImage(); // transform it 
@@ -83,55 +65,55 @@ public class FenetreJeu extends javax.swing.JFrame {
 		
 		
 		//Chargement des images
-		URL url = FenetreJeu.class.getResource("carrier.png");
+		URL url = ClassLoader.getSystemResource("carrier.png");
 		ImageIcon pAvionsImag = resize(new ImageIcon(url));
 		
-		url = FenetreJeu.class.getResource("submarine.gif");
+		url = ClassLoader.getSystemResource("submarine.gif");
 		ImageIcon sousMarinImag = resize(new ImageIcon(url));
 		
-		url = FenetreJeu.class.getResource("battleship.jpg");
+		url = ClassLoader.getSystemResource("battleship.jpg");
 		ImageIcon croiseurImag = resize(new ImageIcon(url));
 		
-		url = FenetreJeu.class.getResource("destroyer.png");
+		url = ClassLoader.getSystemResource("destroyer.png");
 		ImageIcon torpilleurImag = resize(new ImageIcon(url));
 		
-		url = FenetreJeu.class.getResource("battleship2.jpg");
+		url = ClassLoader.getSystemResource("battleship2.jpg");
 		ImageIcon contreTorpImag = resize(new ImageIcon(url));
 		
-		url = FenetreJeu.class.getResource("cruiser.png");
+		url = ClassLoader.getSystemResource("cruiser.png");
 		ImageIcon cuirasseImag = resize(new ImageIcon(url));
 		
 		//Creation d'un pannel pour affiché la flotte du jouer
 		JPanel flotte = new JPanel();
 		flotte.setLayout(new GridLayout(nbTypesDeBateaux,2));
 		flotte.add(new JLabel(pAvionsImag));
-		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateauxNonCoules(TypesBateau.PORTEAVIONS)));
+		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateaux(TypesBateau.PORTEAVIONS)));
 		flotte.add(new JLabel(sousMarinImag));
-		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateauxNonCoules(TypesBateau.SOUSMARIN)));
+		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateaux(TypesBateau.SOUSMARIN)));
 		flotte.add(new JLabel(croiseurImag));
-		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateauxNonCoules(TypesBateau.CROISEUR)));
+		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateaux(TypesBateau.CROISEUR)));
 		flotte.add(new JLabel(torpilleurImag));
-		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateauxNonCoules(TypesBateau.TORPILLEUR)));
+		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateaux(TypesBateau.TORPILLEUR)));
 		flotte.add(new JLabel(contreTorpImag));
-		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateauxNonCoules(TypesBateau.CONTRETORPILLEUR)));
+		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateaux(TypesBateau.CONTRETORPILLEUR)));
 		flotte.add(new JLabel(cuirasseImag));
-		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateauxNonCoules(TypesBateau.CUIRASSE)));
+		flotte.add(new JLabel("x" + leJeu.getJoueur().getFlotte().getNbBateaux(TypesBateau.CUIRASSE)));
 		
 		//Creation d'un pannel pour afficher la flotte ennemie
 		JPanel flotteEnnemie = new JPanel();
 		flotteEnnemie.setLayout(new GridLayout(nbTypesDeBateaux,2));
 		flotteEnnemie.add(new JLabel(pAvionsImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateauxNonCoules(TypesBateau.PORTEAVIONS)));
+		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.PORTEAVIONS)));
 		flotteEnnemie.add(new JLabel(sousMarinImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateauxNonCoules(TypesBateau.SOUSMARIN)));
+		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.SOUSMARIN)));
 		flotteEnnemie.add(new JLabel(croiseurImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateauxNonCoules(TypesBateau.CROISEUR)));
+		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.CROISEUR)));
 		flotteEnnemie.add(new JLabel(torpilleurImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateauxNonCoules(TypesBateau.TORPILLEUR)));
+		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.TORPILLEUR)));
 		flotteEnnemie.add(new JLabel(contreTorpImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateauxNonCoules(TypesBateau.CONTRETORPILLEUR)));
+		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.CONTRETORPILLEUR)));
 		flotteEnnemie.add(new JLabel(cuirasseImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateauxNonCoules(TypesBateau.CUIRASSE)));
+		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.CUIRASSE)));
 		
 		//Création de la grille qui aura pour but de représenter les cases de la bataille navale
 		JLayeredPane laGrille = new GrilleIHM(leJeu.getJoueur().getCarte());

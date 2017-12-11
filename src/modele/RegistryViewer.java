@@ -7,7 +7,7 @@ import java.rmi.registry.Registry;
 public class RegistryViewer {
   public static void main(String args[]){
     String host = "localhost";
-    int port = 5002;
+    int port = 1099;
     Registry registry;
 	try {
 		registry = LocateRegistry.getRegistry(host, port);
@@ -15,7 +15,6 @@ public class RegistryViewer {
 	        System.out.println(name);
 	    }
 	} catch (RemoteException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
   }    

@@ -17,7 +17,7 @@ public interface IUtilisateurDistant extends Remote {
 	boolean notifierJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
 	String getNom() throws RemoteException;
 	void setUtilisateurLocal(IUtilisateur utilisateur) throws RemoteException;
-	void connecter() throws RemoteException;
+	void connecter(boolean estNouveau) throws RemoteException;
 	boolean estConnecte() throws RemoteException;
 	void finirJeu(String adversaire) throws RemoteException;
 	void ajouterVictoire(String adversaire) throws RemoteException;
@@ -27,5 +27,5 @@ public interface IUtilisateurDistant extends Remote {
 	void ajouterEntree(IEntree entree) throws RemoteException;
 	int getBddId() throws RemoteException;
 	IUtilisateur getUtilisateurLocal() throws RemoteException;
-	void informerConnection(IUtilisateurDistant utilisateur) throws RemoteException;
+	void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException;
 }

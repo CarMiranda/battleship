@@ -32,7 +32,8 @@ public class Flotte extends UnicastRemoteObject implements IFlotte {
 		return flotte.iterator();
 	}
 
-	public int getNbBateauxNonCoules() throws RemoteException{
+	@Override
+	public int getNbBateauxNonCoules() throws RemoteException {
 		int counter = 0;
 		for (IBateau b : flotte) {
 			if (!b.estCoule())
@@ -41,10 +42,21 @@ public class Flotte extends UnicastRemoteObject implements IFlotte {
 		return counter;
 	}
 	
-	public int getNbBateauxNonCoules(TypesBateau ship) throws RemoteException{
+	@Override
+	public int getNbBateauxNonCoules(TypesBateau ship) throws RemoteException {
 		int counter = 0;
 		for (IBateau b : flotte){
-			if (!b.estCoule() && b.getNom().equals(ship.getNom()))
+			if (!b.estCoule() && b.getType() == ship)
+				counter++;
+		}
+		return counter;
+	}
+	
+	@Override
+	public int getNbBateaux(TypesBateau ship) throws RemoteException {
+		int counter = 0;
+		for (IBateau b : flotte){
+			if (b.getType() == ship)
 				counter++;
 		}
 		return counter;

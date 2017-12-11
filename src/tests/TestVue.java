@@ -28,7 +28,7 @@ public class TestVue {
 	
 	
 	public static void main(String[] args) {
-		Client client = new Client("localhost");
+		Client client = new Client(args[0]);
 		Utilisateur user = null;
 		try {
 			user = new Utilisateur("Jorge",client);

@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.Map;
 
 import modele.Difficulte;
@@ -23,17 +24,18 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	private String nom;
 	private IUtilisateurDistant utilisateurDistant;
 	private transient Client client;
-	//private TreeSet<IJeu> jeux;
+	private transient Map<String, IJeu> jeux;
 
 	public Utilisateur(String nom, Client client)
 			throws RemoteException {
 		this.nom = nom;		
 		this.client = client;
+		jeux = new HashMap<String, IJeu>();
 	}
 	
 	@Override
-	public void informerConnection(IUtilisateurDistant utilisateur) throws RemoteException {
-		client.actualiserUtilisateurs();
+	public void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException {
+		client.actualiserUtilisateurs(utilisateur, estNouveau);
 	}
 	
 	@Override
@@ -48,7 +50,7 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 				localRegistry.bind(nom, this);
 				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
 				utilisateurDistant.setUtilisateurLocal(this);
-				utilisateurDistant.connecter();
+				utilisateurDistant.connecter(false);
 				return utilisateurDistant;
 			}
 		} catch (NotBoundException e) {
@@ -71,7 +73,7 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 				localRegistry.bind(nom, this);
 				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
 				utilisateurDistant.setUtilisateurLocal(this);
-				utilisateurDistant.connecter();
+				utilisateurDistant.connecter(true);
 				return utilisateurDistant;
 			}
 		} catch (NotBoundException e) {
@@ -85,17 +87,17 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	@Override
 	public IJeu commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte)
 			throws RemoteException {
-		IJeuDistant jeuDistant = utilisateurDistant.commencerJeu(utilisateur, difficulte);
-		IJeu jeuLocal = new Jeu(jeuDistant, this);
-		utilisateur.getUtilisateurLocal().rejoindreJeu(utilisateurDistant, jeuDistant);
-		return jeuLocal;
+		utilisateurDistant.commencerJeu(utilisateur, difficulte);
+		return null;
 	}
 	
 	@Override
-	public boolean rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu)
+	public IJeu rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu)
 			throws RemoteException {
-		new Jeu(jeu, this);
-		return true;
+		IJeu jeuLocal = new Jeu(jeu, this);
+		jeux.put(utilisateur.getNom(), jeuLocal);
+		jeuLocal.afficher();
+		return null;
 	}
 
 	@Override

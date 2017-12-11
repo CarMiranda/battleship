@@ -13,7 +13,7 @@ import rmi.Serveur.IUtilisateurDistant;
 public interface IUtilisateur extends Remote {
 	
 	// Méthodes à distance
-	boolean rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
+	IJeu rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
 	
 	// Méthodes locales
 	IUtilisateurDistant authentification(String motDePasse) throws RemoteException;
@@ -23,5 +23,5 @@ public interface IUtilisateur extends Remote {
 	void finirUtilisation() throws RemoteException;
 	Map<String, IUtilisateurDistant> getUtilisateurs() throws RemoteException;
 	Map<String, IEntree> getStatistiques() throws RemoteException;
-	void informerConnection(IUtilisateurDistant utilisateur) throws RemoteException;
+	void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException;
 }
