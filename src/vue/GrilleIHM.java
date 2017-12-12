@@ -20,11 +20,12 @@ import rmi.Serveur.ICarreauCarte;
 public class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
-	private final ICarte map;
-	private JPanel pane1 = new JPanel(new BorderLayout());
+	protected final ICarte map;
+	protected JPanel pane1 = new JPanel(new BorderLayout());
+	protected JPanel pane2;
 	URL url = ClassLoader.getSystemResource("sea.gif");
 	private Icon icon = new ImageIcon(url);
-	private JLabel label = new JLabel(icon);
+	protected JLabel label = new JLabel(icon);
 	
 	public GrilleIHM(ICarte carte) throws RemoteException{
 		super();
@@ -33,7 +34,7 @@ public class GrilleIHM extends JLayeredPane {
 		int cols = map.getDifficulte().LARGEUR;
 		
 		this.setPreferredSize(new Dimension(512, 512));
-		JPanel pane2 = new JPanel(new GridLayout(rows, cols));
+		this.pane2 = new JPanel(new GridLayout(rows, cols));
 		pane1.add(label);
 		pane1.setOpaque(true);
 		pane1.setBounds(0, 0, 512, 512);

@@ -138,7 +138,8 @@ public class FenetreJeu extends javax.swing.JFrame {
 		cote_Ennemie.add(South,BorderLayout.SOUTH);
 		
 		//De la meme manière que pour le joueur nous allons mettre en place la carte de l'ennemie
-		JLayeredPane grilleEnnemie = new GrilleIHM(leJeu.getAdversaire().getCarte());
+		//JLayeredPane grilleEnnemie = new GrilleIHM(leJeu.getAdversaire().getCarte());
+		JLayeredPane grilleEnnemie = new GrilleEnnemieIHM(leJeu.getAdversaire().getCarte());
 		cote_Ennemie.add(grilleEnnemie,BorderLayout.CENTER);
 		
 		//On rahoutte tous les panels dasn le pannel principal
