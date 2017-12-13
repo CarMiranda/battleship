@@ -9,5 +9,6 @@ public interface IJeu extends Remote {
 	IJoueur getAdversaire() throws RemoteException;
 	void jouer() throws RemoteException;
 	void afficher() throws RemoteException;
+	void placerFlotte() throws RemoteException;
 	
 }

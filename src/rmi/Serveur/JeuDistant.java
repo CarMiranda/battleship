@@ -17,7 +17,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	private static final long serialVersionUID = 6582546444277100505L;
 	private IJoueurDistant joueur1, joueur2, gagnant, perdant;
 	private IJeu jeuLocal1, jeuLocal2;
-	private boolean fini, finiParForfait;
+	private boolean fini, finiParForfait, commence;
 	
 	public JeuDistant(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2, Difficulte difficulte)
 			throws RemoteException {
@@ -25,6 +25,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		joueur2 = new JoueurDistant(utilisateur2.getNom(), difficulte);
 		fini = false;
 		finiParForfait = false;
+		commence = false;
 	}
 	
 	@Override
@@ -40,31 +41,34 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	@Override
 	public void jouer() throws RemoteException {
 		try {
-			joueur1.placerFlotte();
-			joueur2.placerFlotte();
-			System.out.println("Les joueurs ont placés leurs flottes.");
-			IJoueurDistant joueurCourant = joueur1;
-			while (!joueur1.getFlotte().estDetruite() && !joueur2.getFlotte().estDetruite()
-					&& !joueur1.forfait() && !joueur2.forfait()) {
-				joueurCourant.attaquer(joueurCourant.getAttaque());
+			if (!commence) {
+				commence = true;
+				joueur1.placerFlotte();
+				joueur2.placerFlotte();
+				System.out.println("Les joueurs ont placés leurs flottes.");
+				IJoueurDistant joueurCourant = joueur1;
+				while (!joueur1.getFlotte().estDetruite() && !joueur2.getFlotte().estDetruite()
+						&& !joueur1.forfait() && !joueur2.forfait()) {
+					joueurCourant.attaquer(joueurCourant.getAttaque());
+				}
+				if (joueur1.getFlotte().estDetruite() || joueur1.forfait()) {
+					System.out.println(joueur2.getNom() + " gagne!");
+					finiParForfait = joueur1.forfait();
+					perdant = joueur1;
+					gagnant = joueur2;
+					joueur1.aPerdu(joueur1.forfait());
+					joueur2.aGagne(joueur1.forfait());
+					ajouterResultat(joueur2, joueur1);
+				} else {
+					System.out.println(joueur1.getNom() + " gagne!");
+					perdant = joueur2;
+					gagnant = joueur1;
+					joueur2.aPerdu(joueur2.forfait());
+					joueur1.aGagne(joueur2.forfait());
+					ajouterResultat(joueur1, joueur2);
+				}
+				UtilisateurDistant.getUtilisateur(joueur1.getNom()).finirJeu(joueur2.getNom());
 			}
-			if (joueur1.getFlotte().estDetruite() || joueur1.forfait()) {
-				System.out.println(joueur2.getNom() + " gagne!");
-				finiParForfait = joueur1.forfait();
-				perdant = joueur1;
-				gagnant = joueur2;
-				joueur1.aPerdu(joueur1.forfait());
-				joueur2.aGagne(joueur1.forfait());
-				ajouterResultat(joueur2, joueur1);
-			} else {
-				System.out.println(joueur1.getNom() + " gagne!");
-				perdant = joueur2;
-				gagnant = joueur1;
-				joueur2.aPerdu(joueur2.forfait());
-				joueur1.aGagne(joueur2.forfait());
-				ajouterResultat(joueur1, joueur2);
-			}
-			UtilisateurDistant.getUtilisateur(joueur1.getNom()).finirJeu(joueur2.getNom());
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}	

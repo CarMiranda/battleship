@@ -14,10 +14,12 @@ public class Joueur extends UnicastRemoteObject implements IJoueur {
 
 	private static final long serialVersionUID = -8393983641830143492L;
 	private final IJoueurDistant joueurDistant;
+	private transient IJeu jeu;
 	
-	public Joueur(IJoueurDistant joueurDistant) throws RemoteException {
+	public Joueur(IJoueurDistant joueurDistant, IJeu jeu) throws RemoteException {
 		this.joueurDistant = joueurDistant;
 		this.joueurDistant.setJoueurLocal(this);
+		this.jeu = jeu;
 	}
 	
 	public boolean attaquer(ICarreauCarte cc) throws RemoteException {
@@ -38,7 +40,9 @@ public class Joueur extends UnicastRemoteObject implements IJoueur {
 	public String getNom() throws RemoteException { return joueurDistant.getNom(); }
 
 	@Override
-	public void placerFlotte() throws RemoteException {}
+	public void placerFlotte() throws RemoteException {
+		jeu.placerFlotte();
+	}
 
 	@Override
 	public ICarreauCarte getAttaque() throws RemoteException {

@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 import rmi.Client.IJeu;
+import rmi.Serveur.IBateau;
 import rmi.Serveur.TypesBateau;
 
 public class FenetreJeu extends javax.swing.JFrame {
@@ -33,7 +34,9 @@ public class FenetreJeu extends javax.swing.JFrame {
 	
 	private final static Font POLICE_TITRE = new Font("DevanagariMT-Bold",Font.ITALIC,20);
 
-	IJeu leJeu;	
+	private IJeu leJeu;
+	private GrilleJoueur grilleJoueur;
+	private GrilleIHM grilleEnnemie;
 	
 	public FenetreJeu(IJeu jeu) throws RemoteException {
 		super("Bataille Navale");
@@ -116,8 +119,8 @@ public class FenetreJeu extends javax.swing.JFrame {
 		flotteEnnemie.add(new JLabel("x"+leJeu.getAdversaire().getFlotte().getNbBateaux(TypesBateau.CUIRASSE)));
 		
 		//Création de la grille qui aura pour but de représenter les cases de la bataille navale
-		JLayeredPane laGrille = new GrilleIHM(leJeu.getJoueur().getCarte());
-		cote_Joueur.add(laGrille,BorderLayout.CENTER);
+		grilleJoueur = new GrilleJoueur(leJeu.getJoueur().getCarte());
+		cote_Joueur.add(grilleJoueur,BorderLayout.CENTER);
 
 		//Côté droit de l'écran qui représente le côté où il peut voir les information qu'il a sur son ennemi. Très similaire au côté gauche.
 		JPanel cote_Ennemie = new JPanel();
@@ -138,7 +141,7 @@ public class FenetreJeu extends javax.swing.JFrame {
 		cote_Ennemie.add(South,BorderLayout.SOUTH);
 		
 		//De la meme manière que pour le joueur nous allons mettre en place la carte de l'ennemie
-		JLayeredPane grilleEnnemie = new GrilleIHM(leJeu.getAdversaire().getCarte());
+		grilleEnnemie = new GrilleJoueur(leJeu.getAdversaire().getCarte());
 		cote_Ennemie.add(grilleEnnemie,BorderLayout.CENTER);
 		
 		//On rahoutte tous les panels dasn le pannel principal
@@ -152,9 +155,15 @@ public class FenetreJeu extends javax.swing.JFrame {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		pack();
 		this.setVisible(true);
-		
+	}
+	
+	public void commencerPlacementFlotte() {
+		grilleJoueur.commencerPlacementFlotte();
 	}
 
+	public void setBateauAPlacer(IBateau bateauAPlacer) {
+		grilleJoueur.setBateauAPlacer(bateauAPlacer);
+	}
 		
 }
 

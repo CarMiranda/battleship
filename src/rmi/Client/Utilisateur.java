@@ -97,6 +97,7 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 		IJeu jeuLocal = new Jeu(jeu, this);
 		jeux.put(utilisateur.getNom(), jeuLocal);
 		jeuLocal.afficher();
+		jeuLocal.jouer();
 		return null;
 	}
 

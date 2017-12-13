@@ -26,7 +26,7 @@ public class Bateau extends UnicastRemoteObject implements IBateau {
 	
 	@Override
 	public void placer(List<ICarreauCarte> lcc) throws CarreauUtiliseException, RemoteException {
-		if (!CarreauCarte.aligne(lcc)) throw new IllegalArgumentException();
+		if (!lcc.get(0).aligne(lcc)) throw new IllegalArgumentException();
 		for (ICarreauCarte cc: lcc) {
 			if (cc.contientBateau()) throw new CarreauUtiliseException();
 		}

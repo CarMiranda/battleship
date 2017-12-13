@@ -46,7 +46,7 @@ public class CarreauCarte extends UnicastRemoteObject implements ICarreauCarte {
 	 * @param lsq	Liste de CarreauCarte
 	 * @return si les CarreauCarte sont alignés ou pas
 	 */
-	public static final boolean aligne(List<ICarreauCarte> lcc) {
+	public final boolean aligne(List<ICarreauCarte> lcc) {
 		List<ICoordonnees> lc = new ArrayList<ICoordonnees>(lcc.size());
 		for (ICarreauCarte cc : lcc) {
 			try {

@@ -17,31 +17,30 @@ import javax.swing.JPanel;
 import rmi.Serveur.ICarte;
 import rmi.Serveur.ICarreauCarte;
 
-public class GrilleIHM extends JLayeredPane {
+public abstract class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
-	private final ICarte map;
 	private JPanel pane1 = new JPanel(new BorderLayout());
+	protected JPanel pane2;
 	URL url = ClassLoader.getSystemResource("sea.gif");
 	private Icon icon = new ImageIcon(url);
 	private JLabel label = new JLabel(icon);
 	
-	public GrilleIHM(ICarte carte) throws RemoteException{
+	protected GrilleIHM(ICarte carte) throws RemoteException{
 		super();
-		this.map = carte;
-		int rows = map.getDifficulte().HAUTEUR;
-		int cols = map.getDifficulte().LARGEUR;
+		int rows = carte.getDifficulte().HAUTEUR;
+		int cols = carte.getDifficulte().LARGEUR;
 		
 		this.setPreferredSize(new Dimension(512, 512));
-		JPanel pane2 = new JPanel(new GridLayout(rows, cols));
+		pane2 = new JPanel(new GridLayout(rows, cols));
 		pane1.add(label);
 		pane1.setOpaque(true);
 		pane1.setBounds(0, 0, 512, 512);
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				CarreauCarteVue seaSquareView = new CarreauCarteVue((ICarreauCarte)map.getCarreauCarte(j, i)); //x = cols et y = rows
-				seaSquareView.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-				pane2.add(seaSquareView);
+				CarreauCarteVue ccv = new CarreauCarteVue((ICarreauCarte)carte.getCarreauCarte(j, i)); //x = cols et y = rows
+				ccv.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+				pane2.add(ccv);
 			}
 		}
 		pane2.setOpaque(false);
