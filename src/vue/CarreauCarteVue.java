@@ -29,10 +29,11 @@ public class CarreauCarteVue extends JLabel {
 		
 		this.estAttaque = true;
 		attaqueReussi = this.carreauCarte.attaquer();
+		this.setOpaque(true);
 		if (attaqueReussi){
-			this.setBackground(Color.RED);
+			this.setBackground(Color.red);
 		} else {
-			this.setBackground(Color.GRAY);
+			this.setBackground(Color.blue);
 		}
 		return attaqueReussi;
 	}

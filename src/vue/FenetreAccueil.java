@@ -172,7 +172,7 @@ public class FenetreAccueil extends JFrame {
 		label.setVerticalAlignment(JLabel.CENTER);
 		JPanel statsPanel = new JPanel(new BorderLayout());
 		statsPanel.add(label, BorderLayout.NORTH);
-		statsPanel.add(new JTable(this.tableStats),BorderLayout.WEST);
+		statsPanel.add(new JTable(this.tableStats),BorderLayout.CENTER);
 		
 		/*Creation du panel affichage la liste d'utilisateurs connectes */
 		JLabel label2 = new JLabel("Liste des Utilisateurs");
@@ -214,7 +214,7 @@ public class FenetreAccueil extends JFrame {
 		titre.setVerticalAlignment(JLabel.CENTER);
 		
 		/*On ajoute les differentes composantes sur le panel principal*/
-		mainPanel.add(statsPanel, BorderLayout.WEST);
+		mainPanel.add(statsPanel, BorderLayout.CENTER);
 		mainPanel.add(usersPanel, BorderLayout.EAST);
 		mainPanel.add(titre,BorderLayout.NORTH);
 		

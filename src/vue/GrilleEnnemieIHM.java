@@ -1,15 +1,23 @@
 package vue;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.RemoteException;
 
 import rmi.Serveur.ICarte;
+//import vue.GrilleJoueur.MaCarteControleur;
 
 public class GrilleEnnemieIHM extends GrilleIHM {
 
+	private MonMouseListener ml = new MonMouseListener();
+	
 	public GrilleEnnemieIHM(ICarte carte) throws RemoteException {
 		super(carte);
+		for (Component ccv : pane2.getComponents()) {
+			((CarreauCarteVue) ccv).setMouseListener(ml);
+		}
 		// TODO Auto-generated constructor stub
 	}
 

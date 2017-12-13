@@ -34,7 +34,7 @@ public class FenetreJeu extends javax.swing.JFrame {
 
 	private IJeu leJeu;
 	private GrilleJoueur grilleJoueur;
-	private GrilleEnnemie grilleEnnemie;
+	private GrilleEnnemieIHM grilleEnnemie;
 	
 	public FenetreJeu(IJeu jeu) throws RemoteException {
 		super("Bataille Navale");
@@ -139,7 +139,7 @@ public class FenetreJeu extends javax.swing.JFrame {
 		cote_Ennemie.add(South,BorderLayout.SOUTH);
 		
 		//De la meme manière que pour le joueur nous allons mettre en place la carte de l'ennemie
-		grilleEnnemie = new GrilleJoueur(leJeu.getAdversaire().getCarte());
+		grilleEnnemie = new GrilleEnnemieIHM(leJeu.getAdversaire().getCarte());
 		cote_Ennemie.add(grilleEnnemie,BorderLayout.CENTER);
 		
 		//On rajoutte tous les panels dasn le pannel principal

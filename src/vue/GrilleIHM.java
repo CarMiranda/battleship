@@ -20,7 +20,7 @@ import rmi.Serveur.ICarreauCarte;
 public abstract class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
-	protected final ICarte map;
+	//protected final ICarte map;
 	protected JPanel pane1 = new JPanel(new BorderLayout());
 	protected JPanel pane2;
 	URL url = ClassLoader.getSystemResource("sea.gif");
