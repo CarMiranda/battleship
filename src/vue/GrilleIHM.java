@@ -20,11 +20,12 @@ import rmi.Serveur.ICarreauCarte;
 public abstract class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
-	private JPanel pane1 = new JPanel(new BorderLayout());
+	protected final ICarte map;
+	protected JPanel pane1 = new JPanel(new BorderLayout());
 	protected JPanel pane2;
 	URL url = ClassLoader.getSystemResource("sea.gif");
 	private Icon icon = new ImageIcon(url);
-	private JLabel label = new JLabel(icon);
+	protected JLabel label = new JLabel(icon);
 	
 	protected GrilleIHM(ICarte carte) throws RemoteException{
 		super();

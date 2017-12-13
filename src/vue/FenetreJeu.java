@@ -8,7 +8,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.net.URL;
 import java.rmi.RemoteException;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -16,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
-
 import rmi.Client.IJeu;
 import rmi.Serveur.IBateau;
 import rmi.Serveur.TypesBateau;
@@ -36,7 +34,7 @@ public class FenetreJeu extends javax.swing.JFrame {
 
 	private IJeu leJeu;
 	private GrilleJoueur grilleJoueur;
-	private GrilleIHM grilleEnnemie;
+	private GrilleEnnemie grilleEnnemie;
 	
 	public FenetreJeu(IJeu jeu) throws RemoteException {
 		super("Bataille Navale");
@@ -144,7 +142,7 @@ public class FenetreJeu extends javax.swing.JFrame {
 		grilleEnnemie = new GrilleJoueur(leJeu.getAdversaire().getCarte());
 		cote_Ennemie.add(grilleEnnemie,BorderLayout.CENTER);
 		
-		//On rahoutte tous les panels dasn le pannel principal
+		//On rajoutte tous les panels dasn le pannel principal
 		tableauxPanel.add(flotte);
 		tableauxPanel.add(cote_Joueur);
 		tableauxPanel.add(cote_Ennemie);
