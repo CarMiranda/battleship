@@ -18,7 +18,7 @@ public interface IUtilisateur extends Remote {
 	// Méthodes locales
 	IUtilisateurDistant authentification(String motDePasse) throws RemoteException;
 	IUtilisateurDistant inscription(String motDePasse) throws RemoteException;
-	IJeu commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte) throws RemoteException;
+	void commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte) throws RemoteException;
 	String getNom() throws RemoteException;
 	void finirUtilisation() throws RemoteException;
 	Map<String, IUtilisateurDistant> getUtilisateurs() throws RemoteException;

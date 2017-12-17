@@ -1,80 +1,83 @@
 package rmi.Serveur;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import modele.Difficulte;
 
-import rmi.Client.CarreauUtiliseException;
-import rmi.Client.IJoueur;
+public class JoueurDistant {
 
-public class JoueurDistant extends UnicastRemoteObject implements IJoueurDistant {
-
-	private static final long serialVersionUID = 7877826252900082790L;
 	private final String nom;
-	private final ICarte carte;
-	private final IFlotte flotte;
-	private IJoueur joueurLocal;
+	private final Carte carte;
+	private final Flotte flotte;
+	private Bateau bateauAPlacer;
 
-	public JoueurDistant(String nom, Difficulte difficulte) throws RemoteException {
+	public JoueurDistant(String nom, Difficulte difficulte) {
 		this.nom = nom;
 		carte = new Carte(difficulte);
 		flotte = new Flotte();
 	}
 	
-	public void setJoueurLocal(IJoueur joueurLocal) throws RemoteException {
-		this.joueurLocal = joueurLocal;
+	/**
+	 * 
+	 */
+	public Bateau getBateauAPlacer() {
+		try {
+			bateauAPlacer = flotte.getBateauSuivant();
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+		return bateauAPlacer;
 	}
 	
-	@Override
-	public IJoueur getJoueurLocal() { return joueurLocal; }
-
-	@Override
-	public boolean attaquer(ICarreauCarte cc) throws RemoteException {
-		return cc.attaquer();
+	/**
+	 * Attaque le carreau de la carte associé aux coordonnées passées en paramètre
+	 * @return si on a touché un bateau ou pas
+	 */
+	public boolean attaquer(Coordonnees c) {
+		return carte.toCoordonneesServeur(c).getCarreauCarte().attaquer();
 	}
 
-	@Override
-	public void placerBateau(IBateau bateau, List<ICarreauCarte> lcc) throws CarreauUtiliseException, RemoteException, rmi.Serveur.CarreauUtiliseException {
-		if (bateau.getTaille() != lcc.size()) throw new IllegalArgumentException();
+	/**
+	 * Place un bateau dans la carte du joueur
+	 * @param bateau le bateau a placer
+	 * @param nom
+	 * @param lcc 
+	 */
+	public void placerBateau(String nomBateau, List<Coordonnees> lcc) {
+		Bateau bateau = flotte.getBateau(nomBateau);
+		System.out.println("Bateau " + nomBateau + " se positionne");
 		bateau.placer(lcc);
 	}
 
-	@Override
-	public IFlotte getFlotte() throws RemoteException { return flotte; }
+	/**
+	 * 
+	 * @return la flotte du joueur
+	 */
+	public Flotte getFlotte() { return flotte; }
 
-	@Override
-	public ICarte getCarte() throws RemoteException { return carte; }
+	/**
+	 * 
+	 * @return la carte du joueur
+	 */
+	public Carte getCarte() { return carte; }
 
-	@Override
-	public String getNom() throws RemoteException { return nom; }
-
-	@Override
-	public void placerFlotte() throws RemoteException {
-		joueurLocal.placerFlotte();
+	/**
+	 * 
+	 * @return le nom du joueur
+	 */
+	public String getNom() { return nom; }
+	
+	/**
+	 * 
+	 */
+	public boolean aPerdu() {
+		return flotte.estDetruite();
 	}
-
+	
 	@Override
-	public ICarreauCarte getAttaque() throws RemoteException {
-		return joueurLocal.getAttaque();
-	}
-
-	@Override
-	public boolean forfait() throws RemoteException {
-		// TODO Auto-generated method stub
+	public boolean equals(Object o) {
+		if (o instanceof JoueurDistant) return ((JoueurDistant) o).getNom().equals(nom);
 		return false;
 	}
 
-	@Override
-	public void aGagne(boolean parForfait) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aPerdu(boolean parForfait) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
 }

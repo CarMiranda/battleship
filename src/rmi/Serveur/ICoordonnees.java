@@ -1,15 +1,10 @@
 package rmi.Serveur;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import java.io.Serializable;
 
-/**
- * @author Carlos MIRANDA
- */
-public interface ICoordonnees extends Remote {
-	
-	int getX() throws RemoteException;
-	int getY() throws RemoteException;
-	void setCarreauCarte(ICarreauCarte cc) throws RemoteException;
-	
+public interface ICoordonnees extends Serializable, Cloneable {
+	int getX();
+	int getY();
+	void setX(int x);
+	void setY(int y);
 }

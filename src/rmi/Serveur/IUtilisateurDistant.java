@@ -4,15 +4,13 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-import modele.Difficulte;
-
 import rmi.Client.IUtilisateur;
 
 public interface IUtilisateurDistant extends Remote {
 
 	Map<String, IUtilisateurDistant> getUtilisateurs() throws RemoteException;
 	Map<String, IEntree> getStatistiques() throws RemoteException;
-	IJeuDistant commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte) throws RemoteException;
+	void commencerJeu(IUtilisateurDistant utilisateur, String difficulte) throws RemoteException;
 	void deconnecter() throws RemoteException;
 	boolean notifierJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
 	String getNom() throws RemoteException;

@@ -1,28 +1,22 @@
 package rmi.Serveur;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-
-public class PartieBateau extends UnicastRemoteObject implements IPartieBateau {
+public class PartieBateau {
 	
-	private static final long serialVersionUID = 4860153582005026777L;
 	private boolean touchee;
-	private final ICarreauCarte cc;
+	private final CarreauCarte cc;
 	
-	public PartieBateau(ICarreauCarte cc)
-			throws CarreauUtiliseException, RemoteException {
+	public PartieBateau(CarreauCarte cc) throws CarreauUtiliseException {
 		touchee = false;
 		this.cc = cc;
 		this.cc.lierPartieBateau(this);	
 	}
 	
-	public boolean estTouchee() throws RemoteException { return touchee; }
+	public boolean estTouchee() { return touchee; }
 	
-	public void attaquer() throws RemoteException { touchee = true; }
+	public void attaquer() { touchee = true; }
 	
-	public ICarreauCarte getCarreauCarte() throws RemoteException { return cc; }	
+	public CarreauCarte getCarreauCarte() { return cc; }	
 
-	@Override
 	public boolean equals(Object o) {
 		if (o instanceof PartieBateau) return (PartieBateau) o == this;
 		if (o instanceof CarreauCarte) return cc.equals((CarreauCarte) o);

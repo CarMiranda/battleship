@@ -27,8 +27,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.SortedSet;
 
 public class FenetreAccueil extends JFrame {

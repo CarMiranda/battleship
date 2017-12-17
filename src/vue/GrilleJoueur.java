@@ -1,61 +1,64 @@
 package vue;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import rmi.Client.CarreauUtiliseException;
-import rmi.Client.IJoueur;
+import rmi.Client.Jeu;
 import rmi.Serveur.Coordonnees;
-import rmi.Serveur.IBateau;
-import rmi.Serveur.ICarte;
-import rmi.Serveur.ICarreauCarte;
-import rmi.Serveur.ICoordonnees;
 
 public class GrilleJoueur extends GrilleIHM {
 
 	private static final long serialVersionUID = 1L;
 	private boolean placementFlotte;
-	private IBateau bateauAPlacer;
-	private List<ICarreauCarte> lcc;
-	private IJoueur joueur;
+	private final List<Coordonnees> bateauEnPlacement;
+	private final Jeu jeu;
+	private final ArrayList<CarreauCarteVue> lccv = new ArrayList<>();
+	private boolean isSelecting = false;
+	private int tailleBateauAPlacer;
+	private String nomBateauAPlacer;
 	
 	private class MaCarteControleur implements MouseListener {
-
-		private boolean isSelecting = false;
-		private List<CarreauCarteVue> lccv = new ArrayList<>();
+		
+		public MaCarteControleur() {
+			super();
+		}
 		
 		@Override
 		public void mouseClicked(MouseEvent me) {}
 
 		@Override
 		public void mouseEntered(MouseEvent me) {
-			if (placementFlotte && bateauAPlacer != null) {
-				try {
-					if (isSelecting && lcc.size() < bateauAPlacer.getTaille()) {
-						CarreauCarteVue ccv = (CarreauCarteVue) me.getSource();
-						if (lccv.size() >= 2 && lccv.get(lccv.size() - 2).equals(ccv)) {
-							lcc.remove(lcc.size() - 1);
-							lccv.remove(lccv.size() - 1).setBackground(new JLabel("").getBackground());
-							return;
+			if (placementFlotte) {
+				System.out.print("Choix d'un autre carreau? ");
+				if (isSelecting && bateauEnPlacement.size() >= 1 && bateauEnPlacement.size() < tailleBateauAPlacer) {
+					System.out.println("Oui");
+					CarreauCarteVue ccv = (CarreauCarteVue) me.getSource();
+					if (lccv.size() >= 2 && lccv.get(lccv.size() - 2).equals(ccv)) {
+						bateauEnPlacement.remove(bateauEnPlacement.size() - 1);
+						CarreauCarteVue ccvb = lccv.remove(lccv.size() - 1);
+						ccvb.setBackground(new JLabel("").getBackground());
+						ccvb.setOpaque(false);
+						return;
+					} else {
+						bateauEnPlacement.add(ccv.getCoordonnees());
+						if (Coordonnees.aligne(bateauEnPlacement)) {
+							System.out.println("Ajout du carreau de coordonnées " + ccv.getCoordonnees().getX() + ":" + ccv.getCoordonnees().getY());
+							lccv.add(ccv);
+							System.out.println(lccv.size() + " carreaux sélectionnées.");
+							ccv.setOpaque(true);
+							ccv.setBackground(Color.GRAY);
 						} else {
-							ICarreauCarte cc = ccv.getCarreauCarte();
-							if (cc.aligne(lcc)) {
-								lcc.add(cc);
-								lccv.add(ccv);
-								ccv.setBackground(Color.GRAY);
-							}
+							bateauEnPlacement.remove(ccv.getCoordonnees());
 						}
 					}
-				} catch (RemoteException e) {
-					e.printStackTrace();
+				} else {
+					System.out.println("Non car isSelecting = " + isSelecting + ", bateauEnPlacement.size() = " + bateauEnPlacement.size() + ", tailleBateauAPlacer = " + tailleBateauAPlacer);
 				}
 			}
 		}
@@ -65,11 +68,13 @@ public class GrilleJoueur extends GrilleIHM {
 
 		@Override
 		public void mousePressed(MouseEvent me) {
-			if (placementFlotte && bateauAPlacer != null) {
+			if (placementFlotte) {
 				if (!isSelecting) {
 					isSelecting = true;
 					lccv.add((CarreauCarteVue) me.getSource());
-					lcc.add(lccv.get(0).getCarreauCarte());
+					System.out.println("Selection d'un carreau");
+					bateauEnPlacement.add(lccv.get(0).getCoordonnees());
+					lccv.get(0).setOpaque(true);
 					lccv.get(0).setBackground(Color.GRAY);
 				}
 			}
@@ -77,22 +82,19 @@ public class GrilleJoueur extends GrilleIHM {
 
 		@Override
 		public void mouseReleased(MouseEvent me) {
-			if (placementFlotte && bateauAPlacer != null) {
+			if (placementFlotte) {
 				if (isSelecting) {
 					isSelecting = false;
 					try {
-						joueur.placerBateau(bateauAPlacer, lcc);
+						System.out.println("Placement du bateau " + nomBateauAPlacer);
+						jeu.placerBateau(nomBateauAPlacer, bateauEnPlacement);
 						colorier(lccv);
-						this.notifyAll();
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					} catch (CarreauUtiliseException e) {
-						e.printStackTrace();
 					} catch (rmi.Serveur.CarreauUtiliseException e) {
 						e.printStackTrace();
+					} catch (rmi.Serveur.MauvaiseTailleException e) {
+						decolorier(lccv);
 					}
-					decolorier(lccv);
-					lcc.clear();
+					bateauEnPlacement.clear();
 					lccv.clear();
 				}
 			}			
@@ -102,32 +104,38 @@ public class GrilleJoueur extends GrilleIHM {
 	private void decolorier(List<CarreauCarteVue> lccv) {
 		JLabel lab = new JLabel();
 		for (CarreauCarteVue ccv : lccv) {
+			ccv.setOpaque(false);
 			ccv.setBackground(lab.getBackground());
 		}
 	}
 	
 	private void colorier(List<CarreauCarteVue> lccv) {
 		for (CarreauCarteVue ccv : lccv) {
+			ccv.setOpaque(true);
 			ccv.setBackground(Color.BLACK);
 		}
 	}
 	
-	public GrilleJoueur(ICarte carte) throws RemoteException {
-		super(carte);
-		lcc = new ArrayList<ICarreauCarte>();
+	public void attaquer(Coordonnees coordonneesAttaquees) {
+		CarreauCarteVue ccv = grille.get(coordonneesAttaquees.getX() + coordonneesAttaquees.getY() * jeu.getLargeurCarte());
+		ccv.setOpaque(true);
+		ccv.setBackground(Color.RED);
+	}
+	
+	public GrilleJoueur(int hauteur, int largeur, Jeu jeu) {
+		super(hauteur, largeur);
 		placementFlotte = false;
-		for (Component ccv : pane2.getComponents()) {
-			((CarreauCarteVue) ccv).setMouseListener(new MaCarteControleur());
+		this.jeu = jeu;
+		bateauEnPlacement = new ArrayList<>();
+		for (CarreauCarteVue ccv : grille) {
+			ccv.setMouseListener(new MaCarteControleur());
 		}
 	}
 	
-	public void setBateauAPlacer(IBateau bateauAPlacer) {
-		this.bateauAPlacer = bateauAPlacer;
-		try {
-			System.out.println("Placement du bateau " + bateauAPlacer.getNom());
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void setBateauAPlacer(int taille, String nom) {
+		System.out.println("Placement du bateau " + nom + " de taille " + taille);
+		tailleBateauAPlacer = taille;
+		nomBateauAPlacer = nom;
 	}
 	
 	public void commencerPlacementFlotte() {

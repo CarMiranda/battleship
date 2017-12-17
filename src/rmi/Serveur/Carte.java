@@ -1,20 +1,17 @@
 package rmi.Serveur;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import modele.Difficulte;
 
-public class Carte extends UnicastRemoteObject implements ICarte {
+public class Carte implements Iterable<CarreauCarte> {
 	
-	private static final long serialVersionUID = 2753013296381801190L;
-	private final List<ICarreauCarte> carte;
+	private final List<CarreauCarte> carte;
 	private final Difficulte difficulte;
 	
-	public Carte(Difficulte difficulte) throws RemoteException {
+	public Carte(Difficulte difficulte) {
 		this.difficulte = difficulte;
 		carte = new ArrayList<>(difficulte.HAUTEUR * difficulte.LARGEUR);
 		int i, j;
@@ -25,8 +22,19 @@ public class Carte extends UnicastRemoteObject implements ICarte {
 		}
 	}
 	
-	@Override
-	public ICarreauCarte getCarreauCarte(int x, int y) throws RemoteException {
+	public List<Coordonnees> toCoordonneesServeur(List<Coordonnees> lc) {
+		List<Coordonnees> lcs = new ArrayList<>(lc.size());
+		for (Coordonnees c : lc) {
+			lcs.add(carte.get(c.getX() + c.getY() * difficulte.LARGEUR).getCoordonnees());
+		}
+		return lcs;
+	}
+	
+	public Coordonnees toCoordonneesServeur(Coordonnees c) {
+		return carte.get(c.getX() + c.getY() * difficulte.LARGEUR).getCoordonnees();
+	}
+	
+	public CarreauCarte getCarreauCarte(int x, int y) {
 		try {
 			return carte.get(carte.indexOf(new Coordonnees(x, y)));
 		} catch (IndexOutOfBoundsException e) {
@@ -36,11 +44,7 @@ public class Carte extends UnicastRemoteObject implements ICarte {
 		return null;
 	}
 	
-	@Override
-	public Difficulte getDifficulte() throws RemoteException { return difficulte; }
+	public Difficulte getDifficulte() { return difficulte; }
 
-	@Override
-	public Iterator<ICarreauCarte> iterator() throws RemoteException {
-		return carte.iterator();
-	}
+	public Iterator<CarreauCarte> iterator() { return carte.iterator(); }
 }

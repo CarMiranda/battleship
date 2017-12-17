@@ -28,7 +28,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	private final Map<String, IJeuDistant> jeux;
 	private String nom;
 	private boolean connecte;
-	private IUtilisateur utilisateurLocal;
+	private transient IUtilisateur utilisateurLocal;
 	private int bddId;
 	
 	static {
@@ -154,16 +154,16 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	 * @return une instance distante du jeu
 	 */
 	@Override
-	public IJeuDistant commencerJeu(IUtilisateurDistant adversaire, Difficulte difficulte) throws RemoteException {
+	public void commencerJeu(IUtilisateurDistant adversaire, String diff) throws RemoteException {
 		System.out.println(nom + " lance une partie contre " + adversaire.getNom());
 		if (!adversaire.estConnecte()) throw new UtilisateurNonConnecteException();
-		if (jeux.containsKey(nom + adversaire.getNom()) || jeux.containsKey(adversaire.getNom() + nom)) return null;
+		if (jeux.containsKey(nom + adversaire.getNom()) || jeux.containsKey(adversaire.getNom() + nom)) return;
 		System.out.println("Jeu valide, création du jeu en cours...");
+		Difficulte difficulte = Difficulte.DIFFICILE;
 		IJeuDistant jeuDistant = new JeuDistant(this, adversaire, difficulte);
 		jeux.put(nom + adversaire.getNom(), jeuDistant);
-		adversaire.notifierJeu(this, jeuDistant);
 		notifierJeu(adversaire, jeuDistant);
-		return null;
+		adversaire.notifierJeu(this, jeuDistant);
 	}
 
 	@Override
