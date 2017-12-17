@@ -1,67 +1,47 @@
 package rmi.Client;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import rmi.Serveur.IBateau;
-import rmi.Serveur.ICarreauCarte;
-import rmi.Serveur.ICarte;
-import rmi.Serveur.IFlotte;
-import rmi.Serveur.IJoueurDistant;
+import rmi.Serveur.Coordonnees;
 
-public class Joueur extends UnicastRemoteObject implements IJoueur {
+public class Joueur {
 
-	private static final long serialVersionUID = -8393983641830143492L;
-	private final IJoueurDistant joueurDistant;
-	private transient IJeu jeu;
+	private transient Jeu jeu;
+	private final String nom;
 	
-	public Joueur(IJoueurDistant joueurDistant, IJeu jeu) throws RemoteException {
-		this.joueurDistant = joueurDistant;
-		this.joueurDistant.setJoueurLocal(this);
+	public Joueur(Jeu jeu, String nom) {
 		this.jeu = jeu;
+		this.nom = nom;
 	}
 	
-	public boolean attaquer(ICarreauCarte cc) throws RemoteException {
-		return joueurDistant.attaquer(cc);
+	public void attaquer(Coordonnees cc) {
+		jeu.attaquer(cc);
 	}
 	
-	public void placerBateau(IBateau bateau, List<ICarreauCarte> lcc) throws CarreauUtiliseException, RemoteException, rmi.Serveur.CarreauUtiliseException {
-		joueurDistant.placerBateau(bateau, lcc);
-	}
-	
-	@Override
-	public IFlotte getFlotte() throws RemoteException { return joueurDistant.getFlotte(); }
-
-	@Override
-	public ICarte getCarte() throws RemoteException { return joueurDistant.getCarte(); }
-
-	@Override
-	public String getNom() throws RemoteException { return joueurDistant.getNom(); }
-
-	@Override
-	public void placerFlotte() throws RemoteException {
-		jeu.placerFlotte();
+	/**
+	 * Envoyer les coordonnées du bateau placé
+	 * @param coordonneesBateau
+	 */
+	public void placerBateau(List<Coordonnees> coordonneesBateau) {
+		jeu.placerBateau(nom, coordonneesBateau);
 	}
 
-	@Override
-	public ICarreauCarte getAttaque() throws RemoteException {
+	/**
+	 * Instruire au joueur de placer le bateau
+	 * @param taille
+	 * @param nom
+	 * @param coordonneesBateau
+	 * @return
+	 */
+	public List<Coordonnees> placerBateau(int taille, String nom, List<Coordonnees> coordonneesBateau){
 		return null;
 	}
-
-	@Override
-	public boolean forfait() throws RemoteException {
-		joueurDistant.forfait();
-		return false;
-	}
-
-	@Override
-	public void aGagne(boolean parForfait) throws RemoteException {		
-	}
-
-	@Override
-	public void aPerdu(boolean parForfait) throws RemoteException {		
-	}
+	
+	/**
+	 *
+	 * @return le nom du joueur
+	 */
+	public String getNom() { return nom; }
 
 }
 

@@ -1,63 +1,56 @@
 package rmi.Serveur;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Bateau extends UnicastRemoteObject implements IBateau {
+public class Bateau implements Iterable<PartieBateau> {
 
-	private static final long serialVersionUID = 8080164946147281260L;
 	private final int taille;
 	private final String nom;
 	private final TypesBateau type;
 	private boolean estCoule;
-	private List<IPartieBateau> bateau;
+	private List<PartieBateau> bateau;
 
-	public Bateau(TypesBateau type) 
-			throws RemoteException {
+	public Bateau(TypesBateau type) {
 		this.type = type;
 		taille = type.getTaille();
 		nom = type.getNom();
 		estCoule = false;
-		bateau = new ArrayList<IPartieBateau>(this.taille);
+		bateau = new ArrayList<PartieBateau>();
 	};
 	
-	@Override
-	public void placer(List<ICarreauCarte> lcc) throws CarreauUtiliseException, RemoteException {
-		if (!lcc.get(0).aligne(lcc)) throw new IllegalArgumentException();
-		for (ICarreauCarte cc: lcc) {
-			if (cc.contientBateau()) throw new CarreauUtiliseException();
+	public void placer(List<Coordonnees> lcc) {
+		if (taille != lcc.size()) throw new MauvaiseTailleException();
+		System.out.println("Taille correcte");
+		if (!Coordonnees.aligne(lcc)) throw new IllegalArgumentException();
+		System.out.println("Coordonnées correctes");
+		for (Coordonnees cc: lcc) {
+			if (cc.getCarreauCarte().contientBateau()) throw new CarreauUtiliseException();
 		}
-		for (ICarreauCarte cc: lcc) {
-			this.bateau.add(new PartieBateau(cc));
+		for (Coordonnees cc: lcc) {
+			this.bateau.add(new PartieBateau(cc.getCarreauCarte()));
 		}
+		System.out.println("Bateau " + nom + " placé avec succès");
 	}
 	
-	@Override
-	public boolean estCoule() 
-			throws RemoteException {
-		if (this.estCoule) return true;
-		for (IPartieBateau pb : bateau) {
+	public boolean estCoule() {
+		if (estCoule) { return true; }
+		if (bateau.size() == 0) return false; // Cas où le bateau n'a pas encore été placé
+		for (PartieBateau pb : bateau) {
 			if (!pb.estTouchee()) return false;
 		}
-		this.estCoule = true;
+		estCoule = true;
 		return true;
 	}
 	
-	@Override
-	public int getTaille() throws RemoteException { return this.taille; }
+	public int getTaille() { return this.taille; }
 	
-	@Override
-	public TypesBateau getType() throws RemoteException { return this.type; }
+	public TypesBateau getType() { return this.type; }
 	
-	@Override
-	public List<IPartieBateau> getBateau() throws RemoteException { return this.bateau; }
+	public List<PartieBateau> getBateau() { return this.bateau; }
 	
-	@Override
-	public String getNom() throws RemoteException { return this.nom; }
+	public String getNom() { return this.nom; }
 	
-	@Override
-	public Iterator<IPartieBateau> iterator() throws RemoteException { return this.bateau.iterator(); }
+	public Iterator<PartieBateau> iterator() { return this.bateau.iterator(); }
 }

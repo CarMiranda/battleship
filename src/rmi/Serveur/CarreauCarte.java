@@ -1,25 +1,20 @@
 package rmi.Serveur;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarreauCarte extends UnicastRemoteObject implements ICarreauCarte {
+public class CarreauCarte {
 	
-	private static final long serialVersionUID = -7419420286469375210L;
-	private final ICoordonnees c;
-	private IPartieBateau pb;
+	private final Coordonnees c;
+	private PartieBateau pb;
 	
-	public CarreauCarte(int x, int y)
-			throws RemoteException {
+	public CarreauCarte(int x, int y) {
 		pb = null;
 		c = new Coordonnees(x, y);
 		c.setCarreauCarte(this);
 	}
 	
-	public CarreauCarte(ICoordonnees c)
-			throws RemoteException {
+	public CarreauCarte(Coordonnees c) {
 		this.c = c;
 		this.c.setCarreauCarte(this);
 	}
@@ -29,9 +24,7 @@ public class CarreauCarte extends UnicastRemoteObject implements ICarreauCarte {
 	 * marque la case comme touchée.
 	 * @return si on a touché un bateau
 	 */
-	@Override
-	public boolean attaquer() throws RemoteException {
-		if (pb.estTouchee()) throw new IllegalArgumentException();
+	public boolean attaquer() {
 		if (pb == null) {
 			return false;
 		} else {
@@ -46,20 +39,15 @@ public class CarreauCarte extends UnicastRemoteObject implements ICarreauCarte {
 	 * @param lsq	Liste de CarreauCarte
 	 * @return si les CarreauCarte sont alignés ou pas
 	 */
-	public final boolean aligne(List<ICarreauCarte> lcc) {
-		List<ICoordonnees> lc = new ArrayList<ICoordonnees>(lcc.size());
-		for (ICarreauCarte cc : lcc) {
-			try {
-				lc.add(cc.getCoordonnees());
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
+	public final boolean aligne(List<CarreauCarte> lcc) {
+		List<Coordonnees> lc = new ArrayList<Coordonnees>(lcc.size());
+		for (CarreauCarte cc : lcc) {
+			lc.add(cc.getCoordonnees());
 		}
 		return Coordonnees.aligne(lc);
 	}
 
-	@Override
-	public void lierPartieBateau(PartieBateau partieBateau) throws RemoteException, CarreauUtiliseException {
+	public void lierPartieBateau(PartieBateau partieBateau) throws CarreauUtiliseException {
 		if (this.pb == null) {
 			this.pb = partieBateau;
 		} else {
@@ -67,20 +55,13 @@ public class CarreauCarte extends UnicastRemoteObject implements ICarreauCarte {
 		}
 	}
 	
-	@Override
-	public ICoordonnees getCoordonnees() throws RemoteException { return c; }
+	public Coordonnees getCoordonnees() { return c; }
 	
-	@Override
 	public boolean contientBateau() { return this.pb != null; }
 
-	@Override
 	public boolean equals(Object o) {
-		try {
-			if (o instanceof ICarreauCarte) return c.equals(((ICarreauCarte) o).getCoordonnees());
-			if (o instanceof ICoordonnees) return c.equals((ICoordonnees) o);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		if (o instanceof CarreauCarte) return c.equals(((CarreauCarte) o).getCoordonnees());
+		if (o instanceof Coordonnees) return c.equals((Coordonnees) o);
 		return false;
 	}
 }

@@ -1,65 +1,81 @@
 package rmi.Serveur;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-public class Flotte extends UnicastRemoteObject implements IFlotte {
+public class Flotte implements Iterable<Bateau> {
 
-	private static final long serialVersionUID = 1953553838135245884L;
-	private final HashSet<IBateau> flotte = new HashSet<>(TypesBateau.values().length);
+	private final List<Bateau> flotte;
 	private boolean estDetruite;
+	private short indiceBateauSuivant;
 	
-	public Flotte() throws RemoteException {
+	public Flotte() {
+		flotte = new ArrayList<>(TypesBateau.values().length);
 		for (TypesBateau s : TypesBateau.values()) {
 			flotte.add(new Bateau(s));
 		}
+		indiceBateauSuivant = -1;
+		estDetruite = false;
 	}
 	
-	@Override
-	public boolean estDetruite() throws RemoteException {
+	public Bateau getBateau(String nom) {
+		for (Bateau bateau : this) {
+			if (bateau.getNom().equals(nom)) return bateau;
+		}
+		return null;
+	}
+	
+	public Bateau getBateauSuivant() {
+		indiceBateauSuivant += 1;
+		return flotte.get(indiceBateauSuivant);
+	}
+	
+	public boolean estDetruite() {
 		if (estDetruite) return estDetruite;
-		for (IBateau b : flotte) {
+		for (Bateau b : flotte) {
 			if (!b.estCoule()) return false;
+			System.out.println("Bateau " + b.getNom() + " est coulé.");
 		}
 		estDetruite = true;
 		return estDetruite;
 	}
 
-	@Override
-	public Iterator<IBateau> iterator() throws RemoteException {
+	public Iterator<Bateau> iterator() {
 		return flotte.iterator();
 	}
-
-	@Override
-	public int getNbBateauxNonCoules() throws RemoteException {
+	
+	public int getNbBateaux(boolean nonCoules) {
 		int counter = 0;
-		for (IBateau b : flotte) {
-			if (!b.estCoule())
-				counter++;
+		if (nonCoules) {
+			for (Bateau b : flotte) {
+				if (!b.estCoule()) {
+					counter += 1;
+				}
+			}
+			return counter;
+		} else {
+			return flotte.size();
 		}
-		return counter;
 	}
 	
-	@Override
-	public int getNbBateauxNonCoules(TypesBateau ship) throws RemoteException {
+	public int getNbBateaux(String nomBateau, boolean nonCoules) {
 		int counter = 0;
-		for (IBateau b : flotte){
-			if (!b.estCoule() && b.getType() == ship)
-				counter++;
+		if (nonCoules) {
+			for (Bateau b : flotte) {
+				if (b.getNom().equals(nomBateau) && !b.estCoule()) {
+					counter += 1;
+				}
+			}
+			return counter;
+		} else {
+			for (Bateau b : flotte) {
+				if (b.getNom().equals(nomBateau)) {
+					counter += 1;
+				}
+			}
+			return counter;
 		}
-		return counter;
-	}
-	
-	@Override
-	public int getNbBateaux(TypesBateau ship) throws RemoteException {
-		int counter = 0;
-		for (IBateau b : flotte){
-			if (b.getType() == ship)
-				counter++;
-		}
-		return counter;
 	}
 }
 

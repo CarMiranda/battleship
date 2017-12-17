@@ -2,39 +2,69 @@ package vue;
 
 import java.awt.event.MouseListener;
 import java.awt.Color;
-import java.rmi.RemoteException;
 import javax.swing.JLabel;
-import rmi.Serveur.ICarreauCarte;
+import rmi.Client.Jeu;
+import rmi.Serveur.AttendPetitConException;
+import rmi.Serveur.Coordonnees;
 
 public class CarreauCarteVue extends JLabel {
 
 	private static final long serialVersionUID = 1L;
-	private final ICarreauCarte carreauCarte;
-	private boolean estAttaque = false;
+	private int etat; // 0 si vide, 1 si attaqué, 2 si partie bateau, 3 si partie bateau attaquee
+	private MouseListener ml;
+	private Jeu jeu;
+	private final Coordonnees coordonnees;
 	
-	public CarreauCarteVue(ICarreauCarte carreauCarte){
+	public CarreauCarteVue(int x, int y) {
 		super();
-		this.carreauCarte = carreauCarte;
+		coordonnees = new Coordonnees(x, y);
+		etat = 0;
 	}
 	
-	public ICarreauCarte getCarreauCarte() { return this.carreauCarte; }
-	public void setMouseListener(MouseListener ml) { addMouseListener(ml); }
+	public Coordonnees getCoordonnees() { return coordonnees; }
 	
-	public boolean getEstAttaque(){
-		return this.estAttaque;
+	/**
+	 * Associe une instance d'une class implémentant MouseListener au carreau de la carte
+	 * @param ml
+	 */
+	public void setMouseListener(MouseListener ml) { 
+		this.ml = ml;
+		addMouseListener(ml);
+	}
+	
+	/**
+	 *
+	 * @return si le carreau a déjà été attaqué
+	 */
+	public boolean getEstAttaque() {
+		return etat == 1 || etat == 3;
 	}
 
-	public boolean attaquer() throws Exception{
-		boolean attaqueReussi;
-		
-		this.estAttaque = true;
-		attaqueReussi = this.carreauCarte.attaquer();
+	/**
+	 * Informe d'une attaque
+	 */
+	public void attaquer() {
+		int etatAttaque;
+		if (!jeu.estMonTour()) throw new AttendPetitConException();
+		if (getEstAttaque()) throw new IllegalArgumentException();
+		etatAttaque = (jeu.attaquer(coordonnees) ? 3 : 1);
 		this.setOpaque(true);
-		if (attaqueReussi){
-			this.setBackground(Color.red);
-		} else {
-			this.setBackground(Color.blue);
+		switch(etatAttaque) {
+		case 1:
+			setBackground(Color.blue);
+			break;
+		case 3:
+			setBackground(Color.red);
+			break;
+		default:
 		}
-		return attaqueReussi;
+	}
+	
+	/**
+	 * Supprime l'instance de la classe implémentant MouseListener
+	 */
+	public void removeMouseListener() {
+		this.removeMouseListener(ml);
+		ml = null;
 	}
 }

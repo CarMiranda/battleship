@@ -35,10 +35,9 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 			throws RemoteException {
 		IUtilisateurDistant u = UtilisateurDistant.getUtilisateur(nom);
 		if (u != null && u.estConnecte()) return false;
-			if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
-				return validate(nom, motDePasse);
-			}
-		
+		if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
+			return validate(nom, motDePasse);
+		}
 		throw new IllegalArgumentException();
 	}
 

@@ -1,4 +1,4 @@
-package rmi.Client;
+/*package rmi.Client;
 
 import java.rmi.RemoteException;
 
@@ -19,12 +19,9 @@ public class Client {
 		
 	}
 
-	/**
-	 * @since 1.0.0
-	 */
 	public static void main(String[] args) {	
 		vue.Client client = new vue.Client(args[0]);
-		try {
+		/*try {
 			// Authentification
 			Utilisateur carlos = new Utilisateur("Carlos", client);
 			carlos.authentification("Miranda");
@@ -32,24 +29,24 @@ public class Client {
 			Utilisateur jorge = new Utilisateur("Jorge", client);
 			IUtilisateurDistant jorged = jorge.authentification("Ochoa");
 			
-			/*if (iud != null)
+			if (iud != null)
 				System.out.println(iud.getNom());
 			else
 				System.out.println("User not found.");
 			for (IEntree entree : iud.getStatistiques().values()) {
 				System.out.println(entree.getNom() + " " + entree.getVictoires() + " " + entree.getDefaites());
-			}*/
+			}
 			carlos.commencerJeu(jorged, Difficulte.FACILE).jouer();
-			/*Registry registry = LocateRegistry.getRegistry(HOST, PORT);
+			Registry registry = LocateRegistry.getRegistry(HOST, PORT);
 			IUtilisateurDistant carlos = (IUtilisateurDistant) registry.lookup("CarlosDistant");
-			System.out.println(carlos.estConnecte());*/
+			System.out.println(carlos.estConnecte());
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		}/* catch (NotBoundException e) {
+		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 
 	}
 
-}
+}*/
