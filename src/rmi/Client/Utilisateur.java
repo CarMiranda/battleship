@@ -24,13 +24,13 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	private String nom;
 	private IUtilisateurDistant utilisateurDistant;
 	private transient Client client;
-	private transient Map<String, IJeu> jeux;
+	private transient Map<String, Jeu> jeux;
 
 	public Utilisateur(String nom, Client client)
 			throws RemoteException {
 		this.nom = nom;		
 		this.client = client;
-		jeux = new HashMap<String, IJeu>();
+		jeux = new HashMap<String, Jeu>();
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	@Override
 	public IJeu rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu)
 			throws RemoteException {
-		IJeu jeuLocal = new Jeu(jeu, this);
+		Jeu jeuLocal = new Jeu(jeu, this);
 		jeux.put(utilisateur.getNom(), jeuLocal);
 		jeuLocal.afficher();
 		//jeuLocal.jouer();
@@ -103,6 +103,9 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	@Override
 	public void finirUtilisation()
 			throws RemoteException {
+		for (Jeu j : jeux.values()) {
+			j.forfait();
+		}
 		utilisateurDistant.deconnecter();
 		Registry registry = LocateRegistry.getRegistry();
 		try {

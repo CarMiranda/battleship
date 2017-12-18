@@ -61,9 +61,9 @@ public class GrilleEnnemieIHM extends GrilleIHM {
 	
 	public void colorierAttaque(boolean resultatAttaque) {
 		if (resultatAttaque) {
-			ccvAAttaquer.setBackground(Color.GREEN);
-		} else {
 			ccvAAttaquer.setBackground(Color.RED);
+		} else {
+			ccvAAttaquer.setBackground(Color.BLUE);
 		}
 		ccvAAttaquer = null;
 	}

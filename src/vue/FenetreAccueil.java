@@ -113,13 +113,18 @@ public class FenetreAccueil extends JFrame {
 		private static final long serialVersionUID = 1L;
 		
 		private Object[] stats;
-		private String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées",
-		        "Parties perdues"};
+		private String[] columnNames;
 
-		public TableModelStats(IUtilisateur u) throws RemoteException{
+		public TableModelStats(IUtilisateur u, String[] columnNames) throws RemoteException{
 			this.stats = u.getStatistiques().values().toArray();
+			this.columnNames = columnNames;
 		}
-
+		
+		@Override
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+		
 		@Override
 		public int getColumnCount() {
 			return this.columnNames.length;
@@ -161,7 +166,8 @@ public class FenetreAccueil extends JFrame {
 		
 		this.client = client;
 		final IUtilisateur user = client.getUtilisateur();
-		this.tableStats = new TableModelStats(user);
+		String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées", "Parties perdues"};
+		this.tableStats = new TableModelStats(user, columnNames);
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		/*Creation du panel affichage des statistiques de jeu */

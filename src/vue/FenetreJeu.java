@@ -8,7 +8,10 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.rmi.RemoteException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -161,6 +164,11 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		this.setAlwaysOnTop(true);
 		this.add(tableauxPanel);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				leJeu.forfait();
+			}
+		});
 		pack();
 		this.setVisible(true);
 	}
@@ -177,8 +185,16 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		grilleJoueur.commencerPlacementFlotte();
 	}
 
-	public void setBateauAPlacer(int taille, String nomBateau) {
+	public void setBateauAPlacer(final int taille, final String nomBateau) {
 		grilleJoueur.setBateauAPlacer(taille, nomBateau);
+		final JFrame fj = this;
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(fj, "Placez votre " + nomBateau + " (taille : " + taille + ")");
+			}
+			
+		});
 	}
 	
 	public void finirPlacementFlotte() {
@@ -255,6 +271,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getActionCommand().equals("abandonner")) {
 			System.out.println("Abandon...");
+			leJeu.forfait();
 		} else if (ae.getActionCommand().equals("tirer")) {
 			System.out.println("Attaque d'un carreau en cours.");
 			grilleEnnemie.colorierAttaque(leJeu.attaquer(grilleEnnemie.getCoordonneesAAttaquer()));

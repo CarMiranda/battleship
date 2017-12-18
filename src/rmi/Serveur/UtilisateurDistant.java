@@ -156,6 +156,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	@Override
 	public void commencerJeu(IUtilisateurDistant adversaire, String diff) throws RemoteException {
 		System.out.println(nom + " lance une partie contre " + adversaire.getNom());
+		if (nom.equals(adversaire.getNom())) throw new AttendPetitConException();
 		if (!adversaire.estConnecte()) throw new UtilisateurNonConnecteException();
 		if (jeux.containsKey(nom + adversaire.getNom()) || jeux.containsKey(adversaire.getNom() + nom)) return;
 		System.out.println("Jeu valide, création du jeu en cours...");
