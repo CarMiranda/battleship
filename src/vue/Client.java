@@ -72,5 +72,8 @@ public class Client {
 		fa.actualiserUtilisateurs();
 	}
 	
+	public void actualiserStat(){
+		this.fa.actualiserStats();
+	}
 
 }

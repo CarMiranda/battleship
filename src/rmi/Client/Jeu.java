@@ -7,6 +7,7 @@ import java.util.List;
 import rmi.Serveur.AttendPetitConException;
 import rmi.Serveur.Coordonnees;
 import rmi.Serveur.IJeuDistant;
+import vue.Client;
 import vue.FenetreJeu;
 
 public class Jeu extends UnicastRemoteObject implements IJeu {
@@ -31,12 +32,12 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	 * @param utilisateurLocal	l'utilisateur local
 	 * @throws RemoteException
 	 */
-	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal)
+	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal,Client leClient)
 			throws RemoteException {
 		this.jeuDistant = jeuDistant;
 		this.jeuDistant.setJeuLocal(this, utilisateurLocal);
 		joueur = new Joueur(this, utilisateurLocal.getNom());
-		fj = new FenetreJeu(this);
+		fj = new FenetreJeu(this, leClient);
 		estMonTour = false;
 		informerPret();
 	}

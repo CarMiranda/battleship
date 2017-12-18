@@ -239,5 +239,7 @@ public class FenetreAccueil extends JFrame {
 		pack();
 		this.setVisible(true);
 	}
+	
+	public void actualiserStats(){ this.tableStats.fireTableDataChanged();}
 }
 

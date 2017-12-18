@@ -48,10 +48,12 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	private Jeu leJeu;
 	private GrilleJoueur grilleJoueur;
 	private GrilleEnnemieIHM grilleEnnemie;
+	private Client leClient;
 	
-	public FenetreJeu(Jeu jeu) {
+	public FenetreJeu(Jeu jeu, Client client) {
 		super("Bataille Navale - Jeu contre " + jeu.getNomAdversaire());
 		this.leJeu = jeu;
+		this.leClient = client;
 		int nbTypesDeBateaux = 6; 
 		
 		this.setSize(getMaximumSize());
@@ -224,8 +226,8 @@ public class FenetreJeu extends JFrame implements ActionListener {
 			public void run() {
 				JOptionPane.showMessageDialog(fj, "Défaite!" + (parForfait ? " Vous avez forfaité." : ""));
 			}
-			
-		});		
+		});
+		this.leClient.actualiserStat();
 	}
 
 	public void informerVictoire(final boolean parForfait) {
@@ -237,7 +239,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 			}
 			
 		});
-		
+		this.leClient.actualiserStat();
 	}
 
 	public void informerTour() {
