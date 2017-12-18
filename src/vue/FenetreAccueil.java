@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
@@ -171,19 +172,19 @@ public class FenetreAccueil extends JFrame {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		/*Creation du panel affichage des statistiques de jeu */
-		JLabel label = new JLabel("Statistiques de Jeu", SwingConstants.CENTER);
-		label.setFont(POLICE_SOUSTITRE);
-		label.setVerticalAlignment(JLabel.CENTER);
+		JLabel sousTitreStats = new JLabel("Statistiques de Jeu", SwingConstants.CENTER);
+		sousTitreStats.setFont(POLICE_SOUSTITRE);
+		sousTitreStats.setVerticalAlignment(JLabel.CENTER);
 		JPanel statsPanel = new JPanel(new BorderLayout());
-		statsPanel.add(label, BorderLayout.NORTH);
-		statsPanel.add(new JTable(this.tableStats),BorderLayout.CENTER);
+		statsPanel.add(sousTitreStats, BorderLayout.NORTH);
+		statsPanel.add(new JScrollPane(new JTable(this.tableStats)), BorderLayout.CENTER);
 		
 		/*Creation du panel affichage la liste d'utilisateurs connectes */
-		JLabel label2 = new JLabel("Liste des Utilisateurs");
-		label2.setFont(POLICE_SOUSTITRE);
-		label2.setVerticalAlignment(JLabel.CENTER);
+		JLabel sousTitreUtilisateurs = new JLabel("Liste des Utilisateurs");
+		sousTitreUtilisateurs.setFont(POLICE_SOUSTITRE);
+		sousTitreUtilisateurs.setVerticalAlignment(JLabel.CENTER);
 		JPanel usersPanel = new JPanel(new BorderLayout());
-		usersPanel.add(label, BorderLayout.NORTH);
+		usersPanel.add(sousTitreUtilisateurs, BorderLayout.NORTH);
 
 		usersList = new JList<IUtilisateurDistant>();
 		Object[] tmp = client.getUtilisateurs().toArray();
@@ -213,7 +214,7 @@ public class FenetreAccueil extends JFrame {
 		usersPanel.add(usersList, BorderLayout.CENTER);
 		
 		/*Creation titre pour la fenetre d'accueil*/
-		JLabel titre = new JLabel("BATTLESHIP GM4-17");
+		JLabel titre = new JLabel("BATTLESHIP GM4-17", SwingConstants.CENTER);
 		titre.setFont(POLICE_SOUSTITRE);
 		titre.setVerticalAlignment(JLabel.CENTER);
 		
