@@ -31,9 +31,15 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	/*Cette methode permet de redimensionner une image*/
-	private static ImageIcon resize(ImageIcon imageIcon){
+	public static ImageIcon resize(ImageIcon imageIcon){
 		Image image = imageIcon.getImage(); // transform it 
 		Image newimg = image.getScaledInstance(70, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		return  (new ImageIcon(newimg));  // transform it back
+	}
+	
+	public static ImageIcon resize(ImageIcon imageIcon, int l, int lar){
+		Image image = imageIcon.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(l, lar,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 		return  (new ImageIcon(newimg));  // transform it back
 	}
 	

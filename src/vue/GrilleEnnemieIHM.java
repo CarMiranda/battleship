@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -30,7 +32,7 @@ public class GrilleEnnemieIHM extends GrilleIHM {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (SwingUtilities.isRightMouseButton(e)){ //clic droit
+			if (SwingUtilities.isLeftMouseButton(e)){ //clic gauche
 				CarreauCarteVue ccv = (CarreauCarteVue) e.getSource();
 				if (!ccv.getEstAttaque()) {
 					if (ccvAAttaquer != null) {
@@ -61,6 +63,12 @@ public class GrilleEnnemieIHM extends GrilleIHM {
 	
 	public void colorierAttaque(boolean resultatAttaque) {
 		if (resultatAttaque) {
+			/*Chargement de l'image*/
+			URL url = ClassLoader.getSystemResource("explosion.png");
+			ImageIcon explosionImg = FenetreJeu.resize(new ImageIcon(url), 50, 50);
+			/*Fin du chargement de l'image*/
+			
+			ccvAAttaquer.setIcon(explosionImg);
 			ccvAAttaquer.setBackground(Color.RED);
 		} else {
 			ccvAAttaquer.setBackground(Color.BLUE);
