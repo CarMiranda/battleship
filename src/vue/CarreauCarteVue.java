@@ -33,6 +33,15 @@ public class CarreauCarteVue extends JLabel {
 	}
 	
 	/**
+	 * Permet de changer l'etat d'un carreau de la carte
+	 * 0 si vide, 1 si attaqué, 2 si partie bateau, 3 si partie bateau attaquee
+	 * @param i
+	 */
+	public void setEtat(int i){
+		this.etat = i;
+	}
+	
+	/**
 	 *
 	 * @return si le carreau a déjà été attaqué
 	 */
@@ -40,15 +49,16 @@ public class CarreauCarteVue extends JLabel {
 		return etat == 1 || etat == 3;
 	}
 
-	/**
+/*	/**
 	 * Informe d'une attaque
 	 */
-	public void attaquer() {
+	/*public void attaquer() {
 		int etatAttaque;
 		if (!jeu.estMonTour()) throw new AttendPetitConException();
 		if (getEstAttaque()) throw new IllegalArgumentException();
 		etatAttaque = (jeu.attaquer(coordonnees) ? 3 : 1);
 		this.setOpaque(true);
+		this.etat = etatAttaque;
 		switch(etatAttaque) {
 		case 1:
 			setBackground(Color.blue);
@@ -58,7 +68,7 @@ public class CarreauCarteVue extends JLabel {
 			break;
 		default:
 		}
-	}
+	}*/
 	
 	/**
 	 * Supprime l'instance de la classe implémentant MouseListener

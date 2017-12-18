@@ -70,8 +70,10 @@ public class GrilleEnnemieIHM extends GrilleIHM {
 			
 			ccvAAttaquer.setIcon(explosionImg);
 			ccvAAttaquer.setBackground(Color.RED);
+			ccvAAttaquer.setEtat(3);
 		} else {
 			ccvAAttaquer.setBackground(Color.BLUE);
+			ccvAAttaquer.setEtat(1);
 		}
 		ccvAAttaquer = null;
 	}
