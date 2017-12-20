@@ -3,9 +3,9 @@ package modele;
 /**
  * Cette énumération représente les différents types de bateaux du jeu ainsi que leurs propriétés.
  * 
- * @author Carlos MIRANDA
+ * @author Carlos MIRANDA, Cyril ANTOUN
  */
-// 04-12-17 - Carlos - Refactoring
+
 public enum TypesBateau {
 	
 	PORTEAVIONS(5, "Porte-avions"),

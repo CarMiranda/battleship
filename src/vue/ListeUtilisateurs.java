@@ -5,7 +5,11 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 import rmi.Serveur.IUtilisateurDistant;
-
+/**
+ * Cette classe représente l'ensemble ordonné d'utilisateurs et leur état de connéxion.
+ * @author Carlos MIRANDA
+ *
+ */
 class ListeUtilisateurs extends TreeSet<IUtilisateurDistant> {
 
 	private static final long serialVersionUID = 1L;
@@ -33,10 +37,17 @@ class ListeUtilisateurs extends TreeSet<IUtilisateurDistant> {
 		}
 	}
 	
+	/**
+	 * Contructeur
+	 */
 	public ListeUtilisateurs() {
 		super(new Comparateur());
 	}
 	
+	/**
+	 * Met à jour la liste d'utilsateurs.
+	 * @param utilisateurModifie
+	 */
 	public void update(IUtilisateurDistant utilisateurModifie) {
 		if (this.contains(utilisateurModifie)) {
 			this.remove(utilisateurModifie);

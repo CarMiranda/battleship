@@ -6,7 +6,12 @@ import javax.swing.JLabel;
 import rmi.Client.Jeu;
 import rmi.Serveur.AttendPetitConException;
 import rmi.Serveur.Coordonnees;
-
+/**
+ * Cette classe représente un carreau de la carte affichée sur la fênetre de jeu.
+ * (carreau carte de l'IHM). 
+ * @author Jorge OCHOA, Carlos MIRANDA
+ *
+ */
 public class CarreauCarteVue extends JLabel {
 
 	private static final long serialVersionUID = 1L;
@@ -15,17 +20,26 @@ public class CarreauCarteVue extends JLabel {
 	private Jeu jeu;
 	private final Coordonnees coordonnees;
 	
+	/**
+	 * Contructeur
+	 * @param x abscisse
+	 * @param y ordonnée
+	 */
 	public CarreauCarteVue(int x, int y) {
 		super();
 		coordonnees = new Coordonnees(x, y);
 		etat = 0;
 	}
 	
+	/**
+	 * Getter
+	 * @return coordonnées du carreau de la carte
+	 */
 	public Coordonnees getCoordonnees() { return coordonnees; }
 	
 	/**
 	 * Associe une instance d'une class implémentant MouseListener au carreau de la carte
-	 * @param ml
+	 * @param ml le mouse listenner
 	 */
 	public void setMouseListener(MouseListener ml) { 
 		this.ml = ml;
@@ -35,7 +49,7 @@ public class CarreauCarteVue extends JLabel {
 	/**
 	 * Permet de changer l'etat d'un carreau de la carte
 	 * 0 si vide, 1 si attaqué, 2 si partie bateau, 3 si partie bateau attaquee
-	 * @param i
+	 * @param i 0 si vide, 1 si attaqué, 2 si partie bateau, 3 si partie bateau attaquee
 	 */
 	public void setEtat(int i){
 		this.etat = i;

@@ -11,6 +11,11 @@ import java.util.Properties;
 
 import com.mysql.jdbc.Connection;
 
+/**
+ * Cette classe permet d'initialiser le serveur RMI.
+ * @author Carlos MIRANDA
+ *
+ */
 public class Serveur {
 	
 	/*public static final String HOST;
@@ -29,6 +34,10 @@ public class Serveur {
 		proprietesConnexion.put("useSSL", "false");
 	}
 	
+	/**
+	 * Permet de se connecter à la base de données.
+	 * @return la connexion SQL.
+	 */
 	public static Connection initConnexionSQL() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -45,10 +54,17 @@ public class Serveur {
 		return connexionSQL;
 	}
 	
+	/**
+	 * Getter
+	 * @return la connexion SQL.
+	 */
 	public static Connection getConnexionSQL() {
 		return connexionSQL;
 	}
 	
+	/**
+	 * Permet de fermer ma connexion SQL.
+	 */
 	public static void fermerConnexionSQL() {
 		try {
 			connexionSQL.close();
@@ -62,6 +78,10 @@ public class Serveur {
 		}
 	}
 	
+	/**
+	 * Main. Initialise le serveur RMI.
+	 * @param args arguments du programme.
+	 */
 	public static void main(String args[]) {
 		// Initialisation de toutes les ressources
 		try {

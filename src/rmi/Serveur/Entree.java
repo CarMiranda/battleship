@@ -6,6 +6,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * Cette classe est l'implémentation de l'interface IEntree.
+ * @author Carlos MIRANDA
+ *
+ */
 public class Entree extends UnicastRemoteObject implements IEntree {
 	
 	private static final long serialVersionUID = -575027575945659838L;
@@ -13,6 +18,15 @@ public class Entree extends UnicastRemoteObject implements IEntree {
 	private int defaites;
 	private int victoires;
 	
+	/**
+	 * Constructeur
+	 * @param joueur nom du joueur.
+	 * @param adversaire nom de l'adversaire.
+	 * @param victoires nombre de victoires.
+	 * @param defaites nombre de défaites.
+	 * @throws RemoteException
+	 * @throws AlreadyBoundException
+	 */
 	public Entree(String joueur, String adversaire, int victoires, int defaites) throws RemoteException, AlreadyBoundException {
 		this.nom = adversaire;
 		this.defaites = defaites;

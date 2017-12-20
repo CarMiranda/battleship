@@ -18,6 +18,11 @@ import rmi.Serveur.IJeuDistant;
 import rmi.Serveur.IUtilisateurDistant;
 import vue.Client;
 
+/**
+ * Cette classe implémente l'interface IUtilisateur.
+ * @author Carlos MIRANDA.
+ *
+ */
 public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	
 	private static final long serialVersionUID = 2650680778390438018L;
@@ -26,6 +31,12 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	private transient Client client;
 	private transient Map<String, Jeu> jeux;
 
+	/**
+	 * Constructeur
+	 * @param nom nom de l'utilisateur
+	 * @param client le client qui crée l'utilisateur
+	 * @throws RemoteException
+	 */
 	public Utilisateur(String nom, Client client)
 			throws RemoteException {
 		this.nom = nom;		
@@ -91,13 +102,12 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	}
 	
 	@Override
-	public IJeu rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu)
+	public void rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu)
 			throws RemoteException {
 		Jeu jeuLocal = new Jeu(jeu, this, client);
 		jeux.put(utilisateur.getNom(), jeuLocal);
 		jeuLocal.afficher();
 		//jeuLocal.jouer();
-		return null;
 	}
 
 	@Override

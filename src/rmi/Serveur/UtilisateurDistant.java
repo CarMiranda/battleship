@@ -20,6 +20,11 @@ import modele.UtilisateurInconnuException;
 
 import rmi.Client.IUtilisateur;
 
+/**
+ * Cette classe implémente l'interface IUtilisateurDistant
+ * @author Carlos MIRANDA
+ *
+ */
 public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisateurDistant {
 	
 	private static final long serialVersionUID;
@@ -36,6 +41,15 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		utilisateurs = new HashMap<String, IUtilisateurDistant>();
 	}
 	
+	/**
+	 * Constructeur
+	 * @param bddId Id de la base de données
+	 * @param nom nome de l'utilisateur
+	 * @throws RemoteException
+	 * @throws AlreadyBoundException
+	 * @throws MalformedURLException
+	 * @throws NotBoundException
+	 */
 	public UtilisateurDistant(int bddId, String nom)
 			throws RemoteException, AlreadyBoundException, MalformedURLException, NotBoundException {
 		super();
@@ -113,10 +127,6 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		return utilisateurs;
 	}
 
-	/**
-	 * Recupération des statistiques associées à l'utilisateur.
-	 * @since 1.0.0
-	 */
 	@Override
 	public Map<String, IEntree> getStatistiques() throws RemoteException {
 		return statistiques;
@@ -148,11 +158,6 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		entree.ajouterDefaite();
 	}
 
-	/**
-	 * Commence un jeu contre l'utilisateur passé en paramètre
-	 * @param utilisateur L'adversaire défié
-	 * @return une instance distante du jeu
-	 */
 	@Override
 	public void commencerJeu(IUtilisateurDistant adversaire, String diff) throws RemoteException {
 		System.out.println(nom + " lance une partie contre " + adversaire.getNom());

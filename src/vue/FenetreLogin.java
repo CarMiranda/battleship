@@ -14,7 +14,11 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import rmi.Client.Utilisateur;
 import rmi.Serveur.IUtilisateurDistant;
-
+/**
+ * Cette classe représente la fenêtre de login de l'application.
+ * @author Victor LE MAISTRE, Carlos MIRANDA
+ *
+ */
 public class FenetreLogin extends JFrame implements ActionListener {
 
 	private final JLabel usernameLabel;
@@ -28,8 +32,12 @@ public class FenetreLogin extends JFrame implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Constructeur
+	 * @param client le client
+	 */
 	public FenetreLogin(Client client) {
-		super("Bataille Navale");
+		super("Bataille Navale - Login");
 		
 		this.setPreferredSize(new Dimension(350, 125));
 		
@@ -81,6 +89,9 @@ public class FenetreLogin extends JFrame implements ActionListener {
 		this.setResizable(false);
 	}
 	
+	/**
+	 * Affichage un message d'erreur (utilisé lors d'une authetification non réussie).
+	 */
 	public void promptError() {
 		errorLabel.setText("Erreur d'authentification.");
 	}

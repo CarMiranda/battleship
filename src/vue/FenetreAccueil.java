@@ -29,7 +29,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 import java.util.SortedSet;
-
+/**
+ * Cette classe représente la fenêtre d'accueil du jeu.
+ * @author Jorge OCHOA, Carlos MIRANDA, Victor LE LEMAISTRE
+ *
+ */
 public class FenetreAccueil extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
@@ -41,6 +45,11 @@ public class FenetreAccueil extends JFrame {
 	private MyListModel usersListModel;
 	private JList<IUtilisateurDistant> usersList;
 	
+	/**
+	 * 
+	 * @author Carlos MIRANDA
+	 *
+	 */
 	private static class MyCellRenderer extends JLabel implements ListCellRenderer<IUtilisateurDistant> {
 
 		private static final long serialVersionUID = 1L;
@@ -77,11 +86,21 @@ public class FenetreAccueil extends JFrame {
 			
 		}
 	}
+	
+	/**
+	 * Cette classe représente la liste des utilisateurs pour l'IHM.
+	 * @author Carlos MIRANDA
+	 *
+	 */
 	protected class MyListModel extends DefaultListModel<IUtilisateurDistant> {
 		
 		private SortedSet<IUtilisateurDistant> data = null;
 		private static final long serialVersionUID = 1L;
 		
+		/**
+		 * Contructeur
+		 * @param utilisateurs Ennsemble ordonné d'utilsiateurs
+		 */
 		public MyListModel(SortedSet<IUtilisateurDistant> utilisateurs) {
 			super();
 			data = utilisateurs;
@@ -109,13 +128,25 @@ public class FenetreAccueil extends JFrame {
 		}*/
 		
 	}
+	
+	/**
+	 * Cette classe représenten le tableau des statistiques pour l'IHM.
+	 * @author Jorge OCHOA
+	 *
+	 */
 	private class TableModelStats extends AbstractTableModel {
 		
 		private static final long serialVersionUID = 1L;
 		
 		private Object[] stats;
 		private String[] columnNames;
-
+		
+		/**
+		 * Constructeur
+		 * @param u l'utilsiteur
+		 * @param columnNames 
+		 * @throws RemoteException
+		 */
 		public TableModelStats(IUtilisateur u, String[] columnNames) throws RemoteException{
 			this.stats = u.getStatistiques().values().toArray();
 			this.columnNames = columnNames;
@@ -157,13 +188,21 @@ public class FenetreAccueil extends JFrame {
 			return null;
 		}
 	}
+	
+	/**
+	 * Permet d'actualiser la liste d'utlisateurs.
+	 */
 	public void actualiserUtilisateurs() {
 		usersList.repaint();
 	}
 	
-	
+	/**
+	 * Constructeur
+	 * @param client le client
+	 * @throws RemoteException
+	 */
 	public FenetreAccueil(final Client client) throws RemoteException {
-		super("Bataille Navale");
+		super("Bataille Navale - Accueil de " + client.getUtilisateur().getNom());
 		
 		this.client = client;
 		final IUtilisateur user = client.getUtilisateur();
@@ -240,6 +279,9 @@ public class FenetreAccueil extends JFrame {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Permet de mettre à jour les statistiques de jeu.
+	 */
 	public void actualiserStats(){ this.tableStats.fireTableDataChanged();}
 }
 

@@ -13,15 +13,29 @@ import modele.UtilisateurInconnuException;
 
 import com.mysql.jdbc.Connection;
 
+/**
+ * Cette classe est l'implémentation de l'interface IAuthentification.
+ * @author Jorge OCHOA
+ *
+ */
 public class Authentification extends UnicastRemoteObject implements IAuthentification {
 
 	private static final long serialVersionUID = -1773982318381197725L;
 	
+	/**
+	 * Constructeur.
+	 * @throws RemoteException
+	 */
 	protected Authentification()
 			throws RemoteException {
 		super();
 	}
 	
+	/**
+	 * Initialise le service d'authentification dans le serveur RMI.
+	 * @throws RemoteException
+	 * @throws AlreadyBoundException
+	 */
 	public static void initAuthentification()
 			throws RemoteException, AlreadyBoundException {
 		Authentification auth = new Authentification();
@@ -54,6 +68,12 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 		throw new IllegalArgumentException();
 	}
 	
+	/**
+	 * Valide les identifiants fournis.
+	 * @param nom
+	 * @param motDePasse
+	 * @return true si les identifiants sont valides.
+	 */
 	private boolean validate(String nom, String motDePasse) {
 		Connection conn = Serveur.getConnexionSQL();
 		String query = "SELECT password FROM users WHERE uname='" + nom + "' LIMIT 1;";
@@ -70,6 +90,12 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 		return false;
 	}
 	
+	/**
+	 * Créer un nouveau compte utilisateur.
+	 * @param nom
+	 * @param motDePasse
+	 * @return true si la création a réussi.
+	 */
 	private boolean add(String nom, String motDePasse) {
 		Connection conn = Serveur.getConnexionSQL();
 		String query = "INSERT INTO users (uname, password) VALUES ('" + nom + "', '" + motDePasse + "')";

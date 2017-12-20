@@ -25,22 +25,37 @@ import javax.swing.border.MatteBorder;
 import rmi.Client.Jeu;
 import rmi.Serveur.Coordonnees;
 import rmi.Serveur.TypesBateau;
-
+/**
+ * Cette classe représente la fenêtre de jeu du jeu.
+ * @author Victor LE MAISTRE, Jorge OCHOA, Carlos MIRANDA
+ *
+ */
 public class FenetreJeu extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	/*Cette methode permet de redimensionner une image*/
+	/**
+	 * Cette methode permet de redimensionner une image
+	 * @param imageIcon l'image
+	 * @return image redimensionnée
+	 */
 	public static ImageIcon resize(ImageIcon imageIcon){
-		Image image = imageIcon.getImage(); // transform it 
-		Image newimg = image.getScaledInstance(70, 40,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		return  (new ImageIcon(newimg));  // transform it back
+		Image image = imageIcon.getImage();
+		Image newimg = image.getScaledInstance(70, 40,  java.awt.Image.SCALE_SMOOTH);
+		return  (new ImageIcon(newimg)); 
 	}
 	
+	/**
+	 * Cette methode permet de redimensionner une image
+	 * @param imageIcon l'image
+	 * @param l longueur
+	 * @param lar largeur
+	 * @return image redimensionnée
+	 */
 	public static ImageIcon resize(ImageIcon imageIcon, int l, int lar){
-		Image image = imageIcon.getImage(); // transform it 
-		Image newimg = image.getScaledInstance(l, lar,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		return  (new ImageIcon(newimg));  // transform it back
+		Image image = imageIcon.getImage(); 
+		Image newimg = image.getScaledInstance(l, lar,  java.awt.Image.SCALE_SMOOTH);
+		return  (new ImageIcon(newimg));
 	}
 	
 	private final static Font POLICE_TITRE = new Font("DevanagariMT-Bold",Font.ITALIC,20);
@@ -50,6 +65,11 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	private GrilleEnnemieIHM grilleEnnemie;
 	private Client leClient;
 	
+	/**
+	 * Constructeur
+	 * @param jeu le jeu
+	 * @param client le client
+	 */
 	public FenetreJeu(Jeu jeu, Client client) {
 		super("Bataille Navale - Jeu contre " + jeu.getNomAdversaire());
 		this.leJeu = jeu;
@@ -181,6 +201,9 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Permet de commencer le placement de la flotte.
+	 */
 	public void commencerPlacementFlotte() {
 		final JFrame fj = this;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -193,6 +216,12 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		grilleJoueur.commencerPlacementFlotte();
 	}
 
+	/**
+	 * Defini le bateau à placer et informe le joueur le bateau qu'il doit placer (affichage d'un message à l'écran).
+	 *  
+	 * @param taille taille du bateau
+	 * @param nomBateau nom du bateau à placer (nom du type).
+	 */
 	public void setBateauAPlacer(final int taille, final String nomBateau) {
 		grilleJoueur.setBateauAPlacer(taille, nomBateau);
 		final JFrame fj = this;
@@ -205,20 +234,25 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		});
 	}
 	
+	/**
+	 * Permet de finir le placement de la flotte.
+	 */
 	public void finirPlacementFlotte() {
 		grilleJoueur.finirPlacementFlotte();
 	}
 	
-	boolean placementFlotte;
-	
-	public boolean placementFlotte() {
-		return placementFlotte;
-	}
-
+	/**
+	 * Permet d'infomer le joueur qu'il a été attaqué ( chager de couleur la grille ). 
+	 * @param coordonneesAttaquees coordonnées à attaquer
+	 */
 	public void informerAttaque(Coordonnees coordonneesAttaquees) {
 		grilleJoueur.attaquer(coordonneesAttaquees);
 	}
 
+	/**
+	 * Informe le joueur d'une défaite (affichage de message à l'écran) et actualise les statistiques.
+	 * @param parForfait true si c'est une défaite par forfait.
+	 */
 	public void informerDefaite(final boolean parForfait) {
 		final JFrame fj = this;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -230,6 +264,10 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		this.leClient.actualiserStat();
 	}
 
+	/**
+	 * Informe le joueur d'une victoire (affichage de message à l'écran) et actualise les statistiques.
+	 * @param parForfait true si c'est une victoire par forfait.
+	 */
 	public void informerVictoire(final boolean parForfait) {
 		final JFrame fj = this;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -242,6 +280,9 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		this.leClient.actualiserStat();
 	}
 
+	/**
+	 * Permet d'informer le joueur que c'est à lui de jouer (affichage de message à l'écran).
+	 */
 	public void informerTour() {
 		final JFrame fj = this;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -252,7 +293,12 @@ public class FenetreJeu extends JFrame implements ActionListener {
 			
 		});
 	}
-
+	
+	/**
+	 * Permet d'informer le joueur que le jeu commence (affichage de message à l'écran).
+	 * On indique aussi le nom du joueur qui commence à jouer.
+	 * @param nomJoueur nom du joueur à informer
+	 */
 	public void informerDebutJeu(final String nomJoueur) {
 		final JFrame fj = this;
 		SwingUtilities.invokeLater(new Runnable() {
@@ -264,6 +310,9 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		});		
 	}
 
+	/**
+	 * Permet d'informer le joueur qu'il doit placer sa flotte (affichage de message à l'écran).
+	 */
 	public void informerPlacementFlotte() {
 		final JFrame fj = this;
 		SwingUtilities.invokeLater(new Runnable() {

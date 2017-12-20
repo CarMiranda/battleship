@@ -13,7 +13,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-
+/**
+ * Cette classe représente une grille de jeu en tant qu'objet de l'IHM.
+ * @author Jorge OCHOA, Carlos MIRANDA, Victor LE MAISTRE
+ *
+ */
 public abstract class GrilleIHM extends JLayeredPane {
 	
 	private static final long serialVersionUID = 1L;
@@ -24,6 +28,11 @@ public abstract class GrilleIHM extends JLayeredPane {
 	protected JLabel label = new JLabel(icon);
 	protected ArrayList<CarreauCarteVue> grille;
 	
+	/**
+	 * Constructeur
+	 * @param hauteur hauteur de la grille.
+	 * @param longueur longueur de la grille.
+	 */
 	protected GrilleIHM(int hauteur, int longueur) {
 		super();
 		int rows = hauteur;

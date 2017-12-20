@@ -2,7 +2,7 @@ package modele;
 
 /**
  * Cette énumération représente les différentes difficultés du jeu (tailles de la carte).
- * @author Carlos MIRANDA
+ * @author Cyril ANTOUN
  */
 public enum Difficulte {
 	FACILE(5,6),

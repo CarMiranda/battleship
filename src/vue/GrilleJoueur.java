@@ -11,7 +11,11 @@ import javax.swing.SwingUtilities;
 
 import rmi.Client.Jeu;
 import rmi.Serveur.Coordonnees;
-
+/**
+ * Cette classe représente la grille de jeu du joueur en tant qu'objet de l'IHM.
+ * @author Carlos MIRANDA, Victor LE MAISTRE
+ *
+ */
 public class GrilleJoueur extends GrilleIHM {
 
 	private static final long serialVersionUID = 1L;
@@ -23,6 +27,11 @@ public class GrilleJoueur extends GrilleIHM {
 	private int tailleBateauAPlacer;
 	private String nomBateauAPlacer;
 	
+	/**
+	 * 
+	 * @author Carlos MIRANDA.
+	 *
+	 */
 	private class MaCarteControleur implements MouseListener {
 		
 		public MaCarteControleur() {
@@ -101,6 +110,10 @@ public class GrilleJoueur extends GrilleIHM {
 		}
 	}
 	
+	/**
+	 * Permet de décolorier une liste de carreaux de la carte.
+	 * @param lccv liste de carreaux de la carte
+	 */
 	private void decolorier(List<CarreauCarteVue> lccv) {
 		JLabel lab = new JLabel();
 		for (CarreauCarteVue ccv : lccv) {
@@ -109,6 +122,10 @@ public class GrilleJoueur extends GrilleIHM {
 		}
 	}
 	
+	/**
+	 * Permet de colorier une liste de carreaux de la carte.
+	 * @param lccv liste de carreaux de la carte
+	 */
 	private void colorier(List<CarreauCarteVue> lccv) {
 		for (CarreauCarteVue ccv : lccv) {
 			ccv.setOpaque(true);
@@ -116,12 +133,22 @@ public class GrilleJoueur extends GrilleIHM {
 		}
 	}
 	
+	/**
+	 * Attaque un carreau de la carte (change sa couleur) sur la grille du joueur.
+	 * @param coordonneesAttaquees coordonnées du carreau de la carte à attaquer
+	 */
 	public void attaquer(Coordonnees coordonneesAttaquees) {
 		CarreauCarteVue ccv = grille.get(coordonneesAttaquees.getX() + coordonneesAttaquees.getY() * jeu.getLargeurCarte());
 		ccv.setOpaque(true);
 		ccv.setBackground(Color.RED);
 	}
 	
+	/**
+	 * Constructeur.
+	 * @param hauteur hauteur de la grille
+	 * @param largeur largeur de la grille
+	 * @param jeu le jeu
+	 */
 	public GrilleJoueur(int hauteur, int largeur, Jeu jeu) {
 		super(hauteur, largeur);
 		placementFlotte = false;
@@ -132,16 +159,29 @@ public class GrilleJoueur extends GrilleIHM {
 		}
 	}
 	
+	/**
+	 * Defini le bateau à placer.
+	 * @param taille la taille du batau
+	 * @param nom nom du bateau
+	 */
 	public void setBateauAPlacer(int taille, String nom) {
 		System.out.println("Placement du bateau " + nom + " de taille " + taille);
 		tailleBateauAPlacer = taille;
 		nomBateauAPlacer = nom;
 	}
 	
+	/**
+	 * Setter.
+	 * Utiliser pour indiquer que le placement d'une flotte est en train de s'effectuer.
+	 */
 	public void commencerPlacementFlotte() {
 		placementFlotte = true;
 	}
 	
+	/**
+	 * Setter. 
+	 * Utiliser pour indiquer que le placement d'une flotte a fini.
+	 */
 	public void finirPlacementFlotte() {
 		placementFlotte = false;
 	}

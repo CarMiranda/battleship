@@ -12,7 +12,11 @@ import modele.Difficulte;
 import rmi.Client.IJeu;
 import rmi.Client.IUtilisateur;
 
-
+/**
+ * Cette classe implémente l'interface IJeuDistant.
+ * @author Carlos MIRANDA.
+ *
+ */
 public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 
 	private static final long serialVersionUID = 6582546444277100505L;
@@ -23,6 +27,13 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	private transient int joueursPrets;
 	private transient final Difficulte difficulte;
 	
+	/**
+	 * Constructeur
+	 * @param utilisateur1 utilisateur 1. 
+	 * @param utilisateur2 utilisateur 2.
+	 * @param difficulte difficulté du jeu.
+	 * @throws RemoteException
+	 */
 	public JeuDistant(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2, Difficulte difficulte)
 			throws RemoteException {
 		joueur1 = new JoueurDistant(utilisateur1.getNom(), difficulte);
@@ -74,11 +85,6 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		}
 	}
 	
-	/**
-	 * Méthode appelée par le jeu local pour informer d'une attaque effectuée, informer l'autre joueur de l'attaque et 
-	 * informer cet autre joueur que c'est son tour
-	 * @throws AttendPetitConException
-	 */
 	@Override
 	public boolean tour(String nom, Coordonnees coordonneesAttaquees) throws RemoteException {
 		if (!nom.equals(joueurCourant.getNom())) throw new AttendPetitConException();
@@ -109,10 +115,6 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		return false;
 	}
 	
-	/**
-	 * Méthode appelée par le jeu local pour savoir quel est le bateau suivant à placer
-	 * @throws AttendPetitConException
-	 */
 	@Override
 	public void placementFlotte(String nom) throws RemoteException {
 		if (!nom.equals(joueurCourant.getNom())) throw new AttendPetitConException();
@@ -130,9 +132,6 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		placementFlotte(joueurCourant, jeuLocalCourant);
 	}
 	
-	/**
-	 * Commence un jeu, i.e. instruit au joueur1 de placer sa flotte et informe le joueur2
-	 */
 	@Override
 	public void jouer() throws RemoteException {
 		try {
@@ -189,7 +188,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 			jeuLocal1.informerVictoire(true);
 		}
 	}
-
+	
 	@Override
 	public String getNomAdversaire(String nom) throws RemoteException {
 		if (nom.equals(joueur1.getNom())) {
