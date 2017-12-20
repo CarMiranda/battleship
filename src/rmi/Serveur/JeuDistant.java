@@ -1,6 +1,9 @@
 package rmi.Serveur;
 
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import com.mysql.jdbc.Connection;
@@ -10,38 +13,51 @@ import java.util.List;
 import modele.Difficulte;
 
 import rmi.Client.IJeu;
-import rmi.Client.IUtilisateur;
 
 
 public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 
 	private static final long serialVersionUID = 6582546444277100505L;
+	private transient final IUtilisateurDistant utilisateur1, utilisateur2;
 	private transient final JoueurDistant joueur1, joueur2;
 	private transient JoueurDistant joueurCourant;
 	private transient IJeu jeuLocal1, jeuLocal2, jeuLocalCourant;
 	private transient boolean commence;
 	private transient int joueursPrets;
 	private transient final Difficulte difficulte;
-	
+
 	public JeuDistant(IUtilisateurDistant utilisateur1, IUtilisateurDistant utilisateur2, Difficulte difficulte)
 			throws RemoteException {
+		this.utilisateur1 = utilisateur1;
+		this.utilisateur2 = utilisateur2;
 		joueur1 = new JoueurDistant(utilisateur1.getNom(), difficulte);
 		joueur2 = new JoueurDistant(utilisateur2.getNom(), difficulte);
 		commence = false;
 		this.difficulte = difficulte;
 		joueursPrets = 0;
-	}
-	
-	@Override
-	public void setJeuLocal(IJeu jeuLocal, IUtilisateur utilisateur)
-			throws RemoteException {
-		if (utilisateur.getNom().equals(joueur1.getNom())) {
-			jeuLocal1 = jeuLocal;
-		} else {
-			jeuLocal2 = jeuLocal;
+		try {
+			LocateRegistry.getRegistry().bind(utilisateur1.getNom() + utilisateur2.getNom() + "Distant", this);
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	public void setJeuLocal(String nomUtilisateurLocal, IJeu jeuLocal)
+			throws RemoteException {
+		try {
+			if (nomUtilisateurLocal.equals(joueur1.getNom())) {
+				jeuLocal1 = jeuLocal;
+				LocateRegistry.getRegistry().bind(joueur1.getNom() + joueur2.getNom() + "Local", jeuLocal);
+			} else {
+				jeuLocal2 = jeuLocal;
+				LocateRegistry.getRegistry().bind(joueur1.getNom() + joueur2.getNom() + "Local", jeuLocal);
+			}
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Méthode interne pour gérer le placement de bateaux, notamment le changement de joueur et la fin du placement,
 	 * donc le début du jeu
@@ -73,9 +89,9 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Méthode appelée par le jeu local pour informer d'une attaque effectuée, informer l'autre joueur de l'attaque et 
+	 * Méthode appelée par le jeu local pour informer d'une attaque effectuée, informer l'autre joueur de l'attaque et
 	 * informer cet autre joueur que c'est son tour
 	 * @throws AttendPetitConException
 	 */
@@ -108,7 +124,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Méthode appelée par le jeu local pour savoir quel est le bateau suivant à placer
 	 * @throws AttendPetitConException
@@ -118,10 +134,10 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		if (!nom.equals(joueurCourant.getNom())) throw new AttendPetitConException();
 		placementFlotte(joueurCourant, jeuLocalCourant);
 	}
-	
-	
+
+
 	@Override
-	public void placerBateau(String nomJoueur, String nomBateau, List<Coordonnees> bateau) 
+	public void placerBateau(String nomJoueur, String nomBateau, List<Coordonnees> bateau)
 			throws RemoteException {
 		if (!nomJoueur.equals(joueurCourant.getNom())) throw new AttendPetitConException();
 		System.out.println("Placement du bateau " + nomBateau + " par " + nomJoueur);
@@ -129,7 +145,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		joueurCourant.placerBateau(nomBateau, lc);
 		placementFlotte(joueurCourant, jeuLocalCourant);
 	}
-	
+
 	/**
 	 * Commence un jeu, i.e. instruit au joueur1 de placer sa flotte et informe le joueur2
 	 */
@@ -146,9 +162,9 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	/**
 	 * Actualise la base de données suite à un jeu
 	 * @param gagnant	le joueur ayant gagné le jeu
@@ -198,12 +214,12 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 			return joueur1.getNom();
 		}
 	}
-	
+
 	private JoueurDistant getJoueur(String nom) {
 		if (joueur1.getNom().equals(nom)) return joueur1;
 		else return joueur2;
 	}
-	
+
 	private JoueurDistant getAdversaire(String nom) {
 		if (joueur1.getNom().equals(nom)) return joueur2;
 		else return joueur1;

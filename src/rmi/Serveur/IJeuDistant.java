@@ -5,11 +5,10 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import rmi.Client.IJeu;
-import rmi.Client.IUtilisateur;
 
 public interface IJeuDistant extends Remote {
-	
-	void setJeuLocal(IJeu jeu, IUtilisateur utilisateur) throws RemoteException;
+
+	void setJeuLocal(String nomUtilisateur, IJeu jeuLocal) throws RemoteException;
 	void jouer() throws RemoteException;
 	boolean tour(String nom, Coordonnees coordonneesAttaquees) throws RemoteException;
 	void placementFlotte(String nom) throws RemoteException;

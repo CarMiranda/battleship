@@ -17,5 +17,5 @@ public class RegistryViewer {
 	} catch (RemoteException e) {
 		e.printStackTrace();
 	}
-  }    
+  }
 }

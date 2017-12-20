@@ -1,6 +1,5 @@
 package rmi.Client;
 
-import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -19,7 +18,7 @@ import rmi.Serveur.IUtilisateurDistant;
 import vue.Client;
 
 public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
-	
+
 	private static final long serialVersionUID = 2650680778390438018L;
 	private String nom;
 	private IUtilisateurDistant utilisateurDistant;
@@ -28,75 +27,78 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 
 	public Utilisateur(String nom, Client client)
 			throws RemoteException {
-		this.nom = nom;		
+		this.nom = nom;
 		this.client = client;
 		jeux = new HashMap<String, Jeu>();
 	}
-	
+
 	@Override
 	public void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException {
 		client.actualiserUtilisateurs(utilisateur, estNouveau);
 	}
-	
+
 	@Override
-	public IUtilisateurDistant authentification(String motDePasse) 
+	public IUtilisateurDistant authentification(String motDePasse)
 			throws RemoteException {
 		IAuthentification auth;
 		try {
-			Registry localRegistry = LocateRegistry.getRegistry();
 			Registry remoteRegistry = LocateRegistry.getRegistry(Client.REMOTEHOST);
 			auth = (IAuthentification) remoteRegistry.lookup("auth");
 			if (auth.authentification(nom, motDePasse)) {
-				localRegistry.bind(nom, this);
 				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
-				utilisateurDistant.setUtilisateurLocal(this);
+				utilisateurDistant.setUtilisateurLocal(nom, this);
 				utilisateurDistant.connecter(false);
 				return utilisateurDistant;
 			}
 		} catch (NotBoundException e) {
 			e.printStackTrace();
-		} catch (AlreadyBoundException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	@Override
 	public IUtilisateurDistant inscription(String motDePasse)
 			throws RemoteException {
 		IAuthentification auth;
 		try {
-			Registry localRegistry = LocateRegistry.getRegistry();
+			//Registry localRegistry = LocateRegistry.getRegistry();
 			Registry remoteRegistry = LocateRegistry.getRegistry(Client.REMOTEHOST);
 			auth = (IAuthentification) remoteRegistry.lookup("auth");
 			if (auth.inscription(nom, motDePasse)) {
-				localRegistry.bind(nom, this);
+				System.out.println("Connexion satisfactoire");
 				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
-				utilisateurDistant.setUtilisateurLocal(this);
+				utilisateurDistant.setUtilisateurLocal(nom, this);
 				utilisateurDistant.connecter(true);
 				return utilisateurDistant;
 			}
 		} catch (NotBoundException e) {
 			e.printStackTrace();
-		} catch (AlreadyBoundException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte)
 			throws RemoteException {
 		utilisateurDistant.commencerJeu(utilisateur, "");
 	}
-	
+
 	@Override
-	public IJeu rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu)
+	public IJeu rejoindreJeu(String nom)
 			throws RemoteException {
+		IJeuDistant jeu = null;
+		try {
+			jeu = (IJeuDistant) LocateRegistry.getRegistry(Client.REMOTEHOST).lookup(this.nom + nom + "Distant");
+		} catch (NotBoundException e) {
+			try {
+				jeu = (IJeuDistant) LocateRegistry.getRegistry(Client.REMOTEHOST).lookup(nom + this.nom + "Distant");
+			} catch (NotBoundException ee) {
+				ee.printStackTrace();
+			}
+		}
 		Jeu jeuLocal = new Jeu(jeu, this, client);
-		jeux.put(utilisateur.getNom(), jeuLocal);
+		jeux.put(nom, jeuLocal);
 		jeuLocal.afficher();
-		//jeuLocal.jouer();
 		return null;
 	}
 
@@ -107,12 +109,6 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 			j.forfait();
 		}
 		utilisateurDistant.deconnecter();
-		Registry registry = LocateRegistry.getRegistry();
-		try {
-			registry.unbind(nom);
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -129,5 +125,5 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 			throws RemoteException {
 		return utilisateurDistant.getStatistiques();
 	}
-	
+
 }

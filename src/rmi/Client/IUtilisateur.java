@@ -11,10 +11,10 @@ import rmi.Serveur.IJeuDistant;
 import rmi.Serveur.IUtilisateurDistant;
 
 public interface IUtilisateur extends Remote {
-	
+
 	// Méthodes à distance
-	IJeu rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
-	
+	IJeu rejoindreJeu(String nom) throws RemoteException;
+
 	// Méthodes locales
 	IUtilisateurDistant authentification(String motDePasse) throws RemoteException;
 	IUtilisateurDistant inscription(String motDePasse) throws RemoteException;

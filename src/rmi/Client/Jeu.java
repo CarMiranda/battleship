@@ -1,6 +1,8 @@
 package rmi.Client;
 
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
@@ -11,46 +13,46 @@ import vue.Client;
 import vue.FenetreJeu;
 
 public class Jeu extends UnicastRemoteObject implements IJeu {
-	
+
 	private static final long serialVersionUID = -1732761568274563L;
-	
+
 	/**
 	 * Attributs relatifs au côté serveur
 	 */
 	private final IJeuDistant jeuDistant;
-	
+
 	/**
 	 * Attributs relatifs au côté client
 	 */
 	private transient final Joueur joueur;
 	private transient FenetreJeu fj;
 	private transient boolean estMonTour;
-	
+
 	/**
 	 * Constructeur de jeu
 	 * @param jeuDistant		le jeu distant auquel on fait référence
 	 * @param utilisateurLocal	l'utilisateur local
 	 * @throws RemoteException
 	 */
-	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal,Client leClient)
+	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal, Client leClient)
 			throws RemoteException {
 		this.jeuDistant = jeuDistant;
-		this.jeuDistant.setJeuLocal(this, utilisateurLocal);
+		this.jeuDistant.setJeuLocal(utilisateurLocal.getNom(), this);
 		joueur = new Joueur(this, utilisateurLocal.getNom());
 		fj = new FenetreJeu(this, leClient);
 		estMonTour = false;
 		informerPret();
 	}
-	
+
 	// Méthodes appelées à distance
-	
+
 	@Override
 	public void jouer() throws RemoteException {
 		System.out.println("Début du jeu!");
 		jeuDistant.jouer();
 		System.out.println("Fin du jeu!");
 	}
-	
+
 	/**
 	 * Affichage de la fenêtre de jeu
 	 */
@@ -58,13 +60,13 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	public void afficher() {
 		fj.setVisible(true);
 	}
-	
+
 	@Override
 	public void commencerPlacementFlotte()
 			throws RemoteException {
 		fj.commencerPlacementFlotte();
 	}
-	
+
 	public void informerPret() {
 		try {
 			jeuDistant.informerPret();
@@ -78,9 +80,9 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 			throws RemoteException {
 		fj.finirPlacementFlotte();
 	}
-	
+
 	// Méthodes appelées localement
-	
+
 	public void placerBateau(String nom, List<Coordonnees> coordonneesBateau) {
 		try {
 			System.out.println("Envoi des coordonnees pour le bateau " + nom);
@@ -89,7 +91,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void forfait() {
 		try {
 			jeuDistant.forfait(joueur.getNom());
@@ -97,7 +99,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean attaquer(Coordonnees c) {
 		if (!estMonTour) throw new AttendPetitConException();
 		try {
@@ -156,7 +158,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 		}
 		return "";
 	}
-	
+
 	public int getNbBateaux(boolean coules) {
 		try {
 			return jeuDistant.getNbBateaux(joueur.getNom(), coules);
@@ -174,7 +176,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 		}
 		return 0;
 	}
-	
+
 	public int getNbBateauxAdversaire(boolean coules) {
 		try {
 			return jeuDistant.getNbBateauxAdversaire(joueur.getNom(), coules);
@@ -183,7 +185,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 		}
 		return 0;
 	}
-	
+
 	public int getNbBateauxAdversaire(String nomBateau, boolean coules) {
 		try {
 			return jeuDistant.getNbBateauxAdversaire(joueur.getNom(), nomBateau, coules);
@@ -192,7 +194,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 		}
 		return 0;
 	}
-	
+
 	public int getHauteurCarte() {
 		try {
 			return jeuDistant.getHauteurCarte();
@@ -201,8 +203,8 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 		}
 		return 0;
 	}
-	
-	public int getLargeurCarte() { 
+
+	public int getLargeurCarte() {
 		try {
 			return jeuDistant.getLargeurCarte();
 		} catch (RemoteException e) {

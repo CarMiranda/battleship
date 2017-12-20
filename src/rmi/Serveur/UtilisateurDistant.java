@@ -21,7 +21,7 @@ import modele.UtilisateurInconnuException;
 import rmi.Client.IUtilisateur;
 
 public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisateurDistant {
-	
+
 	private static final long serialVersionUID;
 	private static final Map<String, IUtilisateurDistant> utilisateurs;
 	private final Map<String, IEntree> statistiques;
@@ -29,13 +29,14 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	private String nom;
 	private boolean connecte;
 	private transient IUtilisateur utilisateurLocal;
-	private int bddId;
-	
+	private int bddId, remotePort;
+	private String remoteHost;
+
 	static {
 		serialVersionUID = 1255597867363756474L;
 		utilisateurs = new HashMap<String, IUtilisateurDistant>();
 	}
-	
+
 	public UtilisateurDistant(int bddId, String nom)
 			throws RemoteException, AlreadyBoundException, MalformedURLException, NotBoundException {
 		super();
@@ -46,32 +47,41 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		statistiques = new HashMap<String, IEntree>();
 		Registry registry = LocateRegistry.getRegistry();
 		registry.bind(nom + "Distant", this);
-		
+
 	}
-	
+
 	@Override
-	public void setUtilisateurLocal(IUtilisateur utilisateurLocal) throws RemoteException {
-		this.utilisateurLocal = utilisateurLocal;
+	public void setUtilisateurLocal(String nom, IUtilisateur utilisateurLocal) throws RemoteException {
+		try {
+			System.out.println("Association de " + nom);
+			LocateRegistry.getRegistry().bind(nom, utilisateurLocal);
+			this.utilisateurLocal = (IUtilisateur) LocateRegistry.getRegistry().lookup(nom);
+			System.out.println("Association de " + nom + " réussie");
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	@Override
 	public IUtilisateur getUtilisateurLocal() throws RemoteException {
 		return utilisateurLocal;
 	}
-	
+
 	/**
 	 * Initialisation de l'ensemble des utilisateurs (i.e. lecture dans la base de données).
-	 * @throws SQLException 
-	 * @throws RemoteException 
-	 * @throws AlreadyBoundException 
-	 * @throws NotBoundException 
-	 * @throws MalformedURLException 
+	 * @throws SQLException
+	 * @throws RemoteException
+	 * @throws AlreadyBoundException
+	 * @throws NotBoundException
+	 * @throws MalformedURLException
 	 * @since 1.0.0
 	 */
 	public static void initUtilisateurs()
 			throws SQLException, RemoteException, AlreadyBoundException, MalformedURLException, NotBoundException {
 		Connection conn = Serveur.getConnexionSQL();
-		
+
 		String query = "SELECT id, uname FROM users;";
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
@@ -79,7 +89,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		PreparedStatement stats = null;
 		String preparedQuery = "SELECT win, lose, uname AS opponent FROM stats LEFT JOIN users ON id = fid WHERE uid = ?;";
 		ResultSet rsp = null;
-		
+
 		while (rs.next()) {
 			IUtilisateurDistant utilisateur = new UtilisateurDistant(rs.getInt("id"), rs.getString("uname"));
 			utilisateurs.put(utilisateur.getNom(), utilisateur);
@@ -92,11 +102,11 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		}
 		System.out.println("Initialisation de la liste d'utilisateurs.");
 	}
-	
+
 	public String getNom() throws RemoteException { return nom; }
 	public boolean estConnecte() throws RemoteException { return connecte; }
 	public int getBddId() throws RemoteException { return bddId; }
-	
+
 	public static IUtilisateurDistant getUtilisateur(String nom) {
 		for (IUtilisateurDistant u : utilisateurs.values()) {
 			try {
@@ -121,7 +131,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	public Map<String, IEntree> getStatistiques() throws RemoteException {
 		return statistiques;
 	}
-	
+
 	@Override
 	public void finirJeu(String adversaire) throws RemoteException {
 		String nomJeu;
@@ -133,14 +143,14 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 			throw new IllegalArgumentException();
 		jeux.remove(nomJeu);
 	}
-	
+
 	@Override
 	public void ajouterVictoire(String adversaire)
 		throws RemoteException {
 		IEntree entree = statistiques.get(adversaire);
 		entree.ajouterVictoire();
 	}
-	
+
 	@Override
 	public void ajouterDefaite(String adversaire)
 		throws RemoteException {
@@ -163,8 +173,10 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		Difficulte difficulte = Difficulte.DIFFICILE;
 		IJeuDistant jeuDistant = new JeuDistant(this, adversaire, difficulte);
 		jeux.put(nom + adversaire.getNom(), jeuDistant);
-		notifierJeu(adversaire, jeuDistant);
-		adversaire.notifierJeu(this, jeuDistant);
+		System.out.println("Jeu créé et bindé. Notification des joueurs...");
+		System.out.println("Blablabla");
+		notifierJeu(adversaire.getNom());
+		adversaire.notifierJeu(nom);
 	}
 
 	@Override
@@ -174,16 +186,32 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 			if (iud != this)
 			iud.informerConnection(this, false);
 		}
-		setUtilisateurLocal(null);
+		try {
+			LocateRegistry.getRegistry().unbind(nom);
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+		this.utilisateurLocal = null;
+		this.remoteHost = null;
 	}
-	
+
+	@Override
+	public String getRemoteHost() throws RemoteException {
+		return remoteHost;
+	}
+
+	@Override
+	public int getRemotePort() throws RemoteException {
+		return remotePort;
+	}
+
 	@Override
 	public void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau)
 			throws RemoteException {
 		if (utilisateurLocal != null)
 			utilisateurLocal.informerConnection(utilisateur, estNouveau);
 	}
-	
+
 	public void connecter(boolean estNouveau) throws RemoteException {
 		connecte = true;
 		for (IUtilisateurDistant iud : utilisateurs.values()) {
@@ -191,7 +219,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 			iud.informerConnection(this, estNouveau);
 		}
 	}
-	
+
 	public static IUtilisateurDistant addUtilisateurDistant(int bddId, String nom) {
 		try {
 			IUtilisateurDistant u = new UtilisateurDistant(bddId, nom);
@@ -210,8 +238,9 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	}
 
 	@Override
-	public boolean notifierJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException {
-		utilisateurLocal.rejoindreJeu(utilisateur, jeu);
+	public boolean notifierJeu(String nomAdversaire) throws RemoteException {
+		System.out.println("Blablabla");
+		utilisateurLocal.rejoindreJeu(nomAdversaire);
 		return true;
 	}
 
@@ -229,7 +258,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	public void ajouterEntree(IEntree entree) throws RemoteException {
 		statistiques.put(entree.getNom(), entree);
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof IUtilisateurDistant)

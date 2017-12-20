@@ -12,9 +12,9 @@ public interface IUtilisateurDistant extends Remote {
 	Map<String, IEntree> getStatistiques() throws RemoteException;
 	void commencerJeu(IUtilisateurDistant utilisateur, String difficulte) throws RemoteException;
 	void deconnecter() throws RemoteException;
-	boolean notifierJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
+	boolean notifierJeu(String nom) throws RemoteException;
 	String getNom() throws RemoteException;
-	void setUtilisateurLocal(IUtilisateur utilisateur) throws RemoteException;
+	void setUtilisateurLocal(String nom, IUtilisateur utilisateurLocal) throws RemoteException;
 	void connecter(boolean estNouveau) throws RemoteException;
 	boolean estConnecte() throws RemoteException;
 	void finirJeu(String adversaire) throws RemoteException;
@@ -26,4 +26,6 @@ public interface IUtilisateurDistant extends Remote {
 	int getBddId() throws RemoteException;
 	IUtilisateur getUtilisateurLocal() throws RemoteException;
 	void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException;
+	String getRemoteHost() throws RemoteException;
+	int getRemotePort() throws RemoteException;
 }
