@@ -7,7 +7,6 @@ import java.util.Map;
 import modele.Difficulte;
 
 import rmi.Serveur.IEntree;
-import rmi.Serveur.IJeuDistant;
 import rmi.Serveur.IUtilisateurDistant;
 /**
  * Cette interface représente l'interface de la classe Utilisateur.
@@ -15,7 +14,7 @@ import rmi.Serveur.IUtilisateurDistant;
  *
  */
 public interface IUtilisateur extends Remote {
-	
+
 	// Méthodes à distance
 	/**
 	 * Permet de rejoindre un jeu lorsqu'un utilisateur nous défie.
@@ -23,9 +22,9 @@ public interface IUtilisateur extends Remote {
 	 * @param jeu
 	 * @throws RemoteException
 	 */
-	void rejoindreJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
-	
-	// Méthodes locales
+	void rejoindreJeu(String nom) throws RemoteException;
+
+// Méthodes locales
 	
 	/**
 	 * Permet de s'identiefier auprès du logiciel.

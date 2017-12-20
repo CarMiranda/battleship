@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import rmi.Client.IJeu;
-import rmi.Client.IUtilisateur;
 /**
  * Cette interface représente un jeu dans le serveur RMI.
  * @author Carlos MIRANDA
@@ -14,11 +13,11 @@ import rmi.Client.IUtilisateur;
 public interface IJeuDistant extends Remote {
 	/**
 	 * Permet d'associer le jeu distants aux jeux locaux des clients.
-	 * @param jeu le jeu.
-	 * @param utilisateur utilisateur qui veut enregistrer son jeu.
+	 * @param String	nom de l'utilisateur qui veut enregistrer son jeu
+	 * @param IJeu		le jeu à enregistrer dans le registre RMI du serveur
 	 * @throws RemoteException
 	 */
-	void setJeuLocal(IJeu jeu, IUtilisateur utilisateur) throws RemoteException;
+	void setJeuLocal(String nomUtilisateur, IJeu jeuLocal) throws RemoteException;
 	
 	/**
 	 * Commence un jeu, i.e. instruit au joueur1 de placer sa flotte et informe le joueur2.

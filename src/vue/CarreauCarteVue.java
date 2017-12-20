@@ -1,10 +1,7 @@
 package vue;
 
 import java.awt.event.MouseListener;
-import java.awt.Color;
 import javax.swing.JLabel;
-import rmi.Client.Jeu;
-import rmi.Serveur.AttendPetitConException;
 import rmi.Serveur.Coordonnees;
 /**
  * Cette classe représente un carreau de la carte affichée sur la fênetre de jeu.
@@ -17,7 +14,6 @@ public class CarreauCarteVue extends JLabel {
 	private static final long serialVersionUID = 1L;
 	private int etat; // 0 si vide, 1 si attaqué, 2 si partie bateau, 3 si partie bateau attaquee
 	private MouseListener ml;
-	private Jeu jeu;
 	private final Coordonnees coordonnees;
 	
 	/**

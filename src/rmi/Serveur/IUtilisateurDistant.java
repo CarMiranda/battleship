@@ -47,7 +47,7 @@ public interface IUtilisateurDistant extends Remote {
 	 * @return true si l'utilisateur a été notifié correctement
 	 * @throws RemoteException
 	 */
-	boolean notifierJeu(IUtilisateurDistant utilisateur, IJeuDistant jeu) throws RemoteException;
+	boolean notifierJeu(String nom) throws RemoteException;
 	
 	/**
 	 * Getter
@@ -61,7 +61,7 @@ public interface IUtilisateurDistant extends Remote {
 	 * @param utilisateur l'utilisateur local (celui qui est dans le client).
 	 * @throws RemoteException
 	 */
-	void setUtilisateurLocal(IUtilisateur utilisateur) throws RemoteException;
+	void setUtilisateurLocal(String nom, IUtilisateur utilisateurLocal) throws RemoteException;
 	
 	/**
 	 * Permet qu'un utilisateur se connecte.
@@ -142,4 +142,6 @@ public interface IUtilisateurDistant extends Remote {
 	 * @throws RemoteException
 	 */
 	void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException;
+	String getRemoteHost() throws RemoteException;
+	int getRemotePort() throws RemoteException;
 }

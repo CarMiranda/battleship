@@ -41,7 +41,6 @@ public class FenetreAccueil extends JFrame {
 	private final static Font POLICE_SOUSTITRE = new Font("DevanagariMT-Bold",Font.ITALIC,20);
 	
 	private TableModelStats tableStats;
-	private final Client client;
 	private MyListModel usersListModel;
 	private JList<IUtilisateurDistant> usersList;
 	
@@ -204,7 +203,6 @@ public class FenetreAccueil extends JFrame {
 	public FenetreAccueil(final Client client) throws RemoteException {
 		super("Bataille Navale - Accueil de " + client.getUtilisateur().getNom());
 		
-		this.client = client;
 		final IUtilisateur user = client.getUtilisateur();
 		String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées", "Parties perdues"};
 		this.tableStats = new TableModelStats(user, columnNames);

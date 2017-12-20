@@ -15,39 +15,39 @@ import vue.FenetreJeu;
  *
  */
 public class Jeu extends UnicastRemoteObject implements IJeu {
-	
+
 	private static final long serialVersionUID = -1732761568274563L;
-	
+
 	/**
 	 * Attributs relatifs au côté serveur
 	 */
 	private final IJeuDistant jeuDistant;
-	
+
 	/**
 	 * Attributs relatifs au côté client
 	 */
 	private transient final Joueur joueur;
 	private transient FenetreJeu fj;
 	private transient boolean estMonTour;
-	
+
 	/**
 	 * Constructeur de jeu
 	 * @param jeuDistant		le jeu distant auquel on fait référence
 	 * @param utilisateurLocal	l'utilisateur local
 	 * @throws RemoteException
 	 */
-	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal,Client leClient)
+	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal, Client leClient)
 			throws RemoteException {
 		this.jeuDistant = jeuDistant;
-		this.jeuDistant.setJeuLocal(this, utilisateurLocal);
+		this.jeuDistant.setJeuLocal(utilisateurLocal.getNom(), this);
 		joueur = new Joueur(this, utilisateurLocal.getNom());
 		fj = new FenetreJeu(this, leClient);
 		estMonTour = false;
 		informerPret();
 	}
-	
+
 	// Méthodes appelées à distance
-	
+
 	@Override
 	/**
 	 * Permet de commencer un jeu.
@@ -55,7 +55,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	public void jouer() throws RemoteException {
 		jeuDistant.jouer();
 	}
-	
+
 	/**
 	 * Affichage de la fenêtre de jeu
 	 */
@@ -63,7 +63,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	public void afficher() {
 		fj.setVisible(true);
 	}
-	
+
 	@Override
 	/**
 	 * Permet de commencer à placer une flotte de bataux.
@@ -72,6 +72,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 			throws RemoteException {
 		fj.commencerPlacementFlotte();
 	}
+	
 	/**
 	 * Informer le serveur que le jeu est prêt.
 	 */
@@ -91,7 +92,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 			throws RemoteException {
 		fj.finirPlacementFlotte();
 	}
-	
+
 	// Méthodes appelées localement
 	/**
 	 * Cette méthode permet de placer un bateau aux coordonnées indiquées.
@@ -107,6 +108,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Permet de finir le jeu lors d'un forfait de l'un des joueurs.
 	 */

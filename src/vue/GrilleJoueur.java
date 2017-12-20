@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 import rmi.Client.Jeu;
 import rmi.Serveur.Coordonnees;

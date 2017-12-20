@@ -1,5 +1,6 @@
 package vue;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Map;
@@ -13,12 +14,11 @@ import rmi.Serveur.IUtilisateurDistant;
  *
  */
 public class Client {
-	
+
 	public static String REMOTEHOST;
-	
+
 	private FenetreLogin fl;
 	private FenetreAccueil fa;
-	//private FenetreJeu fj;
 	private IUtilisateur utilisateur;
 	private ListeUtilisateurs utilisateurs;	
 	
@@ -33,14 +33,18 @@ public class Client {
 	}
 	
 	/**
-	 * Perme de récuperer la liste d'utilisateurs contenue dans le serveur.
+	 * Permet de récuperer la liste d'utilisateurs contenue dans le serveur.
 	 */
 	public void setUtilisateurs() {
 		try {
 			Map<String, IUtilisateurDistant> utilisateursWeak = new WeakHashMap<String, IUtilisateurDistant>(utilisateur.getUtilisateurs());
 			utilisateurs = new ListeUtilisateurs();
-			utilisateurs.addAll(utilisateursWeak.values());
+			for (String nom : utilisateursWeak.keySet()) {
+				utilisateurs.add((IUtilisateurDistant) LocateRegistry.getRegistry(REMOTEHOST).lookup(nom + "Distant"));
+			}
 		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -105,7 +109,7 @@ public class Client {
 	 */
 	public void actualiserUtilisateurs(IUtilisateurDistant utilisateurDistant, boolean estNouveau) {
 		if (estNouveau) {
-			utilisateurs.add(utilisateurDistant);	
+			utilisateurs.add(utilisateurDistant);
 		} else {
 			utilisateurs.update(utilisateurDistant);
 		}

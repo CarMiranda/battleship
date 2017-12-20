@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
-import java.rmi.RemoteException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;

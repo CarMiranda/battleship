@@ -43,13 +43,14 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 		registry.bind("auth", auth);
 		System.out.println("Service d'authentification initialisé correctement.");
 	}
-	
+
 	@Override
-	public boolean authentification(String nom, String motDePasse) 
+	public boolean authentification(String nom, String motDePasse)
 			throws RemoteException {
 		IUtilisateurDistant u = UtilisateurDistant.getUtilisateur(nom);
 		if (u != null && u.estConnecte()) return false;
 		if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty())) {
+			System.out.println("Tentative de connexion de " + nom);
 			return validate(nom, motDePasse);
 		}
 		throw new IllegalArgumentException();
@@ -63,7 +64,7 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 				return add(nom, motDePasse);
 			}
 		} catch (UtilisateurInconnuException e) {
-			
+
 		}
 		throw new IllegalArgumentException();
 	}
@@ -86,7 +87,7 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 	
@@ -106,12 +107,12 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			rs = stmt.getGeneratedKeys();
 			rs.next();
-			UtilisateurDistant.addUtilisateurDistant(rs.getInt(1), nom); 
+			UtilisateurDistant.addUtilisateurDistant(rs.getInt(1), nom);
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
