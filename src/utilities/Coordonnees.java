@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import rmi.Serveur.CarreauCarte;
-import rmi.Serveur.ICoordonnees;
 
 /**
  * Cette classe implémente l'interface ICoordonnes
@@ -84,7 +83,7 @@ public class Coordonnees implements Serializable {
 	 * Redéfinition de equals.
 	 */
 	public boolean equals(Object o) {
-		if (o instanceof Coordonnees) return ((ICoordonnees) o).getX() == x && ((Coordonnees) o).getY() == y;
+		if (o instanceof Coordonnees) return ((Coordonnees) o).getX() == x && ((Coordonnees) o).getY() == y;
 		if (o instanceof CarreauCarte) return ((CarreauCarte) o).getCoordonnees().getX() == x && ((CarreauCarte) o).getCoordonnees().getY() == y;
 		return false;
 	}

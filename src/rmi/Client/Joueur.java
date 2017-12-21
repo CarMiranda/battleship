@@ -33,21 +33,10 @@ public class Joueur {
 	
 	/**
 	 * Permet d'envoyer les coordonnées où l'on veut placer le bateau au serveur.
-	 * @param coordonneesBateau
+	 * @param coordonneesBateau liste de coordonnées où l'on veut placer le bateau
 	 */
 	public void placerBateau(List<Coordonnees> coordonneesBateau) {
 		jeu.placerBateau(nom, coordonneesBateau);
-	}
-
-	/**
-	 * Instruire au joueur de placer le bateau
-	 * @param taille
-	 * @param nom
-	 * @param coordonneesBateau
-	 * @return
-	 */
-	public List<Coordonnees> placerBateau(int taille, String nom, List<Coordonnees> coordonneesBateau){
-		return null;
 	}
 	
 	/**

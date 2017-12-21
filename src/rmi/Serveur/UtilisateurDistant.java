@@ -17,7 +17,7 @@ import java.util.Map;
 
 
 import rmi.Client.IUtilisateur;
-import utilities.AttendPetitConException;
+import utilities.AttendPasTonTour;
 import utilities.Difficulte;
 import utilities.UtilisateurInconnuException;
 import utilities.UtilisateurNonConnecteException;
@@ -73,7 +73,6 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	@Override
 	public void setUtilisateurLocal(String nom, IUtilisateur utilisateurLocal) throws RemoteException {
 		try {
-			System.out.println("Association de " + nom);
 			LocateRegistry.getRegistry().bind(nom, utilisateurLocal);
 			this.utilisateurLocal = (IUtilisateur) LocateRegistry.getRegistry().lookup(nom);
 			System.out.println("Association de " + nom + " réussie");
@@ -177,7 +176,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	@Override
 	public void commencerJeu(IUtilisateurDistant adversaire, String diff) throws RemoteException {
 		System.out.println(nom + " lance une partie contre " + adversaire.getNom());
-		if (nom.equals(adversaire.getNom())) throw new AttendPetitConException();
+		if (nom.equals(adversaire.getNom())) throw new AttendPasTonTour();
 		if (!adversaire.estConnecte()) throw new UtilisateurNonConnecteException();
 		if (jeux.containsKey(nom + adversaire.getNom()) || jeux.containsKey(adversaire.getNom() + nom)) return;
 		System.out.println("Jeu valide, création du jeu en cours...");
@@ -192,7 +191,6 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		IJeuDistant jeuDistant = new JeuDistant(this, adversaire, difficulte);
 		jeux.put(nom + adversaire.getNom(), jeuDistant);
 		System.out.println("Jeu créé et bindé. Notification des joueurs...");
-		System.out.println("Blablabla");
 		notifierJeu(adversaire.getNom());
 		adversaire.notifierJeu(nom);
 	}
@@ -251,7 +249,6 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 
 	@Override
 	public boolean notifierJeu(String nomAdversaire) throws RemoteException {
-		System.out.println("Blablabla");
 		utilisateurLocal.rejoindreJeu(nomAdversaire);
 		return true;
 	}

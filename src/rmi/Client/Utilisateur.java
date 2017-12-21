@@ -14,7 +14,6 @@ import rmi.Serveur.IAuthentification;
 import rmi.Serveur.IEntree;
 import rmi.Serveur.IJeuDistant;
 import rmi.Serveur.IUtilisateurDistant;
-import utilities.Difficulte;
 
 /**
  * Cette classe implémente l'interface IUtilisateur.

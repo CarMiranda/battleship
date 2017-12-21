@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import rmi.Serveur.IJeuDistant;
-import utilities.AttendPetitConException;
+import utilities.AttendPasTonTour;
 import utilities.Coordonnees;
 /**
  * Cette classe représente le jeu de la bataille navale.
@@ -30,8 +30,9 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 
 	/**
 	 * Constructeur de jeu
-	 * @param jeuDistant		le jeu distant auquel on fait référence
+	 * @param jeuDistant le jeu distant auquel on fait référence
 	 * @param utilisateurLocal	l'utilisateur local
+	 * @param leClient le client.
 	 * @throws RemoteException
 	 */
 	public Jeu(IJeuDistant jeuDistant, IUtilisateur utilisateurLocal, Client leClient)
@@ -125,7 +126,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	 * @return true si l'attaque a réussi (on a touché une partie de bateau).
 	 */
 	public boolean attaquer(Coordonnees c) {
-		if (!estMonTour) throw new AttendPetitConException();
+		if (!estMonTour) throw new AttendPasTonTour();
 		try {
 			return jeuDistant.tour(joueur.getNom(), c);
 		} catch (RemoteException e) {
@@ -182,7 +183,7 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	/**
 	 * getter
 	 * Permet de savoir si c'est e tour du joueur utilisant ce jeu.
-	 * @return
+	 * @return true si c'est le tour du joueur utilisant ce jeu.
 	 */
 	public boolean estMonTour() {
 		return estMonTour;

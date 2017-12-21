@@ -65,28 +65,23 @@ public interface IJeu extends Remote {
 	
 	/**
 	 * Informe de la victoire du joueur.
-	 * @param parForfait
+	 * @param parForfait true si victoire par fofait.
 	 * @throws RemoteException
 	 */
 	void informerVictoire(boolean parForfait) throws RemoteException;
 	
 	/**
 	 * Informe de la defaite du joueur.
-	 * @param parForfait 
+	 * @param parForfait true si cùest une defaite par forfait.
 	 * @throws RemoteException
 	 */
 	void informerDefaite(boolean parForfait) throws RemoteException;
 	
 	/**
 	 * Permet de notifier au joueur que le carreau de la carte aux coordonnées passées en paramètre a été attaqué.
-	 * @param coordonneesAttaquees
+	 * @param coordonneesAttaquees coordonnées à attaquer.
 	 * @throws RemoteException
 	 */
 	void informerAttaque(Coordonnees coordonneesAttaquees) throws RemoteException;
 	
-	/*/**
-	 * Permet d'informer le nombre de bateaux qui restent dans une flotte. 
-	 * @throws RemoteException
-	 */
-	//void informerNbrBateaux() throws RemoteException;
 }

@@ -7,21 +7,18 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
 
 
 import rmi.Serveur.IUtilisateurDistant;
 import rmi.Serveur.IEntree;
-import utilities.Difficulte;
 
 
 import java.awt.BorderLayout;
@@ -35,18 +32,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
+
 /**
  * Cette classe représente la fenêtre d'accueil du jeu.
  * @author Jorge OCHOA, Carlos MIRANDA, Victor LE LEMAISTRE
@@ -230,6 +224,7 @@ public class FenetreAccueil extends JFrame {
 
 	/**
 	 * Permet d'actualiser la liste d'utlisateurs.
+	 * @param iud l'utilisateur qui a été modifié.
 	 */
 	public void actualiserUtilisateurs(IUtilisateurDistant iud) {
 		usersListModel.add(iud);
@@ -290,6 +285,7 @@ public class FenetreAccueil extends JFrame {
 
 		MouseListener mouseListener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent mouseEvent) {
+				@SuppressWarnings("unchecked")
 				JList<IUtilisateurDistant> theList = (JList<IUtilisateurDistant>) mouseEvent.getSource();
 				int index = theList.locationToIndex(mouseEvent.getPoint());
 				if (index >= 0) {

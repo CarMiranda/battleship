@@ -8,9 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import rmi.Client.Joueur;
 import rmi.Serveur.Bateau;
-import rmi.Serveur.Carte;
 import rmi.Serveur.Flotte;
 import rmi.Serveur.JoueurDistant;
 import rmi.Serveur.PartieBateau;

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import rmi.Serveur.IEntree;
 import rmi.Serveur.IUtilisateurDistant;
-import utilities.Difficulte;
+
 /**
  * Cette interface représente l'interface de la classe Utilisateur.
  * @author Carlos MIRANDA
@@ -28,7 +28,7 @@ public interface IUtilisateur extends Remote {
 
 	/**
 	 * Permet de s'identiefier auprès du logiciel.
-	 * @param motDePasse
+	 * @param motDePasse le mot de passe
 	 * @return l'utilisateur distant associé à l'utilisateur.
 	 * @throws RemoteException
 	 */
@@ -36,7 +36,7 @@ public interface IUtilisateur extends Remote {
 
 	/**
 	 * Permet de créer un compte.
-	 * @param motDePasse
+	 * @param motDePasse le mot de passe.
 	 * @return l'utilisateur distant associé à l'utilisateur.
 	 * @throws RemoteException
 	 */
@@ -44,11 +44,11 @@ public interface IUtilisateur extends Remote {
 
 	/**
 	 * Permet de commencer un jeu.
-	 * @param utilisateur
-	 * @param string
+	 * @param utilisateur l'adversaire.
+	 * @param difficulte la difficulte.
 	 * @throws RemoteException
 	 */
-	void commencerJeu(IUtilisateurDistant utilisateur, String string) throws RemoteException;
+	void commencerJeu(IUtilisateurDistant utilisateur, String difficulte) throws RemoteException;
 
 	/**
 	 * Getter
@@ -78,8 +78,8 @@ public interface IUtilisateur extends Remote {
 
 	/**
 	 * Permet d'actualiser les utilisateurs connectés
-	 * @param utilisateur
-	 * @param estNouveau
+	 * @param utilisateur l'utilisateur modifié
+	 * @param estNouveau true s'il est nouveau
 	 * @throws RemoteException
 	 */
 	void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException;

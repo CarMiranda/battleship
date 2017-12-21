@@ -12,7 +12,7 @@ import java.util.List;
 
 
 import rmi.Client.IJeu;
-import utilities.AttendPetitConException;
+import utilities.AttendPasTonTour;
 import utilities.Coordonnees;
 import utilities.Difficulte;
 
@@ -104,11 +104,11 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	/**
 	 * Méthode appelée par le jeu local pour informer d'une attaque effectuée, informer l'autre joueur de l'attaque et
 	 * informer cet autre joueur que c'est son tour
-	 * @throws AttendPetitConException
+	 * @throws AttendPasTonTour
 	 */
 	@Override
 	public boolean tour(String nom, Coordonnees coordonneesAttaquees) throws RemoteException {
-		if (!nom.equals(joueurCourant.getNom())) throw new AttendPetitConException();
+		if (!nom.equals(joueurCourant.getNom())) throw new AttendPasTonTour();
 		JoueurDistant joueurPrecedent = joueurCourant;
 		IJeu jeuLocalPrecedent = jeuLocalCourant;
 		if (joueurCourant.equals(joueur1)) {
@@ -139,11 +139,11 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 
 	/**
 	 * Méthode appelée par le jeu local pour savoir quel est le bateau suivant à placer
-	 * @throws AttendPetitConException
+	 * @throws AttendPasTonTour
 	 */
 	@Override
 	public void placementFlotte(String nom) throws RemoteException {
-		if (!nom.equals(joueurCourant.getNom())) throw new AttendPetitConException();
+		if (!nom.equals(joueurCourant.getNom())) throw new AttendPasTonTour();
 		placementFlotte(joueurCourant, jeuLocalCourant);
 	}
 
@@ -151,7 +151,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	@Override
 	public void placerBateau(String nomJoueur, String nomBateau, List<Coordonnees> bateau)
 			throws RemoteException {
-		if (!nomJoueur.equals(joueurCourant.getNom())) throw new AttendPetitConException();
+		if (!nomJoueur.equals(joueurCourant.getNom())) throw new AttendPasTonTour();
 		System.out.println("Placement du bateau " + nomBateau + " par " + nomJoueur);
 		List<Coordonnees> lc = joueurCourant.getCarte().toCoordonneesServeur(bateau);
 		joueurCourant.placerBateau(nomBateau, lc);

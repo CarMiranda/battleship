@@ -42,9 +42,7 @@ public class GrilleJoueur extends GrilleIHM {
 		@Override
 		public void mouseEntered(MouseEvent me) {
 			if (placementFlotte) {
-				System.out.print("Choix d'un autre carreau? ");
 				if (isSelecting && bateauEnPlacement.size() >= 1 && bateauEnPlacement.size() < tailleBateauAPlacer) {
-					System.out.println("Oui");
 					CarreauCarteVue ccv = (CarreauCarteVue) me.getSource();
 					if (lccv.size() >= 2 && lccv.get(lccv.size() - 2).equals(ccv)) {
 						bateauEnPlacement.remove(bateauEnPlacement.size() - 1);
@@ -64,8 +62,6 @@ public class GrilleJoueur extends GrilleIHM {
 							bateauEnPlacement.remove(ccv.getCoordonnees());
 						}
 					}
-				} else {
-					System.out.println("Non car isSelecting = " + isSelecting + ", bateauEnPlacement.size() = " + bateauEnPlacement.size() + ", tailleBateauAPlacer = " + tailleBateauAPlacer);
 				}
 			}
 		}
