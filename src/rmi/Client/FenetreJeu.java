@@ -85,19 +85,42 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		tableauxPanel.setLayout(new FlowLayout());
 		
 		//Initialisation des quantités de bateaux
-		bateauxJoueur.put(TypesBateau.PORTEAVIONS.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.PORTEAVIONS.getNom(), true))));
-		bateauxJoueur.put(TypesBateau.CONTRETORPILLEUR.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CONTRETORPILLEUR.getNom(), true))));
-		bateauxJoueur.put(TypesBateau.CROISEUR.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CROISEUR.getNom(), true))));
-		bateauxJoueur.put(TypesBateau.CUIRASSE.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CUIRASSE.getNom(), true))));
-		bateauxJoueur.put(TypesBateau.SOUSMARIN.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.SOUSMARIN.getNom(), true))));
-		bateauxJoueur.put(TypesBateau.TORPILLEUR.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.TORPILLEUR.getNom(), true))));
+		JLabel tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.PORTEAVIONS.getNom(), true)+ " (" + TypesBateau.PORTEAVIONS.getTaille() + ")"));
+		bateauxJoueur.put(TypesBateau.PORTEAVIONS.getNom(), tmp);
 		
-		bateauxAdversaires.put(TypesBateau.CONTRETORPILLEUR.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.CONTRETORPILLEUR.getNom(), true))));
-		bateauxAdversaires.put(TypesBateau.CROISEUR.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.CROISEUR.getNom(), true))));
-		bateauxAdversaires.put(TypesBateau.CUIRASSE.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.CUIRASSE.getNom(), true))));
-		bateauxAdversaires.put(TypesBateau.PORTEAVIONS.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.PORTEAVIONS.getNom(), true))));
-		bateauxAdversaires.put(TypesBateau.SOUSMARIN.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.SOUSMARIN.getNom(), true))));
-		bateauxAdversaires.put(TypesBateau.TORPILLEUR.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.TORPILLEUR.getNom(), true))));
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CONTRETORPILLEUR.getNom(), true)) + " (" + TypesBateau.CONTRETORPILLEUR.getTaille() + ")");
+		bateauxJoueur.put(TypesBateau.CONTRETORPILLEUR.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CROISEUR.getNom(), true)) + " (" + TypesBateau.CROISEUR.getTaille() + ")");
+		bateauxJoueur.put(TypesBateau.CROISEUR.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CUIRASSE.getNom(), true)) + " (" + TypesBateau.CUIRASSE.getTaille() + ")");
+		bateauxJoueur.put(TypesBateau.CUIRASSE.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.SOUSMARIN.getNom(), true)) + " (" + TypesBateau.SOUSMARIN.getTaille() + ")");
+		bateauxJoueur.put(TypesBateau.SOUSMARIN.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.TORPILLEUR.getNom(), true)) + " (" + TypesBateau.TORPILLEUR.getTaille() + ")");
+		bateauxJoueur.put(TypesBateau.TORPILLEUR.getNom(), tmp);
+		
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateauxAdversaire(TypesBateau.CONTRETORPILLEUR.getNom(), true)) + " (" + TypesBateau.CONTRETORPILLEUR.getTaille() + ")");
+		bateauxAdversaires.put(TypesBateau.CONTRETORPILLEUR.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateauxAdversaire(TypesBateau.CROISEUR.getNom(), true)) + " (" + TypesBateau.CROISEUR.getTaille() + ")");
+		bateauxAdversaires.put(TypesBateau.CROISEUR.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateauxAdversaire(TypesBateau.CUIRASSE.getNom(), true)) + " (" + TypesBateau.CUIRASSE.getTaille() + ")");
+		bateauxAdversaires.put(TypesBateau.CUIRASSE.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateauxAdversaire(TypesBateau.PORTEAVIONS.getNom(), true)) + " (" + TypesBateau.PORTEAVIONS.getTaille() + ")");
+		bateauxAdversaires.put(TypesBateau.PORTEAVIONS.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateauxAdversaire(TypesBateau.SOUSMARIN.getNom(), true)) + " (" + TypesBateau.SOUSMARIN.getTaille() + ")");
+		bateauxAdversaires.put(TypesBateau.SOUSMARIN.getNom(), tmp);
+		
+		tmp = new JLabel("x " + String.valueOf(leJeu.getNbBateauxAdversaire(TypesBateau.TORPILLEUR.getNom(), true)) + " (" + TypesBateau.TORPILLEUR.getTaille() + ")");
+		bateauxAdversaires.put(TypesBateau.TORPILLEUR.getNom(), tmp);
 		
 		//Coté gauche de l'écran qui représente le côté du Joueur. Seulement le Nord, Center et Sud sont utilisés
 		//On met un texte dans le Nord
@@ -384,7 +407,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		for (Map.Entry<String, JLabel> entry : bateauxJoueur.entrySet()) {
 		    String key = entry.getKey();
 		    JLabel value = entry.getValue();
-		    value.setText("x " + String.valueOf(leJeu.getNbBateaux(key, true)));
+		    value.setText("x " + String.valueOf(leJeu.getNbBateaux(key, true))+ " " +value.getText().split(" ")[2]);
 		    value.repaint();
 		}
 	}
@@ -396,7 +419,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		for (Map.Entry<String, JLabel> entry : bateauxAdversaires.entrySet()) {
 		    String key = entry.getKey();
 		    JLabel value = entry.getValue();
-		    value.setText("x "+ String.valueOf(leJeu.getNbBateauxAdversaire(key, true)));
+		    value.setText("x "+ leJeu.getNbBateauxAdversaire(key, true) + " " +value.getText().split(" ")[2]);
 		    value.repaint();
 		}
 	}
