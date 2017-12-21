@@ -2,16 +2,21 @@ package rmi.Client;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JComboBox;
 
 
 import rmi.Serveur.IUtilisateurDistant;
@@ -21,12 +26,16 @@ import utilities.Difficulte;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -37,25 +46,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 /**
  * Cette classe représente la fenêtre d'accueil du jeu.
  * @author Jorge OCHOA, Carlos MIRANDA, Victor LE LEMAISTRE
  *
  */
 public class FenetreAccueil extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private final static Font POLICE_SOUSTITRE = new Font("DevanagariMT-Bold",Font.ITALIC,20);
-	
+
 	private TableModelStats tableStats;
 	private JTable stats;
 	private MyListModel usersListModel;
 	private JList<IUtilisateurDistant> usersList;
 	private IUtilisateur user;
-	
+
 	/**
-	 * 
+	 *
 	 * @author Carlos MIRANDA
 	 *
 	 */
@@ -64,16 +74,16 @@ public class FenetreAccueil extends JFrame {
 		private static final long serialVersionUID = 1L;
 		final static ImageIcon connectedIcon = new ImageIcon(ClassLoader.getSystemResource("connected.png"));
 		final static ImageIcon notConnectedIcon = new ImageIcon(ClassLoader.getSystemResource("notConnected.png"));
-		
+
 		@Override
 		public Component getListCellRendererComponent(
-				JList<? extends IUtilisateurDistant> list, 
+				JList<? extends IUtilisateurDistant> list,
 				IUtilisateurDistant value,
 				int index,
 				boolean isSelected,
 				boolean cellHasFocus
 				) {
-			
+
 			try {
 				setText(value.getNom());
 				setIcon(value.estConnecte() ? connectedIcon : notConnectedIcon);
@@ -90,22 +100,22 @@ public class FenetreAccueil extends JFrame {
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-			
+
 			return this;
-			
+
 		}
 	}
-	
+
 	/**
 	 * Cette classe représente la liste des utilisateurs pour l'IHM.
 	 * @author Carlos MIRANDA
 	 *
 	 */
 	protected class MyListModel extends DefaultListModel<IUtilisateurDistant> {
-		
+
 		private SortedSet<IUtilisateurDistant> data = null;
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * Contructeur
 		 * @param utilisateurs Ennsemble ordonné d'utilsiateurs
@@ -124,7 +134,7 @@ public class FenetreAccueil extends JFrame {
 		public int getSize() {
 			return data.size();
 		}
-		
+
 		public void add(IUtilisateurDistant utilisateur) {
 			if (data.contains(utilisateur)) {
 				data.remove(utilisateur);
@@ -132,31 +142,31 @@ public class FenetreAccueil extends JFrame {
 			}
 			fireContentsChanged(this, 0, getSize());
 		}
-		
+
 		/*public void addAll(IUtilisateurDistant[] utilisateurs) {
 			Collection<IUtilisateurDistant> c = Arrays.asList(utilisateurs);
 			data.addAll(c);
 			fireContentsChanged(this, 0, getSize());
 		}*/
-		
+
 	}
-	
+
 	/**
 	 * Cette classe représente le tableau des statistiques pour l'IHM.
 	 * @author Jorge OCHOA
 	 *
 	 */
 	private class TableModelStats extends DefaultTableModel {
-		
+
 		private static final long serialVersionUID = 1L;
-		
+
 		private List<IEntree> stats = null;
 		private String[] columnNames;
-		
+
 		/**
 		 * Constructeur
 		 * @param u l'utilsiteur
-		 * @param columnNames 
+		 * @param columnNames
 		 * @throws RemoteException
 		 */
 		public TableModelStats(IUtilisateur u, String[] columnNames) throws RemoteException{
@@ -164,12 +174,12 @@ public class FenetreAccueil extends JFrame {
 			stats = new ArrayList<IEntree>(u.getStatistiques().values());
 			this.columnNames = columnNames;
 		}
-		
+
 		@Override
 		public String getColumnName(int col) {
 			return columnNames[col];
 		}
-		
+
 		@Override
 		public int getColumnCount() {
 			return this.columnNames.length;
@@ -202,7 +212,7 @@ public class FenetreAccueil extends JFrame {
 			}
 			return null;
 		}
-		
+
 		public void addRow(IEntree row) {
 			stats.add(row);
 			Vector<Object> rowVector = new Vector<>();
@@ -217,7 +227,7 @@ public class FenetreAccueil extends JFrame {
 			super.addRow(rowVector);
 		}
 	}
-	
+
 	/**
 	 * Permet d'actualiser la liste d'utlisateurs.
 	 */
@@ -225,7 +235,7 @@ public class FenetreAccueil extends JFrame {
 		usersListModel.add(iud);
 		usersList.repaint();
 	}
-	
+
 	public void ajouterStats(String nomAdversaire) {
 		try {
 			this.tableStats.addRow((IEntree) LocateRegistry.getRegistry(Client.REMOTEHOST).lookup(user.getNom() + nomAdversaire + "Entree"));
@@ -238,7 +248,7 @@ public class FenetreAccueil extends JFrame {
 		}
 		this.stats.repaint();
 	}
-	
+
 	/**
 	 * Constructeur
 	 * @param client le client
@@ -246,12 +256,12 @@ public class FenetreAccueil extends JFrame {
 	 */
 	public FenetreAccueil(final Client client) throws RemoteException {
 		super("Bataille Navale - Accueil de " + client.getUtilisateur().getNom());
-		
+
 		user = client.getUtilisateur();
 		String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées", "Parties perdues"};
 		this.tableStats = new TableModelStats(user, columnNames);
 		JPanel mainPanel = new JPanel(new BorderLayout());
-		
+
 		/*Creation du panel affichage des statistiques de jeu */
 		JLabel sousTitreStats = new JLabel("Statistiques de Jeu", SwingConstants.CENTER);
 		sousTitreStats.setFont(POLICE_SOUSTITRE);
@@ -260,7 +270,7 @@ public class FenetreAccueil extends JFrame {
 		statsPanel.add(sousTitreStats, BorderLayout.NORTH);
 		stats = new JTable(this.tableStats);
 		statsPanel.add(new JScrollPane(stats), BorderLayout.CENTER);
-		
+
 		/*Creation du panel affichage la liste d'utilisateurs connectes */
 		JLabel sousTitreUtilisateurs = new JLabel("Liste des Utilisateurs");
 		sousTitreUtilisateurs.setFont(POLICE_SOUSTITRE);
@@ -277,34 +287,65 @@ public class FenetreAccueil extends JFrame {
 		usersListModel = new MyListModel(client.getUtilisateurs());
 		usersList.setCellRenderer(new MyCellRenderer());
 		usersList.setModel(usersListModel);
-		
+
 		MouseListener mouseListener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent mouseEvent) {
 				JList<IUtilisateurDistant> theList = (JList<IUtilisateurDistant>) mouseEvent.getSource();
 				int index = theList.locationToIndex(mouseEvent.getPoint());
 				if (index >= 0) {
-					IUtilisateurDistant iud = (IUtilisateurDistant) theList.getModel().getElementAt(index);
-					try {
-						client.getUtilisateur().commencerJeu(iud, Difficulte.DIFFICILE);
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					}
+					final IUtilisateurDistant iud = (IUtilisateurDistant) theList.getModel().getElementAt(index);
+
+						final JComboBox<String> choixDifficulte = new JComboBox<String>(new String[] {"FACILE", "MOYEN", "DIFFICILE"});
+						final JDialog choixDifficulteDialog = new JDialog(FenetreAccueil.this, "Choix de difficulté");
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+								choixDifficulteDialog.setResizable(false);
+								choixDifficulteDialog.addWindowListener(new WindowAdapter() {
+									public void windowClosing(WindowEvent evt) {
+										choixDifficulteDialog.dispose();
+							        }
+							    });
+								JPanel panel = new JPanel(new BorderLayout());
+								panel.setPreferredSize(new Dimension(150, 75));
+								JButton commencer = new JButton("Commencer");
+								commencer.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent ae) {
+										try {
+											client.getUtilisateur().commencerJeu(iud, (String) choixDifficulte.getSelectedItem());
+											choixDifficulteDialog.dispose();
+										} catch (RemoteException e) {
+											e.printStackTrace();
+										}
+									}
+								});
+								panel.add(choixDifficulte, BorderLayout.CENTER);
+								panel.add(commencer, BorderLayout.SOUTH);
+								choixDifficulteDialog.add(panel);
+								choixDifficulteDialog.pack();
+								choixDifficulteDialog.setAlwaysOnTop(true);
+								choixDifficulteDialog.setVisible(true);
+							}
+
+						});
 				}
 			}
 		};
 		usersList.addMouseListener(mouseListener);
 		usersPanel.add(usersList, BorderLayout.CENTER);
-		
+
 		/*Creation titre pour la fenetre d'accueil*/
 		JLabel titre = new JLabel("BATTLESHIP GM4-17", SwingConstants.CENTER);
 		titre.setFont(POLICE_SOUSTITRE);
 		titre.setVerticalAlignment(JLabel.CENTER);
-		
+
 		/*On ajoute les differentes composantes sur le panel principal*/
 		mainPanel.add(statsPanel, BorderLayout.CENTER);
 		mainPanel.add(usersPanel, BorderLayout.EAST);
 		mainPanel.add(titre,BorderLayout.NORTH);
-		
+
 		/*On active les proprietes de la fenetre*/
 		this.setAlwaysOnTop(true);
 		this.setContentPane(mainPanel);
@@ -321,7 +362,9 @@ public class FenetreAccueil extends JFrame {
 		pack();
 		this.setVisible(true);
 	}
-	
+
+
+
 	/**
 	 * Permet de mettre à jour les statistiques de jeu.
 	 */

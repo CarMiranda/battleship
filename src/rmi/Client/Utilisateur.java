@@ -86,9 +86,9 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	}
 
 	@Override
-	public void commencerJeu(IUtilisateurDistant utilisateur, Difficulte difficulte)
+	public void commencerJeu(IUtilisateurDistant utilisateur, String difficulte)
 			throws RemoteException {
-		utilisateurDistant.commencerJeu(utilisateur, "");
+		utilisateurDistant.commencerJeu(utilisateur, difficulte);
 	}
 
 	@Override

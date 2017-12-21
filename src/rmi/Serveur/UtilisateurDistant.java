@@ -43,7 +43,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		serialVersionUID = 1255597867363756474L;
 		utilisateurs = new HashMap<String, IUtilisateurDistant>();
 	}
-	
+
 	/**
 	 * Constructeur
 	 * @param bddId Id de la base de données
@@ -181,7 +181,14 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		if (!adversaire.estConnecte()) throw new UtilisateurNonConnecteException();
 		if (jeux.containsKey(nom + adversaire.getNom()) || jeux.containsKey(adversaire.getNom() + nom)) return;
 		System.out.println("Jeu valide, création du jeu en cours...");
-		Difficulte difficulte = Difficulte.DIFFICILE;
+		Difficulte difficulte;
+		if (diff.equals("FACILE")) {
+			difficulte = Difficulte.FACILE;
+		} else if (diff.equals("MOYEN")) {
+			difficulte = Difficulte.MOYEN;
+		} else {
+			difficulte = Difficulte.DIFFICILE;
+		}
 		IJeuDistant jeuDistant = new JeuDistant(this, adversaire, difficulte);
 		jeux.put(nom + adversaire.getNom(), jeuDistant);
 		System.out.println("Jeu créé et bindé. Notification des joueurs...");
