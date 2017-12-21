@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -63,7 +64,8 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	private GrilleJoueur grilleJoueur;
 	private GrilleEnnemieIHM grilleEnnemie;
 	private Client leClient;
-	private Map<String, JLabel> bateauxJoueur;
+	private Map<String, JLabel> bateauxJoueur = new HashMap<String,JLabel>();
+	private Map<String, JLabel> bateauxAdversaires = new HashMap<String,JLabel>();
 	private JLabel bateauxRestants;
 	private JLabel bateauxRestantsAdversaire;
 	
@@ -81,6 +83,21 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		this.setSize(getMaximumSize());
 		JPanel tableauxPanel = new JPanel();
 		tableauxPanel.setLayout(new FlowLayout());
+		
+		//Initialisation des quantités de bateaux
+		bateauxJoueur.put(TypesBateau.PORTEAVIONS.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.PORTEAVIONS.getNom(), true))));
+		bateauxJoueur.put(TypesBateau.CONTRETORPILLEUR.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CONTRETORPILLEUR.getNom(), true))));
+		bateauxJoueur.put(TypesBateau.CROISEUR.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CROISEUR.getNom(), true))));
+		bateauxJoueur.put(TypesBateau.CUIRASSE.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.CUIRASSE.getNom(), true))));
+		bateauxJoueur.put(TypesBateau.SOUSMARIN.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.SOUSMARIN.getNom(), true))));
+		bateauxJoueur.put(TypesBateau.TORPILLEUR.getNom(), new JLabel("x " + String.valueOf(leJeu.getNbBateaux(TypesBateau.TORPILLEUR.getNom(), true))));
+		
+		bateauxAdversaires.put(TypesBateau.CONTRETORPILLEUR.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.CONTRETORPILLEUR.getNom(), true))));
+		bateauxAdversaires.put(TypesBateau.CROISEUR.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.CROISEUR.getNom(), true))));
+		bateauxAdversaires.put(TypesBateau.CUIRASSE.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.CUIRASSE.getNom(), true))));
+		bateauxAdversaires.put(TypesBateau.PORTEAVIONS.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.PORTEAVIONS.getNom(), true))));
+		bateauxAdversaires.put(TypesBateau.SOUSMARIN.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.SOUSMARIN.getNom(), true))));
+		bateauxAdversaires.put(TypesBateau.TORPILLEUR.getNom(), new JLabel(String.valueOf("x " + leJeu.getNbBateauxAdversaire(TypesBateau.TORPILLEUR.getNom(), true))));
 		
 		//Coté gauche de l'écran qui représente le côté du Joueur. Seulement le Nord, Center et Sud sont utilisés
 		//On met un texte dans le Nord
@@ -129,33 +146,33 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		JPanel flotte = new JPanel();
 		flotte.setLayout(new GridLayout(nbTypesDeBateaux,2));
 		flotte.add(new JLabel(pAvionsImag));
-		flotte.add(new JLabel("x" + leJeu.getNbBateaux(TypesBateau.PORTEAVIONS.getNom(), false)));
+		flotte.add(bateauxJoueur.get(TypesBateau.PORTEAVIONS.getNom()));
 		flotte.add(new JLabel(sousMarinImag));
-		flotte.add(new JLabel("x" + leJeu.getNbBateaux(TypesBateau.SOUSMARIN.getNom(), false)));
+		flotte.add(bateauxJoueur.get(TypesBateau.SOUSMARIN.getNom()));
 		flotte.add(new JLabel(croiseurImag));
-		flotte.add(new JLabel("x" + leJeu.getNbBateaux(TypesBateau.CROISEUR.getNom(), false)));
+		flotte.add(bateauxJoueur.get(TypesBateau.CROISEUR.getNom()));
 		flotte.add(new JLabel(torpilleurImag));
-		flotte.add(new JLabel("x" + leJeu.getNbBateaux(TypesBateau.TORPILLEUR.getNom(), false)));
+		flotte.add(bateauxJoueur.get(TypesBateau.TORPILLEUR.getNom()));
 		flotte.add(new JLabel(contreTorpImag));
-		flotte.add(new JLabel("x" + leJeu.getNbBateaux(TypesBateau.CONTRETORPILLEUR.getNom(), false)));
+		flotte.add(bateauxJoueur.get(TypesBateau.CONTRETORPILLEUR.getNom()));
 		flotte.add(new JLabel(cuirasseImag));
-		flotte.add(new JLabel("x" + leJeu.getNbBateaux(TypesBateau.CUIRASSE.getNom(), false)));
+		flotte.add(bateauxJoueur.get(TypesBateau.CUIRASSE.getNom()));
 		
 		//Creation d'un pannel pour afficher la flotte ennemie
 		JPanel flotteEnnemie = new JPanel();
 		flotteEnnemie.setLayout(new GridLayout(nbTypesDeBateaux, 2));
 		flotteEnnemie.add(new JLabel(pAvionsImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getNbBateauxAdversaire(TypesBateau.PORTEAVIONS.getNom(), false)));
+		flotteEnnemie.add(bateauxAdversaires.get(TypesBateau.PORTEAVIONS.getNom()));
 		flotteEnnemie.add(new JLabel(sousMarinImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getNbBateauxAdversaire(TypesBateau.SOUSMARIN.getNom(), false)));
+		flotteEnnemie.add(bateauxAdversaires.get(TypesBateau.SOUSMARIN.getNom()));
 		flotteEnnemie.add(new JLabel(croiseurImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getNbBateauxAdversaire(TypesBateau.CROISEUR.getNom(), false)));
+		flotteEnnemie.add(bateauxAdversaires.get(TypesBateau.CROISEUR.getNom()));
 		flotteEnnemie.add(new JLabel(torpilleurImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getNbBateauxAdversaire(TypesBateau.TORPILLEUR.getNom(), false)));
+		flotteEnnemie.add(bateauxAdversaires.get(TypesBateau.TORPILLEUR.getNom()));
 		flotteEnnemie.add(new JLabel(contreTorpImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getNbBateauxAdversaire(TypesBateau.CONTRETORPILLEUR.getNom(), false)));
+		flotteEnnemie.add(bateauxAdversaires.get(TypesBateau.CONTRETORPILLEUR.getNom()));
 		flotteEnnemie.add(new JLabel(cuirasseImag));
-		flotteEnnemie.add(new JLabel("x"+leJeu.getNbBateauxAdversaire(TypesBateau.CUIRASSE.getNom(), false)));
+		flotteEnnemie.add(bateauxAdversaires.get(TypesBateau.CUIRASSE.getNom()));
 		
 		//Création de la grille qui aura pour but de représenter les cases de la bataille navale
 		grilleJoueur = new GrilleJoueur(leJeu.getHauteurCarte(), leJeu.getLargeurCarte(), leJeu);
@@ -252,6 +269,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	public void informerAttaque(Coordonnees coordonneesAttaquees) {
 		grilleJoueur.attaquer(coordonneesAttaquees);
 		this.actualiserBateauxRestant();
+		this.actualiserBateauxJoueurs();
 	}
 
 	/**
@@ -338,6 +356,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 			System.out.println("Attaque d'un carreau en cours.");
 			grilleEnnemie.colorierAttaque(leJeu.attaquer(grilleEnnemie.getCoordonneesAAttaquer()));
 			this.actualiserBateauxRestantsAdversaire();
+			this.actualiserBateauxAdversaire();
 			
 		}
 	}
@@ -356,6 +375,30 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	private void actualiserBateauxRestantsAdversaire(){
 		bateauxRestantsAdversaire.setText("Il vous reste " + leJeu.getNbBateauxAdversaire(true)+ " bateaux ennemis à couler");
 		bateauxRestantsAdversaire.repaint();
+	}
+	
+	/**
+	 * Permet d'actualiser le nombre de de bateaux restant selon le type.
+	 */
+	private void actualiserBateauxJoueurs(){
+		for (Map.Entry<String, JLabel> entry : bateauxJoueur.entrySet()) {
+		    String key = entry.getKey();
+		    JLabel value = entry.getValue();
+		    value.setText("x " + String.valueOf(leJeu.getNbBateaux(key, true)));
+		    value.repaint();
+		}
+	}
+	
+	/**
+	 * Permet d'actualiser le nombre bateaux restant selon le type pour l'adversaire.
+	 */
+	private void actualiserBateauxAdversaire(){
+		for (Map.Entry<String, JLabel> entry : bateauxAdversaires.entrySet()) {
+		    String key = entry.getKey();
+		    JLabel value = entry.getValue();
+		    value.setText("x "+ String.valueOf(leJeu.getNbBateauxAdversaire(key, true)));
+		    value.repaint();
+		}
 	}
 }
 
