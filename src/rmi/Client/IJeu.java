@@ -84,4 +84,9 @@ public interface IJeu extends Remote {
 	 */
 	void informerAttaque(Coordonnees coordonneesAttaquees) throws RemoteException;
 	
+	/*/**
+	 * Permet d'informer le nombre de bateaux qui restent dans une flotte. 
+	 * @throws RemoteException
+	 */
+	//void informerNbrBateaux() throws RemoteException;
 }

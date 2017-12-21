@@ -70,40 +70,40 @@ public interface IJeuDistant extends Remote {
 	/**
 	 * Getter
 	 * @param nom nom du joueur.
-	 * @param coules true si on veut savoir le nombre de bateauw coulés.
+	 * @param nonCoules true si on veut savoir le nombre de bateaux non coulés.
 	 * @return nombre de bateaux coulés ou non du joueur.
 	 * @throws RemoteException
 	 */
-	int getNbBateaux(String nom, boolean coules) throws RemoteException;
+	int getNbBateaux(String nom, boolean nonCoules) throws RemoteException;
 	
 	/**
 	 * Getter
 	 * @param nom nom du joueur.
 	 * @param nomBateau nom du type de bateau.
-	 * @param coules true si on veut savoir le nombre de bateauw coulés.
+	 * @param nonCoules true si on veut savoir le nombre de bateaux non coulés.
 	 * @return nombre de bateaux coulés ou non pour un type donné pour le joueur donné.
 	 * @throws RemoteException
 	 */
-	int getNbBateaux(String nom, String nomBateau, boolean coules) throws RemoteException;
+	int getNbBateaux(String nom, String nomBateau, boolean nonCoules) throws RemoteException;
 	
 	/**
 	 * Getter 
 	 * @param nom nom du jouer.
-	 * @param coules true si on veut savoir le nombre de bateaux coulés.
+	 * @param nonCoules true si on veut savoir le nombre de bateaux non coulés.
 	 * @return nombre de bateaux ennemis coulés ou non pour le joueur donné.
 	 * @throws RemoteException
 	 */
-	int getNbBateauxAdversaire(String nom, boolean coules) throws RemoteException;
+	int getNbBateauxAdversaire(String nom, boolean nonCoules) throws RemoteException;
 	
 	/**
 	 * Getter
 	 * @param nom nom du joueur.
 	 * @param nomBateau nom du type de bateau.
-	 * @param coules coules true si on veut savoir le nombre de bateauw coulés
+	 * @param nonCoules true si on veut savoir le nombre de bateaux non coulés
 	 * @return nombre de bateaux ennemis coulés ou non pour un type donné pour le joueur donné.
 	 * @throws RemoteException
 	 */
-	int getNbBateauxAdversaire(String nom, String nomBateau, boolean coules) throws RemoteException;
+	int getNbBateauxAdversaire(String nom, String nomBateau, boolean nonCoules) throws RemoteException;
 	
 	/**
 	 * Getter

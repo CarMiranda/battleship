@@ -203,12 +203,12 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	
 	/**
 	 * getter
-	 * @param coules false si on veut le nombre de bateaux non coulés
+	 * @param nonCoules true si on veut le nombre de bateaux non coulés
 	 * @return le nombre de bateaux coulés ou non coulés
 	 */
-	public int getNbBateaux(boolean coules) {
+	public int getNbBateaux(boolean nonCoules) {
 		try {
-			return jeuDistant.getNbBateaux(joueur.getNom(), coules);
+			return jeuDistant.getNbBateaux(joueur.getNom(), nonCoules);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -219,12 +219,12 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	 * Getter
 	 *  
 	 * @param nomBateau nom du type de bateau dont on cehrche la quantité.
-	 * @param coules false si on veut le nombre de bateaux non coulés.
+	 * @param nonCoules true si on veut le nombre de bateaux non coulés.
 	 * @return nombre de bateaux d'un type spécifiques coulés ou non.
 	 */
-	public int getNbBateaux(String nomBateau, boolean coules) {
+	public int getNbBateaux(String nomBateau, boolean nonCoules) {
 		try {
-			return jeuDistant.getNbBateaux(joueur.getNom(), nomBateau, coules);
+			return jeuDistant.getNbBateaux(joueur.getNom(), nomBateau, nonCoules);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -233,12 +233,12 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	
 	/**
 	 * Getter
-	 * @param coules false si on veut le nombre de bateaux non coulés.
+	 * @param nonCoules true si on veut le nombre de bateaux non coulés.
 	 * @return nombre de bateaux ennemis coulés ou non
 	 */
-	public int getNbBateauxAdversaire(boolean coules) {
+	public int getNbBateauxAdversaire(boolean nonCoules) {
 		try {
-			return jeuDistant.getNbBateauxAdversaire(joueur.getNom(), coules);
+			return jeuDistant.getNbBateauxAdversaire(joueur.getNom(), nonCoules);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -249,12 +249,12 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	 * Getter
 	 * 
 	 * @param nomBateau nom du type de bateau dont on cehrche la quantité.
-	 * @param coules coules false si on veut le nombre de bateaux non coulés.
+	 * @param nonCoules true si on veut le nombre de bateaux non coulés.
 	 * @return nombre de bateaux ennemis d'un type spécifiques coulés ou non.
 	 */
-	public int getNbBateauxAdversaire(String nomBateau, boolean coules) {
+	public int getNbBateauxAdversaire(String nomBateau, boolean nonCoules) {
 		try {
-			return jeuDistant.getNbBateauxAdversaire(joueur.getNom(), nomBateau, coules);
+			return jeuDistant.getNbBateauxAdversaire(joueur.getNom(), nomBateau, nonCoules);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -291,4 +291,9 @@ public class Jeu extends UnicastRemoteObject implements IJeu {
 	public void informerDebutJeu(String nomJoueur) throws RemoteException {
 		fj.informerDebutJeu(nomJoueur);
 	}
+
+	/*@Override
+	public void informerNbrBateaux() throws RemoteException {
+		this.fj.actualiserBateauxRestant(this.getNbBateaux(false));
+	}*/
 }

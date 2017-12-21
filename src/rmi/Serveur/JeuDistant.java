@@ -248,26 +248,26 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	}
 
 	@Override
-	public int getNbBateaux(String nom, boolean coules) throws RemoteException {
-		return getJoueur(nom).getFlotte().getNbBateaux(coules);
+	public int getNbBateaux(String nom, boolean nonCoules) throws RemoteException {
+		return getJoueur(nom).getFlotte().getNbBateaux(nonCoules);
 	}
 
 	@Override
-	public int getNbBateaux(String nom, String nomBateau, boolean coules)
+	public int getNbBateaux(String nom, String nomBateau, boolean nonCoules)
 			throws RemoteException {
-		return getJoueur(nom).getFlotte().getNbBateaux(nomBateau, coules);
+		return getJoueur(nom).getFlotte().getNbBateaux(nomBateau, nonCoules);
 	}
 
 	@Override
-	public int getNbBateauxAdversaire(String nom, boolean coules)
+	public int getNbBateauxAdversaire(String nom, boolean nonCoules)
 			throws RemoteException {
-		return getAdversaire(nom).getFlotte().getNbBateaux(coules);
+		return getAdversaire(nom).getFlotte().getNbBateaux(nonCoules);
 	}
 
 	@Override
 	public int getNbBateauxAdversaire(String nom, String nomBateau,
-			boolean coules) throws RemoteException {
-		return getAdversaire(nom).getFlotte().getNbBateaux(nomBateau, coules);
+			boolean nonCoules) throws RemoteException {
+		return getAdversaire(nom).getFlotte().getNbBateaux(nomBateau, nonCoules);
 	}
 
 	@Override

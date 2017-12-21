@@ -80,9 +80,8 @@ public class Flotte implements Iterable<Bateau> {
 				}
 			}
 			return counter;
-		} else {
-			return flotte.size();
 		}
+		return flotte.size() - counter;
 	}
 	
 	/**

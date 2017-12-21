@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -62,6 +63,9 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	private GrilleJoueur grilleJoueur;
 	private GrilleEnnemieIHM grilleEnnemie;
 	private Client leClient;
+	private Map<String, JLabel> bateauxJoueur;
+	private JLabel bateauxRestants;
+	private JLabel bateauxRestantsAdversaire;
 	
 	/**
 	 * Constructeur
@@ -93,7 +97,8 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		//On créé un nouveau panel afin de pouvoir mettre un texte ainsi qu'un bouton dans le Sud
 		JPanel sud = new JPanel();
 		sud.setLayout(new FlowLayout());
-		sud.add(new JLabel("Il vous reste " + leJeu.getNbBateaux(true) + " bateaux"));
+		bateauxRestants = new JLabel("Il vous reste " + leJeu.getNbBateaux(true) + " bateaux");
+		sud.add(bateauxRestants);
 		JButton abandonner = new JButton("Abandonner");
 		abandonner.setActionCommand("abandonner");
 		abandonner.addActionListener(this);
@@ -170,7 +175,8 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		 * ainsi qu'un bouton afin de valider la commande d'un tir */
 		JPanel South = new JPanel();
 		South.setLayout(new FlowLayout());
-		South.add(new JLabel("Il vous reste " + leJeu.getNbBateauxAdversaire(true) + " bateaux ennemis à couler"));
+		bateauxRestantsAdversaire = new JLabel("Il vous reste " + leJeu.getNbBateauxAdversaire(true)+ " bateaux ennemis à couler");
+		South.add(bateauxRestantsAdversaire);
 		JButton tirer = new JButton("TIRER");
 		tirer.setActionCommand("tirer");
 		tirer.addActionListener(this);
@@ -245,6 +251,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 	 */
 	public void informerAttaque(Coordonnees coordonneesAttaquees) {
 		grilleJoueur.attaquer(coordonneesAttaquees);
+		this.actualiserBateauxRestant();
 	}
 
 	/**
@@ -330,10 +337,26 @@ public class FenetreJeu extends JFrame implements ActionListener {
 		} else if (ae.getActionCommand().equals("tirer")) {
 			System.out.println("Attaque d'un carreau en cours.");
 			grilleEnnemie.colorierAttaque(leJeu.attaquer(grilleEnnemie.getCoordonneesAAttaquer()));
+			this.actualiserBateauxRestantsAdversaire();
 			
 		}
 	}
 		
+	/**
+	 * Permet d'actualiser à l'écran le nombre de bateaux qui restent dans la flotte.
+	 */
+	private void actualiserBateauxRestant(){
+		bateauxRestants.setText("Il vous reste " + leJeu.getNbBateaux(true) + " bateaux");	
+		bateauxRestants.repaint();
+	}
+	
+	/**
+	 * Permet d'actualiser à l'écran le nombre de bateaux qui restent dans la flotte.
+	 */
+	private void actualiserBateauxRestantsAdversaire(){
+		bateauxRestantsAdversaire.setText("Il vous reste " + leJeu.getNbBateauxAdversaire(true)+ " bateaux ennemis à couler");
+		bateauxRestantsAdversaire.repaint();
+	}
 }
 
 	
