@@ -16,10 +16,10 @@ import utilities.Difficulte;
 public interface IUtilisateur extends Remote {
 
 	// Méthodes à distance
+	
 	/**
 	 * Permet de rejoindre un jeu lorsqu'un utilisateur nous défie.
-	 * @param utilisateur
-	 * @param jeu
+	 * @param nom nom de l'adversaire.
 	 * @throws RemoteException
 	 */
 	void rejoindreJeu(String nom) throws RemoteException;

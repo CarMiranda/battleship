@@ -42,8 +42,7 @@ public interface IUtilisateurDistant extends Remote {
 	
 	/**
 	 * Permet qu'un utilisateur du client rejoigne le jeu.
-	 * @param utilisateur l'utilisateur qu'on défie
-	 * @param jeu le jeu.
+	 * @param nom nom de l'adversaire.
 	 * @return true si l'utilisateur a été notifié correctement
 	 * @throws RemoteException
 	 */
@@ -58,7 +57,8 @@ public interface IUtilisateurDistant extends Remote {
 	
 	/**
 	 * Setter. Permet d'associer un utilsateur local à un utilisateur distant.
-	 * @param utilisateur l'utilisateur local (celui qui est dans le client).
+	 * @param nom de l'utilisateur.
+	 * @param utilisateurLocal l'utilisateur local (celui qui est dans le client).
 	 * @throws RemoteException
 	 */
 	void setUtilisateurLocal(String nom, IUtilisateur utilisateurLocal) throws RemoteException;

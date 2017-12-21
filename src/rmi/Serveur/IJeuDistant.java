@@ -12,10 +12,11 @@ import utilities.Coordonnees;
  *
  */
 public interface IJeuDistant extends Remote {
+	
 	/**
-	 * Permet d'associer le jeu distants aux jeux locaux des clients.
-	 * @param String	nom de l'utilisateur qui veut enregistrer son jeu
-	 * @param IJeu		le jeu à enregistrer dans le registre RMI du serveur
+	 *  Permet d'associer le jeu distants aux jeux locaux des clients.
+	 * @param nomUtilisateur nom de l'utilisateur qui veut enregistrer son jeu.
+	 * @param jeuLocal le jeu.
 	 * @throws RemoteException
 	 */
 	void setJeuLocal(String nomUtilisateur, IJeu jeuLocal) throws RemoteException;
