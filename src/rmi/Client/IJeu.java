@@ -3,7 +3,7 @@ package rmi.Client;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import rmi.Serveur.Coordonnees;
+import utilities.Coordonnees;
 /**
  * Cette interface représente le Jeu.
  * @author Carlos MIRANDA, Cyril ANTOUN

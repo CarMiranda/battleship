@@ -4,10 +4,10 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-import modele.Difficulte;
 
 import rmi.Serveur.IEntree;
 import rmi.Serveur.IUtilisateurDistant;
+import utilities.Difficulte;
 /**
  * Cette interface représente l'interface de la classe Utilisateur.
  * @author Carlos MIRANDA
@@ -83,4 +83,6 @@ public interface IUtilisateur extends Remote {
 	 * @throws RemoteException
 	 */
 	void informerConnection(IUtilisateurDistant utilisateur, boolean estNouveau) throws RemoteException;
+	
+	void informerNouvelleEntree(String nomAdversaire) throws RemoteException;
 }

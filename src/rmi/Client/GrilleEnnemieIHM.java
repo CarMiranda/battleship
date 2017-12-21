@@ -1,4 +1,4 @@
-package vue;
+package rmi.Client;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import rmi.Serveur.Coordonnees;
+import utilities.Coordonnees;
 
 /**
  * Cette classe représente la grille de jeu ennemie en tant qu'objet de l'IHM.

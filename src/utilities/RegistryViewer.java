@@ -1,4 +1,4 @@
-package modele;
+package utilities;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

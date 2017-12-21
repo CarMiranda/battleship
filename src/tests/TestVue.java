@@ -8,15 +8,15 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import modele.Difficulte;
+import rmi.Client.Client;
+import rmi.Client.FenetreJeu;
+import rmi.Client.FenetreLogin;
 import rmi.Client.Jeu;
 import rmi.Client.Utilisateur;
 import rmi.Serveur.IUtilisateurDistant;
 import rmi.Serveur.JeuDistant;
 import rmi.Serveur.UtilisateurDistant;
-import vue.Client;
-import vue.FenetreJeu;
-import vue.FenetreLogin;
+import utilities.Difficulte;
 
 /**
  * @author Jorge OCHOA

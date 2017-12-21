@@ -1,8 +1,9 @@
-package vue;
+package rmi.Client;
 
 import java.awt.event.MouseListener;
 import javax.swing.JLabel;
-import rmi.Serveur.Coordonnees;
+
+import utilities.Coordonnees;
 /**
  * Cette classe représente un carreau de la carte affichée sur la fênetre de jeu.
  * (carreau carte de l'IHM). 

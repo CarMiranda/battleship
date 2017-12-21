@@ -1,7 +1,10 @@
-package rmi.Serveur;
+package utilities;
 
 import java.io.Serializable;
 import java.util.List;
+
+import rmi.Serveur.CarreauCarte;
+import rmi.Serveur.ICoordonnees;
 
 /**
  * Cette classe implémente l'interface ICoordonnes

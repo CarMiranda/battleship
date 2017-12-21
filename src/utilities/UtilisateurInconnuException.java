@@ -1,4 +1,4 @@
-package modele;
+package utilities;
 
 /**
  *Exception utilisée lorsque les identifiants ne sont pas valides. 

@@ -1,4 +1,4 @@
-package vue;
+package rmi.Client;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -8,8 +8,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 
-import rmi.Client.Jeu;
-import rmi.Serveur.Coordonnees;
+import utilities.Coordonnees;
 /**
  * Cette classe représente la grille de jeu du joueur en tant qu'objet de l'IHM.
  * @author Carlos MIRANDA, Victor LE MAISTRE
@@ -97,9 +96,9 @@ public class GrilleJoueur extends GrilleIHM {
 						System.out.println("Placement du bateau " + nomBateauAPlacer);
 						jeu.placerBateau(nomBateauAPlacer, bateauEnPlacement);
 						colorier(lccv);
-					} catch (rmi.Serveur.CarreauUtiliseException e) {
+					} catch (utilities.CarreauUtiliseException e) {
 						e.printStackTrace();
-					} catch (rmi.Serveur.MauvaiseTailleException e) {
+					} catch (utilities.MauvaiseTailleException e) {
 						decolorier(lccv);
 					}
 					bateauEnPlacement.clear();

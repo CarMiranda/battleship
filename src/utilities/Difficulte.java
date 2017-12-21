@@ -1,4 +1,4 @@
-package modele;
+package utilities;
 
 /**
  * Cette énumération représente les différentes difficultés du jeu (tailles de la carte).

@@ -15,10 +15,12 @@ import com.mysql.jdbc.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-import modele.Difficulte;
-import modele.UtilisateurInconnuException;
 
 import rmi.Client.IUtilisateur;
+import utilities.AttendPetitConException;
+import utilities.Difficulte;
+import utilities.UtilisateurInconnuException;
+import utilities.UtilisateurNonConnecteException;
 
 /**
  * Cette classe implémente l'interface IUtilisateurDistant
@@ -52,7 +54,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	 * @throws NotBoundException
 	 */
 	public UtilisateurDistant(int bddId, String nom)
-			throws RemoteException, AlreadyBoundException, MalformedURLException, NotBoundException {
+			throws RemoteException {
 		super();
 		this.bddId = bddId;
 		this.nom = nom;
@@ -60,7 +62,11 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 		jeux = new HashMap<String, IJeuDistant>();
 		statistiques = new HashMap<String, IEntree>();
 		Registry registry = LocateRegistry.getRegistry();
-		registry.bind(nom + "Distant", this);
+		try {
+			registry.bind(nom + "Distant", this);
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -232,12 +238,6 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 			return u;
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		} catch (AlreadyBoundException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -262,6 +262,7 @@ public class UtilisateurDistant extends UnicastRemoteObject implements IUtilisat
 	@Override
 	public void ajouterEntree(IEntree entree) throws RemoteException {
 		statistiques.put(entree.getNom(), entree);
+		if (utilisateurLocal != null) utilisateurLocal.informerNouvelleEntree(entree.getNom());
 	}
 
 	@Override

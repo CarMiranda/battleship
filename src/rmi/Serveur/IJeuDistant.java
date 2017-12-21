@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import rmi.Client.IJeu;
+import utilities.Coordonnees;
 /**
  * Cette interface représente un jeu dans le serveur RMI.
  * @author Carlos MIRANDA

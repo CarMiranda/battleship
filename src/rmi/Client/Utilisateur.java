@@ -8,14 +8,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import modele.Difficulte;
 
 
 import rmi.Serveur.IAuthentification;
 import rmi.Serveur.IEntree;
 import rmi.Serveur.IJeuDistant;
 import rmi.Serveur.IUtilisateurDistant;
-import vue.Client;
+import utilities.Difficulte;
 
 /**
  * Cette classe implémente l'interface IUtilisateur.
@@ -72,11 +71,9 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 			throws RemoteException {
 		IAuthentification auth;
 		try {
-			//Registry localRegistry = LocateRegistry.getRegistry();
 			Registry remoteRegistry = LocateRegistry.getRegistry(Client.REMOTEHOST);
 			auth = (IAuthentification) remoteRegistry.lookup("auth");
 			if (auth.inscription(nom, motDePasse)) {
-				System.out.println("Connexion satisfactoire");
 				utilisateurDistant = (IUtilisateurDistant) remoteRegistry.lookup(nom + "Distant");
 				utilisateurDistant.setUtilisateurLocal(nom, this);
 				utilisateurDistant.connecter(true);
@@ -134,6 +131,12 @@ public class Utilisateur extends UnicastRemoteObject  implements IUtilisateur {
 	public Map<String, IEntree> getStatistiques()
 			throws RemoteException {
 		return utilisateurDistant.getStatistiques();
+	}
+
+	@Override
+	public void informerNouvelleEntree(String nomAdversaire)
+			throws RemoteException {
+		client.actualiserStats();
 	}
 
 }

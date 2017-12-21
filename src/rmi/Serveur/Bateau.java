@@ -3,6 +3,10 @@ package rmi.Serveur;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import utilities.CarreauUtiliseException;
+import utilities.Coordonnees;
+import utilities.MauvaiseTailleException;
  /**
   * Cette classe représente un bateau dans le jeu.
   * @author Jorge OCHOA, Carlos MIRANDA

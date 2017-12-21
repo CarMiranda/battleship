@@ -4,7 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import rmi.Serveur.Coordonnees;
+
+import utilities.Coordonnees;
 
 import org.junit.Test;
 

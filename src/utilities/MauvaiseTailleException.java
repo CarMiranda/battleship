@@ -1,4 +1,4 @@
-package rmi.Serveur;
+package utilities;
 
 /**
  * Exception levée lorsque la taille du bateau n'est pas adéquate.

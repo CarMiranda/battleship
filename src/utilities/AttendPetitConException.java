@@ -1,4 +1,4 @@
-package rmi.Serveur;
+package utilities;
 
 /**
  * Exception utilisée lorsqu'un joueur essaye de jouer alors que ce n'est pas son tour.

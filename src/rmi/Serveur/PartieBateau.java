@@ -1,4 +1,7 @@
 package rmi.Serveur;
+
+import utilities.CarreauUtiliseException;
+
 /**
  * Cette classe représente une composante d'un bateau.
  * @author Jorge OCHOA

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import modele.Difficulte;
+import utilities.Coordonnees;
+import utilities.Difficulte;
+
 
 /**
  * Cette classe représente la carte de jeu.

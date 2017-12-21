@@ -27,12 +27,17 @@ public class Entree extends UnicastRemoteObject implements IEntree {
 	 * @throws RemoteException
 	 * @throws AlreadyBoundException
 	 */
-	public Entree(String joueur, String adversaire, int victoires, int defaites) throws RemoteException, AlreadyBoundException {
+	public Entree(String joueur, String adversaire, int victoires, int defaites)
+			throws RemoteException {
 		this.nom = adversaire;
 		this.defaites = defaites;
 		this.victoires = victoires;
 		Registry registry = LocateRegistry.getRegistry(/*Serveur.HOST, Serveur.PORT*/);
-		registry.bind(joueur + adversaire + "Entree", this);
+		try {
+			registry.bind(joueur + adversaire + "Entree", this);
+		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

@@ -4,11 +4,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import rmi.Serveur.AttendPetitConException;
-import rmi.Serveur.Coordonnees;
 import rmi.Serveur.IJeuDistant;
-import vue.Client;
-import vue.FenetreJeu;
+import utilities.AttendPetitConException;
+import utilities.Coordonnees;
 /**
  * Cette classe représente le jeu de la bataille navale.
  * @author Carlos MIRANDA

@@ -1,4 +1,4 @@
-package vue;
+package rmi.Client;
 
 import java.awt.BorderLayout; 
 import java.awt.Color;
@@ -21,9 +21,8 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
-import rmi.Client.Jeu;
-import rmi.Serveur.Coordonnees;
 import rmi.Serveur.TypesBateau;
+import utilities.Coordonnees;
 /**
  * Cette classe représente la fenêtre de jeu du jeu.
  * @author Victor LE MAISTRE, Jorge OCHOA, Carlos MIRANDA
@@ -260,7 +259,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(fj, "Défaite!" + (parForfait ? " Vous avez forfaité." : ""));
 			}
 		});
-		this.leClient.actualiserStat();
+		this.leClient.actualiserStats();
 	}
 
 	/**
@@ -276,7 +275,7 @@ public class FenetreJeu extends JFrame implements ActionListener {
 			}
 			
 		});
-		this.leClient.actualiserStat();
+		this.leClient.actualiserStats();
 	}
 
 	/**

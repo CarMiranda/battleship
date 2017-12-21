@@ -5,17 +5,17 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import modele.Difficulte;
 
 import org.junit.Test;
 
 import rmi.Client.Joueur;
 import rmi.Serveur.Bateau;
 import rmi.Serveur.Carte;
-import rmi.Serveur.Coordonnees;
 import rmi.Serveur.Flotte;
 import rmi.Serveur.JoueurDistant;
 import rmi.Serveur.PartieBateau;
+import utilities.Coordonnees;
+import utilities.Difficulte;
 
 public class FlotteTest {
 

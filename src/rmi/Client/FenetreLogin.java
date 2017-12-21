@@ -1,4 +1,4 @@
-package vue;
+package rmi.Client;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
-import rmi.Client.Utilisateur;
 import rmi.Serveur.IUtilisateurDistant;
 /**
  * Cette classe représente la fenêtre de login de l'application.

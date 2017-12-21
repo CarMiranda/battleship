@@ -1,6 +1,7 @@
 package rmi.Serveur;
 
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -9,9 +10,11 @@ import com.mysql.jdbc.Connection;
 import java.sql.Statement;
 import java.util.List;
 
-import modele.Difficulte;
 
 import rmi.Client.IJeu;
+import utilities.AttendPetitConException;
+import utilities.Coordonnees;
+import utilities.Difficulte;
 
 /**
  * Cette classe implémente l'interface IJeuDistant.
@@ -24,7 +27,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 	private transient final JoueurDistant joueur1, joueur2;
 	private transient JoueurDistant joueurCourant;
 	private transient IJeu jeuLocal1, jeuLocal2, jeuLocalCourant;
-	private transient boolean commence;
+	private transient boolean commence, fini;
 	private transient int joueursPrets;
 	private transient final Difficulte difficulte;
 	
@@ -40,6 +43,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		joueur1 = new JoueurDistant(utilisateur1.getNom(), difficulte);
 		joueur2 = new JoueurDistant(utilisateur2.getNom(), difficulte);
 		commence = false;
+		fini = false;
 		this.difficulte = difficulte;
 		joueursPrets = 0;
 		try {
@@ -58,7 +62,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 				LocateRegistry.getRegistry().bind(joueur1.getNom() + joueur2.getNom() + "Local", jeuLocal);
 			} else {
 				jeuLocal2 = jeuLocal;
-				LocateRegistry.getRegistry().bind(joueur1.getNom() + joueur2.getNom() + "Local", jeuLocal);
+				LocateRegistry.getRegistry().bind(joueur2.getNom() + joueur1.getNom() + "Local", jeuLocal);
 			}
 		} catch (AlreadyBoundException e) {
 			e.printStackTrace();
@@ -118,6 +122,7 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 		try {
 			jeuLocalCourant.informerAttaque(coordonneesAttaquees);
 			if (joueurCourant.aPerdu()) {
+				fini = true;
 				ajouterResultat(joueurPrecedent, joueurCourant);
 				jeuLocalCourant.informerDefaite(false);
 				jeuLocalPrecedent.informerVictoire(false);
@@ -202,14 +207,24 @@ public class JeuDistant extends UnicastRemoteObject implements IJeuDistant {
 
 	@Override
 	public void forfait(String nom) throws RemoteException {
-		if (joueur1.getNom().equals(nom)) {
-			ajouterResultat(joueur2, joueur1);
-			jeuLocal1.informerDefaite(true);
-			jeuLocal2.informerVictoire(true);
-		} else {
-			ajouterResultat(joueur1, joueur2);
-			jeuLocal2.informerDefaite(true);
-			jeuLocal1.informerVictoire(true);
+		if (!fini) {
+			if (joueur1.getNom().equals(nom)) {
+				ajouterResultat(joueur2, joueur1);
+				jeuLocal1.informerDefaite(true);
+				jeuLocal2.informerVictoire(true);
+			} else {
+				ajouterResultat(joueur1, joueur2);
+				jeuLocal2.informerDefaite(true);
+				jeuLocal1.informerVictoire(true);
+			}
+			fini = true;
+			try {
+				LocateRegistry.getRegistry().unbind(joueur1.getNom() + joueur2.getNom() + "Local");
+				LocateRegistry.getRegistry().unbind(joueur2.getNom() + joueur1.getNom() + "Local");
+				LocateRegistry.getRegistry().unbind(joueur1.getNom() + joueur2.getNom() + "Distant");
+			} catch (NotBoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

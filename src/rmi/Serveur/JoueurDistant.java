@@ -2,7 +2,9 @@ package rmi.Serveur;
 
 import java.util.List;
 
-import modele.Difficulte;
+import utilities.Coordonnees;
+import utilities.Difficulte;
+
 /**
  * Cette classe représente un joueur dans le serveur RMI.
  * @author Carlos MIRANDA

@@ -2,6 +2,9 @@ package rmi.Serveur;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import utilities.CarreauUtiliseException;
+import utilities.Coordonnees;
 /**
  * Cette classe représente un carreau de grille de jeu.
  * @author Carlos MIRANDA, Jorge OCHOA

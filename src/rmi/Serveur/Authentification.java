@@ -5,11 +5,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-import modele.UtilisateurInconnuException;
+import utilities.UtilisateurInconnuException;
 
 import com.mysql.jdbc.Connection;
 
@@ -60,11 +61,11 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 	public boolean inscription(String nom, String motDePasse)
 			throws RemoteException {
 		try {
-			if ((nom != null && !nom.isEmpty()) && (motDePasse != null && !motDePasse.isEmpty()) && UtilisateurDistant.getUtilisateur(nom) == null) {
-				return add(nom, motDePasse);
-			}
-		} catch (UtilisateurInconnuException e) {
-
+			UtilisateurDistant.getUtilisateur(nom);
+			throw new IllegalArgumentException();
+		} catch (UtilisateurInconnuException e) {}
+		if (nom != null && !nom.isEmpty() && motDePasse != null && !motDePasse.isEmpty()) {
+			return add(nom, motDePasse);
 		}
 		throw new IllegalArgumentException();
 	}
@@ -102,14 +103,31 @@ public class Authentification extends UnicastRemoteObject implements IAuthentifi
 		String query = "INSERT INTO users (uname, password) VALUES ('" + nom + "', '" + motDePasse + "')";
 		Statement stmt = null;
 		ResultSet rs = null;
+		
+		PreparedStatement pstmt = null;
+		String preparedQuery = "INSERT INTO stats (uid, fid, win, lose) VALUES (?, ?, 0, 0);";
 		try {
 			stmt = conn.createStatement();
 			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			rs = stmt.getGeneratedKeys();
 			rs.next();
-			UtilisateurDistant.addUtilisateurDistant(rs.getInt(1), nom);
+			IUtilisateurDistant nouvelUtilisateur = UtilisateurDistant.addUtilisateurDistant(rs.getInt(1), nom);
+			pstmt = conn.prepareStatement(preparedQuery);
+			for (IUtilisateurDistant iud : nouvelUtilisateur.getUtilisateurs().values()) {
+				if (iud.equals(nouvelUtilisateur)) continue;
+				pstmt.setInt(1, iud.getBddId());
+				pstmt.setInt(2, nouvelUtilisateur.getBddId());
+				pstmt.executeUpdate();
+				iud.ajouterEntree(new Entree(iud.getNom(), nouvelUtilisateur.getNom(), 0, 0));
+				pstmt.setInt(1, nouvelUtilisateur.getBddId());
+				pstmt.setInt(2, iud.getBddId());
+				pstmt.executeUpdate();
+				nouvelUtilisateur.ajouterEntree(new Entree(nouvelUtilisateur.getNom(), iud.getNom(), 0, 0));
+			}
 			return true;
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 

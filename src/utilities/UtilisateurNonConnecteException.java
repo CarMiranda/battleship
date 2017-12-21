@@ -1,4 +1,4 @@
-package rmi.Serveur;
+package utilities;
 
 /**
  * Exception levée lorsqu'on essaye de défier un joueur hors ligne.

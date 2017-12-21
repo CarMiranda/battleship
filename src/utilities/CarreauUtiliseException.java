@@ -1,4 +1,4 @@
-package rmi.Serveur;
+package utilities;
 
 /**
  * Exception levée lorsqu'on essaye d'utiliser un carreau de la carte qui est deja utilisé

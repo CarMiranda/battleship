@@ -2,7 +2,7 @@ package rmi.Client;
 
 import java.util.List;
 
-import rmi.Serveur.Coordonnees;
+import utilities.Coordonnees;
 /**
  * Cette classe représente un joueur  du jeu.
  * @author Cyril ANTOUN, Carlos MIRANDA

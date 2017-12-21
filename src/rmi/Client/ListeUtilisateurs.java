@@ -1,4 +1,4 @@
-package vue;
+package rmi.Client;
 
 import java.rmi.RemoteException;
 import java.util.Comparator;

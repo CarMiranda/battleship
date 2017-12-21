@@ -1,4 +1,4 @@
-package vue;
+package rmi.Client;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -11,12 +11,12 @@ import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
-import modele.Difficulte;
 
-import rmi.Client.IUtilisateur;
 import rmi.Serveur.IUtilisateurDistant;
 import rmi.Serveur.IEntree;
+import utilities.Difficulte;
 
 
 import java.awt.BorderLayout;
@@ -27,8 +27,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
+import java.util.Vector;
 /**
  * Cette classe représente la fenêtre d'accueil du jeu.
  * @author Jorge OCHOA, Carlos MIRANDA, Victor LE LEMAISTRE
@@ -41,8 +49,10 @@ public class FenetreAccueil extends JFrame {
 	private final static Font POLICE_SOUSTITRE = new Font("DevanagariMT-Bold",Font.ITALIC,20);
 	
 	private TableModelStats tableStats;
+	private JTable stats;
 	private MyListModel usersListModel;
 	private JList<IUtilisateurDistant> usersList;
+	private IUtilisateur user;
 	
 	/**
 	 * 
@@ -115,12 +125,15 @@ public class FenetreAccueil extends JFrame {
 			return data.size();
 		}
 		
-		/*public void add(IUtilisateurDistant utilisateur) {
-			data.add(utilisateur);
+		public void add(IUtilisateurDistant utilisateur) {
+			if (data.contains(utilisateur)) {
+				data.remove(utilisateur);
+				data.add(utilisateur);
+			}
 			fireContentsChanged(this, 0, getSize());
 		}
 		
-		public void addAll(IUtilisateurDistant[] utilisateurs) {
+		/*public void addAll(IUtilisateurDistant[] utilisateurs) {
 			Collection<IUtilisateurDistant> c = Arrays.asList(utilisateurs);
 			data.addAll(c);
 			fireContentsChanged(this, 0, getSize());
@@ -129,15 +142,15 @@ public class FenetreAccueil extends JFrame {
 	}
 	
 	/**
-	 * Cette classe représenten le tableau des statistiques pour l'IHM.
+	 * Cette classe représente le tableau des statistiques pour l'IHM.
 	 * @author Jorge OCHOA
 	 *
 	 */
-	private class TableModelStats extends AbstractTableModel {
+	private class TableModelStats extends DefaultTableModel {
 		
 		private static final long serialVersionUID = 1L;
 		
-		private Object[] stats;
+		private List<IEntree> stats = null;
 		private String[] columnNames;
 		
 		/**
@@ -147,7 +160,8 @@ public class FenetreAccueil extends JFrame {
 		 * @throws RemoteException
 		 */
 		public TableModelStats(IUtilisateur u, String[] columnNames) throws RemoteException{
-			this.stats = u.getStatistiques().values().toArray();
+			super(columnNames, 0);
+			stats = new ArrayList<IEntree>(u.getStatistiques().values());
 			this.columnNames = columnNames;
 		}
 		
@@ -163,7 +177,9 @@ public class FenetreAccueil extends JFrame {
 
 		@Override
 		public int getRowCount() {
-			return this.stats.length;
+			if (stats != null)
+				return this.stats.size();
+			return 0;
 		}
 
 		@Override
@@ -171,13 +187,13 @@ public class FenetreAccueil extends JFrame {
 			try {
 				switch (colonne) {
 				case 0:
-						return ((IEntree) stats[ligne]).getNom();
+						return stats.get(ligne).getNom();
 				case 1 :
-						return String.valueOf(((IEntree) stats[ligne]).getDefaites() + ((IEntree) stats[ligne]).getVictoires());
+						return String.valueOf(stats.get(ligne).getDefaites() + stats.get(ligne).getVictoires());
 				case 2 :
-						return String.valueOf(((IEntree) stats[ligne]).getVictoires());
+						return String.valueOf(stats.get(ligne).getVictoires());
 				case 3 :
-						return String.valueOf(((IEntree) stats[ligne]).getDefaites());
+						return String.valueOf(stats.get(ligne).getDefaites());
 					default:
 						return "###";
 				}
@@ -186,13 +202,41 @@ public class FenetreAccueil extends JFrame {
 			}
 			return null;
 		}
+		
+		public void addRow(IEntree row) {
+			stats.add(row);
+			Vector<Object> rowVector = new Vector<>();
+			try {
+				rowVector.add(row.getNom());
+				rowVector.add(String.valueOf(row.getVictoires() + row.getDefaites()));
+				rowVector.add(String.valueOf(row.getVictoires()));
+				rowVector.add(String.valueOf(row.getDefaites()));
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			super.addRow(rowVector);
+		}
 	}
 	
 	/**
 	 * Permet d'actualiser la liste d'utlisateurs.
 	 */
-	public void actualiserUtilisateurs() {
+	public void actualiserUtilisateurs(IUtilisateurDistant iud) {
+		usersListModel.add(iud);
 		usersList.repaint();
+	}
+	
+	public void ajouterStats(String nomAdversaire) {
+		try {
+			this.tableStats.addRow((IEntree) LocateRegistry.getRegistry(Client.REMOTEHOST).lookup(user.getNom() + nomAdversaire + "Entree"));
+		} catch (AccessException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+		this.stats.repaint();
 	}
 	
 	/**
@@ -203,7 +247,7 @@ public class FenetreAccueil extends JFrame {
 	public FenetreAccueil(final Client client) throws RemoteException {
 		super("Bataille Navale - Accueil de " + client.getUtilisateur().getNom());
 		
-		final IUtilisateur user = client.getUtilisateur();
+		user = client.getUtilisateur();
 		String[] columnNames = { "Adversaire", "Total de parties", "Parties gagnées", "Parties perdues"};
 		this.tableStats = new TableModelStats(user, columnNames);
 		JPanel mainPanel = new JPanel(new BorderLayout());
@@ -214,7 +258,8 @@ public class FenetreAccueil extends JFrame {
 		sousTitreStats.setVerticalAlignment(JLabel.CENTER);
 		JPanel statsPanel = new JPanel(new BorderLayout());
 		statsPanel.add(sousTitreStats, BorderLayout.NORTH);
-		statsPanel.add(new JScrollPane(new JTable(this.tableStats)), BorderLayout.CENTER);
+		stats = new JTable(this.tableStats);
+		statsPanel.add(new JScrollPane(stats), BorderLayout.CENTER);
 		
 		/*Creation du panel affichage la liste d'utilisateurs connectes */
 		JLabel sousTitreUtilisateurs = new JLabel("Liste des Utilisateurs");
